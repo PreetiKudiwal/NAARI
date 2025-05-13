@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for slick arrows */
+.slick-prev {
+    left: 10px !important;
+    z-index: 10;
+  }
+  
+  .slick-next {
+    right: 10px !important;
+    z-index: 10;
+  }
+
+  .product-pop-up {
+    background: linear-gradient(145deg, #2e2e2e 0%, #1a1a1a 25%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
+    color: white;
+    width: 100%;
+  }
+
+  .swal2-title {
+    padding: 0 !important; /* Remove default padding */
+    font-weight: normal !important;
+  }
+
+  .swal2-html-container {
+   padding: 5px 18px !important;
+  }
+  .backgroundColor {
+    background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
+  }
