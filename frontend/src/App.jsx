@@ -25,6 +25,7 @@ import UserRegister from './Website/pages/UserRegister'
 import Thankyou from './Website/pages/Thankyou'
 import Setting from './Admin/pages/Setting'
 import ViewUser from './Admin/pages/user/ViewUser'
+import EditUser from './Admin/pages/user/EditUser'
 
 
 export default function App() {
@@ -125,6 +126,10 @@ export default function App() {
           {
             path: "user",
             element: <ViewUser />
+          },
+          {
+            path: "user/edit/:user_id",
+            element: <EditUser />
           }
         ]
       },

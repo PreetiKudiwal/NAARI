@@ -66,6 +66,50 @@ AdminRouter.get(
 
 //read admin end
 
+//delete admin start
+
+AdminRouter.delete(
+    "/delete/:id",
+    (req, res) => {
+        const result = new AdminController().delete(req.params.id);
+
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+    
+)
+
+//delete admin end
+
+//edit admin start
+
+AdminRouter.put(
+    "/edit/:id",
+    (req, res) => {
+        const result = new AdminController().edit(req.body, req.params.id);
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//edit admin end
+
 
 
 module.exports = AdminRouter;

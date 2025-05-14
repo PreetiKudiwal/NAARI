@@ -40,10 +40,11 @@ export default function AddColor() {
         )
   }
   return (
-     <div className='flex justify-center items-center mt-14'>
-       <div className="p-6 rounded-lg text-white shadow-md w-96"style={{
-      background: "linear-gradient(145deg, #1a1a1a 0%, #2e2e2e 100%)"
-    }}>
+     <div className="max-w-xl mx-auto p-6 shadow rounded-2xl text-white mt-10"
+    style={{
+            background:
+              "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+          }}>
          <h2 className="text-2xl font-semibold text-yellow-200 mb-4">Add Color</h2>
          <form onSubmit={addColor}>
            <div className="mb-4">
@@ -52,7 +53,7 @@ export default function AddColor() {
               onChange={createSlug}
                ref={colorName}
                type="text"
-               className="w-full p-2 rounded-md focus:outline-none text-black"
+               className="w-full p-2 rounded-md bg-gray-600"
                placeholder="Enter color name"
                required
              />
@@ -63,7 +64,7 @@ export default function AddColor() {
               readOnly
                ref={colorSlug}
                type="text"
-               className="w-full p-2 bg-gray-300 rounded-md focus:outline-none text-black"
+               className="w-full p-2 rounded-md focus:outline-none bg-gray-800"
                placeholder="Enter color slug"
                required
              />
@@ -87,7 +88,6 @@ export default function AddColor() {
            </button>
          </form>
        </div>
-     </div>
     
   )
 }

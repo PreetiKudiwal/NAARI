@@ -119,9 +119,9 @@ class AdminController {
                     try {
                         let admin;
                         if (id) {
-                            color = await AdminModel.findById(id);
+                            admin = await AdminModel.findById(id);
                         } else {
-                            color = await AdminModel.find();
+                            admin = await AdminModel.find();
                         }
                         resolve(
                             {
@@ -143,6 +143,88 @@ class AdminController {
                 }
             )
         }
+
+        delete(id) {
+                return new Promise(
+                    (resolve, reject) => {
+                        try {
+                            AdminModel.deleteOne({ _id: id }).then(
+                                (success) => {
+                                    resolve(
+                                        {
+                                            msg: 'User deleted successfully',
+                                            status: 1
+                                        }
+                                    )
+                                }
+                            ).catch(
+                                (error) => {
+                                    console.log(error);
+                                    reject(
+                                        {
+                                            msg: 'Color not deleted',
+                                            status: 0
+                                        }
+                                    )
+                                }
+                            )
+                        } catch (error) {
+                            console.log(error);
+                            reject(
+                                {
+                                    msg: 'Internal server error',
+                                    status: 0
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+
+            edit(data, id) {
+                    return new Promise(
+                        (resolve, reject) => {
+                            try {
+                                AdminModel.updateOne(
+                                    { _id: id },
+                                    {
+                                        $set: {
+                                            ...data
+                                        }
+                                    }
+                                ).then(
+                                    (success) => {
+                                        resolve(
+                                            {
+                                                msg: "User updated",
+                                                status: 1
+                                            }
+                                        )
+                                    }
+                                ).catch(
+                                    (error) => {
+                                        console.log(error);
+                                        reject(
+                                            {
+                                                msg: 'User not updated',
+                                                status: 0
+                                            }
+                                        )
+                                    }
+                                )
+            
+                            } catch (error) {
+                                console.log(error);
+                                reject(
+                                    {
+                                        msg: 'Internal server error',
+                                        status: 0
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
 }
 
 

@@ -58,7 +58,7 @@ export default function ViewColor() {
     <div className="m-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold my-4 text-white">Color List</h2>
-        <button className="bg-yellow-100 text-gray-700 font-medium px-4 py-2 rounded-lg hover:bg-yellow-200">
+        <button className="bg-yellow-200 text-gray-700 font-medium px-4 py-2 rounded-lg hover:bg-yellow-300">
           <Link to={"/admin/color/add"}>Add Color</Link>
         </button>
       </div>
@@ -70,14 +70,14 @@ export default function ViewColor() {
           }}
         >
           <thead>
-            <tr className="bg-gray-700 text-yellow-200">
-              <th className="py-2 px-4 text-left">S.No</th>
-              <th className="py-2 px-4 text-left">Color Name</th>
-              <th className="py-2 px-4 text-left">Color Slug</th>
-              <th className="py-2 px-4 text-left">Color Code</th>
-              <th className="py-2 px-4 text-left">Color View</th>
-              <th className="py-2 px-4 text-left">Status</th>
-              <th className="py-2 px-4 text-left">Actions</th>
+            <tr className="bg-gray-700 text-yellow-200 text-center">
+              <th className="py-2 px-4">S.No</th>
+              <th className="py-2 px-4">Color Name</th>
+              <th className="py-2 px-4">Color Slug</th>
+              <th className="py-2 px-4">Color Code</th>
+              <th className="py-2 px-4">Color View</th>
+              <th className="py-2 px-4">Status</th>
+              <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
 
@@ -85,7 +85,7 @@ export default function ViewColor() {
             {Array.isArray(allColor) &&
               allColor.map((colorData, colorIndex) => {
                 return (
-                  <tr key={colorIndex} className="border-t text-white hover:bg-gray-600">
+                  <tr key={colorIndex} className="border-t text-white hover:bg-gray-600 text-center">
                     <td className="py-2 px-4">{colorIndex + 1}.</td>
                     <td className="py-2 px-4">{colorData.colorName}</td>
                     <td className="py-2 px-4">{colorData.colorSlug}</td>
@@ -100,7 +100,7 @@ export default function ViewColor() {
                       {colorData.colorStatus == true ? (
                         <button
                           onClick={() => statusChange(colorData._id)}
-                          className="border text-white gap-1 px-3 py-1 rounded-2xl flex items-center justify-between"
+                          className="border text-white gap-1 px-3 py-1 rounded-2xl flex items-center justify-between mx-auto"
                         >
                           <div className="bg-green-600 rounded-lg">
                             <FaRegCircleCheck />
@@ -110,7 +110,7 @@ export default function ViewColor() {
                       ) : (
                         <button
                           onClick={() => statusChange(colorData._id)}
-                          className="border text-white gap-1 px-3 py-1 rounded-2xl flex items-center justify-between"
+                          className="border text-white gap-1 px-3 py-1 rounded-2xl flex items-center justify-between mx-auto"
                         >
                           <div className="bg-red-600 border-2 text-[12px] rounded-lg">
                             <RxCross2 />
@@ -119,7 +119,7 @@ export default function ViewColor() {
                         </button>
                       )}
                     </td>
-                    <td className="p-2 flex gap-4">
+                    <td className="p-2 flex gap-4 justify-center">
                       <Link to={`/admin/color/edit/${colorData._id}`}>
                         <button className="border text-white px-3 py-1 rounded-xl">
                           Edit

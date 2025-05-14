@@ -30,3 +30,15 @@
   .backgroundColor {
     background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
   }
+
+  .background {
+  background: url("/images/background.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+::selection {
+  color: #374151;
+  background-color: #FEF08A;
+}

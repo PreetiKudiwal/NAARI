@@ -49,64 +49,56 @@ export default function EditColor() {
       }
 
   return (
-    <div className='flex justify-center items-center my-5'>
-       <div className="bg-white p-6 rounded-lg shadow-md w-96 border">
-         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Edit Color</h2>
+       <div className="max-w-xl mx-auto p-6 shadow rounded-2xl text-white mt-10"
+    style={{
+            background:
+              "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+          }}>
+         <h2 className="text-2xl font-semibold mb-4 text-yellow-200">Edit Color</h2>
          <form onSubmit={editColor}>
            <div className="mb-4">
-             <label className="block text-gray-700 font-medium mb-2">Color Name</label>
+             <label className="block font-medium mb-2">Color Name</label>
              <input
              defaultValue={allColor.colorName}
               onChange={createSlug}
                ref={colorName}
                type="text"
-               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               className="w-full p-2 rounded-md bg-gray-600"
                placeholder="Enter color name"
                required
              />
            </div>
            <div className="mb-4">
-             <label className="block text-gray-700 font-medium mb-2">Color Slug</label>
+             <label className="block font-medium mb-2">Color Slug</label>
              <input
              defaultValue={allColor.colorSlug}
               readOnly
                ref={colorSlug}
                type="text"
-               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+               className="w-full p-2 rounded-md bg-gray-800 focus:outline-none"
                placeholder="Enter color slug"
                required
              />
            </div>
 
            <div className="mb-4">
-             <label className="block text-gray-700 font-medium mb-2">Color Code</label>
-             <input
-             defaultValue={allColor.colorCode}
-               ref={colorCode}
-               type="text"
-               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-               placeholder="Enter color code"
-               required
-             />
-           </div>
-
-           <div className="mb-4">
-             <label className="block text-gray-700 font-medium mb-2">
+             <label className="block font-medium mb-2">
                Pick a Color
              </label>
              <input
+             defaultValue={allColor.colorCode}
+               ref={colorCode}
                type="color"
                className="w-full h-6 p-1 border rounded-md cursor-pointer"
              />
            </div>
-           <button
-             type="submit"
-             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-           >
-             Update Color
-           </button>
+        <button
+          type="submit"
+          className="bg-yellow-200 w-full text-gray-700 font-medium py-2 rounded-lg hover:bg-yellow-300"
+        >
+          Update Color
+        </button>
          </form>
        </div>
-     </div>
   )
 }

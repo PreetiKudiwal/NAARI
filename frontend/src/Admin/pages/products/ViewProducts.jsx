@@ -96,22 +96,22 @@ export default function ViewProducts() {
         }}
       >
         <thead>
-          <tr className="bg-gray-700 text-left text-yellow-200 uppercase text-sm leading-normal">
-            <th className="py-2 px-4 text-left">S.No</th>
+          <tr className="bg-gray-700 text-yellow-200 uppercase text-sm leading-normal text-center">
+            <th className="py-2 px-4">S.No</th>
             <th className="py-2 px-4">Name</th>
             <th className="py-2 px-4">Price</th>
             <th className="py-2 px-4">Color</th>
             <th className="py-2 px-4">Category</th>
             <th className="py-2 px-4">Image</th>
             <th className="py-2 px-4">Stock</th>
-            <th className="py-2 px-4 text-center">Actions</th>
+            <th className="py-2 px-4">Actions</th>
           </tr>
         </thead>
         <tbody className="text-white">
           {Array.isArray(allProduct) &&
             allProduct.map((productData, productIndex) => {
               return (
-                <tr key={productIndex} className="border-t hover:bg-gray-600 ">
+                <tr key={productIndex} className="border-t hover:bg-gray-600 text-center">
                   <td className="py-2 px-4">{productIndex + 1}.</td>
                   <td className="py-2 px-4 w-fit">{productData.name}</td>
                   <td className="py-2 px-4 ">
@@ -159,7 +159,7 @@ export default function ViewProducts() {
                       </button>
                     )}
                   </td>
-                  <td className="py-4 px-4 flex gap-1 flex-wrap items-center justify-center">
+                  <td className="py-4 px-4 flex gap-1 items-center justify-center">
                     {productData.status == true ? (
                       <button
                         onClick={() => changePersentValue(productData._id, 2)}

@@ -1,17 +1,19 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MainContext } from '../../context/Context';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import { login } from '../../Redux/Reducer/AdminSlice';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
 
   const {API_BASE_URL, toastNotify} = useContext(MainContext);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); useState
   const dispatch = useDispatch();
   const admin = useSelector((state) => state.admin.data);
   const lsData = JSON.parse(localStorage.getItem('adminLogin'));
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginAdmin = (event) => {
     event.preventDefault();
@@ -45,48 +47,64 @@ export default function Login() {
   )
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6">
+    <div className="min-h-screen flex justify-end background">
+      <div className="w-full max-w-2xl shadow-lg p-8 rounded space-y-6 opacity-90 flex justify-center"
+      style={{
+            background:
+              "linear-gradient(-145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+          }}>
+        <div className="w-full max-w-md h-full shadow-lg p-8 rounded-xl space-y-10 shadow-zinc-600 text-white"
+        style={{
+            background:
+              "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+          }}>
         {/* Heading */}
-        <h2 className="text-2xl font-bold text-center text-gray-800">Login to Your Account</h2>
+        <h2 className="text-2xl font-bold text-center text-yellow-200">Login to Your Account</h2>
 
         {/* Form */}
-        <form className="space-y-4" onSubmit={loginAdmin}>
+        <form className="space-y-10" onSubmit={loginAdmin}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1">Email</label>
             <input
               type="email"
               name='email'
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 rounded-xl bg-zinc-500 placeholder:text-zinc-900 text-black"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              name='password'
-              placeholder="Enter your password"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <div className="relative">
+  <label className="block text-sm font-medium mb-1">Password</label>
+  <input
+    type={showPassword ? "text" : "password"}
+    name="password"
+    placeholder="Enter your password"
+    className="w-full px-4 py-2 rounded-xl bg-zinc-500 placeholder:text-zinc-900 text-black pr-10"
+  />
+  <span
+    className="absolute right-3 top-9 text-zinc-800 cursor-pointer"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? <FaEye /> : <FaEyeSlash />}
+  </span>
+</div>
 
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition"
+            className="w-full bg-yellow-200 text-gray-700 font-medium py-2 rounded-xl hover:bg-yellow-300 transition"
           >
             Login
           </button>
         </form>
 
         {/* Extra Links */}
-        <div className="text-sm text-center text-gray-600">
+        <div className="text-sm text-center">
           Don’t have an account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-yellow-200 hover:underline">
             Sign up
           </a>
+        </div>
         </div>
       </div>
     </div>

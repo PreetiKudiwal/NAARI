@@ -13,7 +13,6 @@ export default function Context({children}) {
     const [allColor, setAllColor] = useState([]);
     const [allProduct, setAllProduct] = useState([]);
     const [allAdminUser, setAllAdminUser] = useState([]);
-    console.log(allAdminUser);
     const [productColor, setProductColor] = useState(null);
     const token = useSelector((state) => state.admin.token);
 
@@ -21,7 +20,7 @@ export default function Context({children}) {
     const CATEGORY_URL = "/category";
     const COLOR_URL = "/color";
     const PRODUCT_URL = "/product";
-    const ADMIN_USER_URL = "/user"
+    const ADMIN_USER_URL = "/admin"
 
     const toastNotify = (msg, status) => toast(msg, { type: status == true ? "success" : "error"});
 
@@ -112,8 +111,7 @@ export default function Context({children}) {
 
       axios.get(adminApiUrl).then(
         (success) => {
-          console.log(success)
-          setAllAdminUser(success.data.color);
+          setAllAdminUser(success.data.admin);
         }
       ).catch(
         (error) => {
