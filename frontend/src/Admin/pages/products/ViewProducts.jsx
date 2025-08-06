@@ -14,7 +14,6 @@ import ReactDOMServer from "react-dom/server";
 export default function ViewProducts() {
   const {
     API_BASE_URL,
-    CATEGORY_URL,
     PRODUCT_URL,
     toastNotify,
     fetchAllproduct,
@@ -30,6 +29,13 @@ export default function ViewProducts() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
+      background: "#1e1e1e",
+      customClass: {
+        title: "swal-title",
+        htmlContainer: "swal-text",
+        icon: "custom-icon",
+        confirmButton: "custom-confirm-btn",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         axios
@@ -84,7 +90,7 @@ export default function ViewProducts() {
     <div className="m-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold my-4 text-white">Products</h2>
-        <button className="bg-yellow-200 text-gray-700 font-medium px-4 py-2 rounded-lg hover:bg-yellow-300">
+        <button className="font-medium px-4 py-2 rounded-lg bg-zinc-800 addButton">
           <Link to={"/admin/products/add"}>Add Product</Link>
         </button>
       </div>
@@ -96,7 +102,7 @@ export default function ViewProducts() {
         }}
       >
         <thead>
-          <tr className="bg-gray-700 text-yellow-200 uppercase text-sm leading-normal text-center">
+          <tr className="bg-zinc-800 text-black uppercase text-sm leading-normal text-center">
             <th className="py-2 px-4">S.No</th>
             <th className="py-2 px-4">Name</th>
             <th className="py-2 px-4">Price</th>
@@ -109,13 +115,16 @@ export default function ViewProducts() {
         </thead>
         <tbody className="text-white">
           {Array.isArray(allProduct) &&
-            allProduct.map((productData, productIndex) => {
+            allProduct?.map((productData, productIndex) => {
               return (
-                <tr key={productIndex} className="border-t hover:bg-gray-600 text-center">
+                <tr
+                  key={productIndex}
+                  className="border-t hover:bg-zinc-800 text-center"
+                >
                   <td className="py-2 px-4">{productIndex + 1}.</td>
                   <td className="py-2 px-4 w-fit">{productData.name}</td>
                   <td className="py-2 px-4 ">
-                    <span>${productData.finel_price.toFixed(1)}</span>
+                    <span>${productData?.finel_price?.toFixed(1)}</span>
                     <span className="line-through ms-2">
                       ${productData.original_price}
                     </span>
@@ -131,7 +140,7 @@ export default function ViewProducts() {
                     })}
                   </td>
                   <td className="py-2 px-4">
-                    {productData.category_id.categoryName}
+                    {productData?.category_id?.categoryName}
                   </td>
                   <td className="py-2 px-4">
                     <img
@@ -228,10 +237,9 @@ export default function ViewProducts() {
 
 function ProductPopUp({ productData, API_BASE_URL }) {
   return (
-    <div className="flex flex-col md:flex-row mt-2 rounded">
+    <div className="flex flex-col md:flex-row mt-1 rounded">
       {/* Left Side: Images */}
       <div className="w-1/2 flex flex-col rounded p-3 gap-4 ms-24 ">
-        
         {/* Main Image */}
         <div>
           <img
@@ -242,102 +250,116 @@ function ProductPopUp({ productData, API_BASE_URL }) {
         </div>
 
         {/* Other Images */}
-          <div className="flex flex-wrap justify-center gap-4 w-full">
-            {productData.other_img.map((image, index) => {
-              return (
-                <img
-                  key={index}
-                  src={API_BASE_URL + `/images/product/${image}`}
-                  alt="Other 1"
-                  className="w-16 rounded"
-                />
-              );
-            })}
-          </div>
+        <div className="flex flex-wrap justify-center gap-4 w-full">
+          {productData.other_img.map((image, index) => {
+            return (
+              <img
+                key={index}
+                src={API_BASE_URL + `/images/product/${image}`}
+                alt="Other 1"
+                className="w-16 rounded"
+              />
+            );
+          })}
+        </div>
       </div>
 
       {/* Right Side: Display Values Only */}
-      <div className="w-1/2 flex flex-col gap-2">
+      <div className="w-1/2 flex flex-col gap-2 pe-12">
         <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Id:</label>
+          <label className="font-medium text-neutral-400">Id:</label>
           <p>{productData._id}</p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Name:</label>
-          <p>{productData.name}</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Name:</label>
+            <p>{productData.name}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Slug:</label>
+            <p>{productData.slug}</p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Slug:</label>
-          <p>{productData.slug}</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Category:</label>
+            <p>{productData?.category_id?.categoryName}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Color:</label>
+            <p>
+              {productData?.colors?.map((color, index) => {
+                return <span key={index}>{color.colorName}, </span>;
+              })}
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Category:</label>
-          <p>{productData.category_id.categoryName}</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">
+              Original Price:
+            </label>
+            <p>${productData.original_price}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Discount:</label>
+            <p>{productData.discount_percentage}%</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Final Price:</label>
+            <p>${productData.finel_price.toFixed(1)}</p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Color:</label>
-          <p>
-            {productData.colors.map((color, index) => {
-              return <span key={index}>{color.colorName}, </span>;
-            })}
+        <div className="space-y-1 text-left">
+          <label className="font-medium text-neutral-400">
+            Short Description:
+          </label>
+          <p className="w-full border border-neutral-400 rounded-md px-2 h-[75px] overflow-auto">
+            {productData.short_description}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Original Price:</label>
-          <p>${productData.original_price}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Discount:</label>
-          <p>{productData.discount_percentage}%</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Final Price:</label>
-          <p>${productData.finel_price.toFixed(1)}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">
-            Short Description:
-          </label>
-          <p>{productData.short_description}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">
+        <div className="space-y-1 text-left">
+          <label className="font-medium text-neutral-400 text-left">
             Long Description:
           </label>
-          <p>{productData.long_description}</p>
+          <p className="w-full border border-neutral-400 px-2 rounded-md h-40 overflow-auto">
+            {productData.long_description}
+          </p>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Status:</label>
+            <p>{productData.status == true ? "Active" : "Inactive"}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Stock:</label>
+            <p>{productData.stock == true ? "In stock" : "Out of stock"}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label className="font-medium text-neutral-400">Top Selling:</label>
+            <p>{productData.top_selling == true ? "Yes" : "No"}</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Status:</label>
-          <p>{productData.status == true ? "Active" : "Inactive"}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Stock:</label>
-          <p>{productData.stock == true ? "In stock" : "Out of stock"}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Top Selling:</label>
-          <p>{productData.top_selling == true ? "Yes" : "No"}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Created at:</label>
+          <label className="font-medium text-neutral-400">Created at:</label>
           <p>{productData.createdAt}</p>
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="font-medium text-yellow-200">Updated at:</label>
+          <label className="font-medium text-neutral-400">Updated at:</label>
           <p>{productData.updatedAt}</p>
         </div>
       </div>

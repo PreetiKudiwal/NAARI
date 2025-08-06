@@ -5,11 +5,11 @@ const CartModel = require("../models/CartModel");
 const ProductModel = require("../models/ProductModel");
 
 
-class UserController { 
+class UserController {
 
     create(data) {
         return new Promise(
-            async(resolve, reject) => {
+            async (resolve, reject) => {
                 try {
 
                     const checkEmail = await UserModel.findOne({ email: data.email });
@@ -21,7 +21,7 @@ class UserController {
                                 status: 0
                             }
                         )
-                    }else {
+                    } else {
 
                         const user = new UserModel(
                             {
@@ -36,7 +36,7 @@ class UserController {
                                     {
                                         msg: "User created successfully",
                                         status: 1,
-                                        user: {...user.toJSON(), password: null},
+                                        user: { ...user.toJSON(), password: null },
                                         token: accessToken(user.toJSON())
                                     }
                                 )
@@ -71,7 +71,7 @@ class UserController {
 
     login(data) {
         return new Promise(
-            async(resolve, reject) => {
+            async (resolve, reject) => {
                 try {
 
                     const user = await UserModel.findOne({ email: data.email });
@@ -83,11 +83,11 @@ class UserController {
                                 {
                                     msg: 'Login successfully',
                                     status: 1,
-                                    user: {...user.toJSON(), password: null},
+                                    user: { ...user.toJSON(), password: null },
                                     token: accessToken(user.toJSON())
                                 }
                             )
-                        }else {
+                        } else {
                             reject(
                                 {
                                     msg: 'Password not correct',
@@ -95,8 +95,8 @@ class UserController {
                                 }
                             )
                         }
-                        
-                    }else {
+
+                    } else {
 
                         reject(
                             {
@@ -118,7 +118,215 @@ class UserController {
         )
     }
 
+    edit(data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const existingUser = await UserModel.findById(data._id);
+                if (!existingUser) {
+                    return reject({
+                        msg: "User not found",
+                        status: 0
+                    });
+                }
+
+                // Merge existing user with new data
+                const updatedUser = {
+                    ...existingUser.toObject(),
+                    ...data, // override only the fields sent in data
+                };
+
+                await UserModel.updateOne(
+                    { _id: data._id },
+                    { $set: updatedUser }
+                );
+
+                resolve({
+                    msg: "Profile updated successfully",
+                    status: 1,
+                    user: { ...updatedUser, password: null }
+                });
+
+            } catch (error) {
+                console.log(error);
+                reject({
+                    msg: "Internal Server Error",
+                    status: 0
+                });
+            }
+        });
+    }
+
+    changePassword(data) {
+        console.log(data);
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+
+                    const user = await UserModel.findById(data._id);
+
+                    if (user) {
+
+                        if (data.password == decryptPassword(user.password)) {
+
+                            await UserModel.updateOne(
+                                { _id: data._id },
+                                { $set: { ...data, password: encryptPassword(data.newPassword) } }
+                            );
+                            resolve(
+                                {
+                                    msg: 'Password updated successfully',
+                                    status: 1,
+                                }
+                            )
+                        } else {
+                            reject(
+                                {
+                                    msg: 'Current Password is not correct',
+                                    status: 0
+                                }
+                            )
+                        }
+
+                    } else {
+
+                        reject(
+                            {
+                                msg: 'Email not found',
+                                status: 0
+                            }
+                        )
+                    }
+                } catch (error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: 'Internal server error',
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    addAddress(data) {
+
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const user = await UserModel.findById(data._id);
+
+                    if (user) {
+
+                        // Check if the user already has 2 addresses
+                        if (user.shipping_address && user.shipping_address.length >= 2) {
+                            return reject({
+                                msg: "Maximum of 2 addresses allowed",
+                                status: 0,
+                            });
+                        }
+                        await UserModel.updateOne(
+                            { _id: data._id },
+                            {
+                                $push: {
+                                    shipping_address: {
+                                        name: data.name,
+                                        contact: data.contact,
+                                        addressLine1: data.addressLine1,
+                                        addressLine2: data.addressLine2,
+                                        city: data.city,
+                                        state: data.state,
+                                        country: data.country,
+                                        postalCode: data.postalCode
+                                    }
+                                }
+                            }
+                        );
+
+                        const updatedUser = await UserModel.findById(data._id);
+                        resolve(
+                            {
+                                msg: "Address saved",
+                                status: 1,
+                                user: { ...updatedUser._doc, password: null }
+                            }
+                        )
+                    } else {
+                        reject(
+                            {
+                                msg: "User not found",
+                                status: 0,
+                            }
+                        )
+                    }
+                } catch (error) {
+                    reject(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    removeAddress(data) {
+        console.log(data, "c");
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+
+                    const user = await UserModel.findById(data._id);
+
+                    if (!user) {
+                        return reject(
+                            {
+                                msg: "User not found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    //chackes the index is valid
+
+                    if (
+                        typeof data.index !== "number" ||
+                        data.index < 0 ||
+                        data.index >= user.shipping_address.length
+                    ) {
+                        return reject({
+                            msg: "Invalid address index",
+                            status: 0,
+                        });
+                    }
+
+                    user.shipping_address.splice(data.index, 1);
+                    await user.save();
+
+                    resolve(
+                        {
+                            msg: "Address removed",
+                            status: 1,
+                            user: {...user._doc, password: null}
+                        }
+                    )
+
+                } catch (error) {
+                    console.log(error)
+                    reject(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
     moveToDb(data, userId) {
+        console.log(data, "moveToDb")
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -126,7 +334,8 @@ class UserController {
                     if (data) {
                         const allPromise = data.map(
                             async (cartItem, cartIndex) => {
-                                const existingProduct = await CartModel.findOne({ product_id: cartItem.product_id, user_id: userId }) ?? null;
+                                console.log(cartItem, "cartItem in moveToDb");
+                                const existingProduct = await CartModel.findOne({ product_id: cartItem.product_id._id, user_id: userId, size: cartItem.size }) ?? null;
                                 if (existingProduct) {
                                     // update product qty in cart
 
@@ -154,7 +363,8 @@ class UserController {
                                         {
                                             user_id: userId,
                                             product_id: cartItem.product_id._id,
-                                            qty: Number(cartItem.qty)
+                                            qty: Number(cartItem.qty),
+                                            size: cartItem.size,
                                         }
                                     ).save().then(
                                         (success) => {
@@ -200,12 +410,13 @@ class UserController {
     }
 
     addToCart(data) {
+        console.log(data, "data in c")
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    const existingProduct = await CartModel.findOne({ product_id: data.product_id, user_id: data.user_id });
-                    if(existingProduct) {
-                        await CartModel.updateOne({ _id: existingProduct._id }, 
+                    const existingProduct = await CartModel.findOne({ product_id: data.product_id, user_id: data.user_id, size: data.size });
+                    if (existingProduct) {
+                        await CartModel.updateOne({ _id: existingProduct._id },
                             {
                                 $inc: {
                                     qty: 1
@@ -221,20 +432,29 @@ class UserController {
                             }
                         )
 
-                    }else {
+                    } else {
                         await new CartModel(
                             {
                                 user_id: data.user_id,
                                 product_id: data.product_id,
+                                size: data.size,
                                 qty: 1
                             }
                         ).save().then(
                             (success) => {
                                 console.log(success);
+                                resolve({
+                                    msg: "Product added to cart",
+                                    status: 1
+                                });
                             }
                         ).catch(
                             (error) => {
                                 console.log(error);
+                                reject({
+                                    msg: "Failed to add product",
+                                    status: 0
+                                });
                             }
                         )
                     }
@@ -250,6 +470,160 @@ class UserController {
             }
         )
     }
+
+    removeFromCart(data) {
+        console.log(data, "removeFromCart");
+        return new Promise(async (resolve, reject) => {
+            try {
+                const existingProduct = await CartModel.findOne({
+                    product_id: data.product_id,
+                    user_id: data.user_id,
+                    size: data.size
+                });
+
+                if (existingProduct) {
+                    const result = await CartModel.deleteOne({ _id: existingProduct._id });
+                    console.log(result);
+
+                    resolve({
+                        msg: "Product removed successfully",
+                        status: 1
+                    });
+
+                } else {
+                    // Important: handle case when product doesn't exist
+                    resolve({
+                        msg: "Product not found in cart",
+                        status: 0
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+                reject({
+                    msg: "Internal Server error",
+                    status: 0
+                });
+            }
+        });
+    }
+
+    updateCartQty(data) {
+        console.log(data);
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const existingProduct = await CartModel.findOne({ product_id: data.product_id, user_id: data.user_id, size: data.size });
+                    console.log(existingProduct._id, "existingProduct");
+
+                    if (existingProduct) {
+                        await CartModel.updateOne(
+                            { _id: existingProduct._id },
+                            {
+                                $set: {
+                                    qty: data.qty
+                                }
+                            }
+                        ).then(
+                            (success) => {
+                                console.log(success);
+                                resolve(
+                                    {
+                                        msg: "Cart updated successfully",
+                                        status: 1
+                                    }
+                                )
+                            }
+                        ).catch(
+                            (error) => {
+                                console.log(error);
+                                reject(
+                                    {
+                                        msg: "Failed to update cart",
+                                        status: 0
+                                    }
+                                )
+                            }
+                        )
+                    } else {
+                        reject(
+                            {
+                                msg: "Product not found in cart",
+                                status: 0
+                            }
+                        )
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: "Internal Server error",
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    updateSize(data) {
+        console.log(data, 'updateSize')
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    
+                    const existingProduct = await CartModel.findOne({product_id: data.product_id, user_id: data.user_id, size: data.oldSize});
+                    if (existingProduct) {
+                        await CartModel.updateOne(
+                            {_id: existingProduct._id},
+                            {
+                                $set: {
+                                    size: data.newSize
+                                }
+                            }
+                        ).then(
+                            (success) => {
+                                resolve(
+                                    {
+                                        msg: 'Size updated successfully',
+                                        status: 1
+                                    }
+                                )
+                            }
+                        ).catch(
+                            (error) => {
+                                console.log(error);
+                                reject(
+                                    {
+                                        msg: 'Size not updated',
+                                        status: 0 
+                                    }
+                                )
+                            }
+                        )
+                    }else {
+                        reject(
+                            {
+                                msg: 'Product not found in cart',
+                                status: 0
+                            }
+                        )
+                    }
+                } catch (error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: 'Internal server error',
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
 }
+
+
 
 module.exports = UserController;

@@ -3,7 +3,7 @@ const ProductController = require("../controllers/ProductController");
 const ProductRouter = express.Router();
 const fileUpload = require("express-fileupload");
 
-//read category start
+//read product start
 
 ProductRouter.get(
     "/:id?",
@@ -25,6 +25,28 @@ ProductRouter.get(
 )
 
 //read product end
+
+//read single product start
+
+ProductRouter.get(
+    "/id/:id",
+    (req, res) => {
+        const result = new ProductController().readSingleProduct(req.params.id);
+
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//read single product end
 
 //create product start
 

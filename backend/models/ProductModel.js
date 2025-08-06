@@ -38,6 +38,10 @@ const ProductSchema = mongoose.Schema(
             type: mongoose.Schema.ObjectId,
             ref: "colors"
         }],
+        sizes: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "sizes"
+        }],
         main_img: {
             type: String,
             default: null

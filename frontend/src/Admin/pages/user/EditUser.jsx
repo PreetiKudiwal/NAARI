@@ -53,7 +53,7 @@ export default function EditUser() {
             background:
               "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
           }}>
-      <h2 className="text-2xl font-semibold mb-6 text-yellow-200">Edit User</h2>
+      <h2 className="text-2xl font-semibold mb-6">Edit User</h2>
       <form className="space-y-5" onSubmit={editUser}>
         <div>
           <label className="block font-medium mb-1">Name</label>
@@ -88,7 +88,7 @@ export default function EditUser() {
         </div>
         <button
           type="submit"
-          className="bg-yellow-200 w-full text-gray-700 font-medium px-6 py-2 rounded-lg hover:bg-yellow-300"
+          className="w-full font-medium px-6 py-2 rounded-lg bg-neutral-600 addButton"
         >
           Update User
         </button>

@@ -9,6 +9,7 @@ const ProductRouter = require("./routers/ProductRouter");
 const AdminRouter = require("./routers/AdminRouter");
 const UserRouter = require('./routers/UserRouter');
 const OrderRouter = require('./routers/OrderRouter');
+const SizeRouter = require('./routers/SizeRouter');
 //middleware
 
 server.use(express.json());
@@ -25,6 +26,7 @@ server.use("/product", ProductRouter);
 server.use("/admin", AdminRouter);
 server.use("/user", UserRouter);
 server.use("/order", OrderRouter);
+server.use("/size", SizeRouter);
 
 console.log(process.env.MONGODB_KEY);
 mongoose.connect(

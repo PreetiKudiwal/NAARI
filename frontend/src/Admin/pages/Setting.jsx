@@ -146,7 +146,7 @@ export default function Setting() {
       <div className="text-right">
         <button
           onClick={handleSave}
-          className="bg-yellow-200 hover:bg-yellow-300 text-gray-700 font-medium px-6 py-2 rounded flex items-center gap-2"
+          className="bg-neutral-600 font-medium px-6 py-2 rounded flex items-center gap-2 addButton"
         >
           <FaCheck />
           Save Settings

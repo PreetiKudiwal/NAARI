@@ -70,7 +70,7 @@ export default function AdminHeader() {
         <div className="flex items-center gap-1" >
           <div className="text-sm">Welcome! {admin?.name}</div>
           <div className="relative" ref={dropdownRef}>
-          <div onClick={() => setIsOpen(!isOpen)} className=" text-[30px] bg-yellow-200 text-black border border-yellow-200 cursor-pointer rounded-full">
+          <div onClick={() => setIsOpen(!isOpen)} className=" text-[30px] bg-white text-black border border-white cursor-pointer rounded-full">
             <FaCircleUser />
           </div>
 

@@ -12,6 +12,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const cart = useSelector((state) => state.cart.data);
+  console.log(cart, 'cart');
 
   const loginUser = (event) => {
     event.preventDefault();
@@ -24,6 +25,7 @@ export default function Login() {
     axios
       .post(API_BASE_URL + "/user/login", data)
       .then((success) => {
+        console.log(success, 'user-login');
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -36,9 +38,11 @@ export default function Login() {
               cart
             )
             .then((res) => {
+              console.log(res, "user-movetodb");
               const latestCart = res.data.latestCart;
               let totalOriginalPrice = 0;
               let totalFinalPrice = 0;
+              console.log(latestCart, "latestCart");
 
               const data =
                 Array.isArray(latestCart) &&
@@ -46,10 +50,11 @@ export default function Login() {
                   totalOriginalPrice +=
                     cartItem.product_id.original_price * cartItem.qty;
                   totalFinalPrice +=
-                    cartItem.product_id.final_price * cartItem.qty;
+                    cartItem.product_id.finel_price * cartItem.qty;
                   return {
                     product_id: cartItem.product_id,
                     qty: cartItem.qty,
+                    size: cartItem.size,
                   };
                 });
 

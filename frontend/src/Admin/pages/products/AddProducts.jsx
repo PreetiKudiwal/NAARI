@@ -8,6 +8,7 @@ import { IoClose } from "react-icons/io5";
 export default function AddProducts() {
 
   const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const productName = useRef();
   const productSlug = useRef();
   const originalPrice = useRef();
@@ -18,7 +19,7 @@ export default function AddProducts() {
     const [error, setError] = useState("");
   
 
-  const {allColor, fetchAllColor, fetchAllCategory, allCategory, PRODUCT_URL, API_BASE_URL, toastNotify} = useContext(MainContext);
+  const {allColor, fetchAllColor, fetchAllCategory, fetchAllSize, allSize, allCategory, PRODUCT_URL, API_BASE_URL, toastNotify} = useContext(MainContext);
 
   const createSlug = () => {
     productSlug.current.value = productName.current.value
@@ -115,7 +116,8 @@ export default function AddProducts() {
       formData.append("short_description", event.target.shortDescription.value);
       formData.append("long_description", event.target.longDescription.value);
       formData.append("category_id", event.target.category_id.value);
-      formData.append("colors", JSON.stringify(selectedColors))
+      formData.append("colors", JSON.stringify(selectedColors));
+      formData.append("sizes", JSON.stringify(selectedSizes));
       formData.append("main_img", event.target.mainImage.files[0])
 
       axios.post(API_BASE_URL + PRODUCT_URL + "/create", formData).then(
@@ -138,13 +140,14 @@ export default function AddProducts() {
     () => {
       fetchAllCategory();
       fetchAllColor();
+      fetchAllSize();
     }, []
   )
 
   return (
     <div className="container mx-auto p-8">
       <h2 className="text-2xl text-white font-bold mb-4">Add Products</h2>
-      <form onSubmit={addProduct} className=" bg-white p-8 rounded-lg flex flex-col gap-8 text-white"
+      <form onSubmit={addProduct} className="p-8 rounded-lg flex flex-col gap-8 text-white"
       style={{
         background:
           "linear-gradient(160deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
@@ -222,6 +225,37 @@ export default function AddProducts() {
           </div>
 
           <div>
+            <label className="block font-medium mb-2">Size</label>
+            
+
+            <Select styles={customStyles}
+            onChange={
+              (options) => {
+                const allSizeId = options.map(
+                  (data, index) => {
+                    return data.value;
+                  }
+                )
+                setSelectedSizes(allSizeId);
+              }
+            }
+            closeMenuOnSelect={false}
+            isMulti
+            options={
+              Array.isArray(allSize)
+              &&
+              allSize?.map(
+                (size, index) => {
+                  return(
+                    { value: size._id, label: size.sizeLabel }
+                  )
+                }
+              )
+            } />
+          </div>
+      </div>
+
+      <div>
             <label className="block font-medium mb-2">
               Short Description
             </label>
@@ -231,7 +265,6 @@ export default function AddProducts() {
               placeholder="Enter short description"
             ></textarea>
           </div>
-      </div>
 
       <div>
             <label className="block font-medium mb-2">
@@ -273,7 +306,7 @@ export default function AddProducts() {
                     <img
                       src={previewURL}
                       alt="Selected Preview"
-                      className="max-w-20 max-h-20 rounded border border-gray-500"
+                      className="max-w-20 rounded border border-gray-500"
                     />
                     <button
                       type="button"
@@ -292,7 +325,9 @@ export default function AddProducts() {
             <label className="block font-medium mb-2">Category</label>
             <Select styles={customStyles}
             name="category_id"
-            options={allCategory?.map(
+            options={Array.isArray(allCategory)
+               &&
+              allCategory?.map(
                 (category, index) => {
                   return(
                     { value: category._id, label: category.categoryName }
@@ -321,7 +356,9 @@ export default function AddProducts() {
             closeMenuOnSelect={false}
             isMulti
             options={
-              allColor.map(
+              Array.isArray(allColor)
+              &&
+              allColor?.map(
                 (color, index) => {
                   return(
                     { value: color._id, label: color.colorName }
@@ -338,7 +375,7 @@ export default function AddProducts() {
           
 
           <div>
-            <button className="w-full bg-yellow-200 text-gray-700 py-3 rounded-md text-lg font-semibold hover:bg-yellow-300 transition duration-300">
+            <button className="w-full py-3 rounded-md text-lg font-semibold bg-neutral-600 addButton">
               Add Product
             </button>
           </div>

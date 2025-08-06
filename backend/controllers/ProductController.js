@@ -1,35 +1,70 @@
 const { generateUniqueImageName } = require("../helping");
 const CategoryModel = require("../models/CategoryModel");
 const ProductModel = require("../models/ProductModel");
+const SizeModel = require("../models/SizeModel");
 
 class ProductController {
 
     read(id, query) {
+        console.log(query);
         return new Promise(
             async (resolve, reject) => {
                 try {
-                 let newQuery = {};   
-                if(query.categorySlug != "null") {
-                    const category = await CategoryModel.findOne({categorySlug: query.categorySlug});
+                    let newQuery = {};
+                    if (query.categorySlug != "null") {
+                        const category = await CategoryModel.findOne({ categorySlug: query.categorySlug });
 
-                    if (!category) {
-                        return reject({
-                            msg: "Category not found",
-                            status: 0
-                        });
+                        if (!category) {
+                            return reject({
+                                msg: "Category not found",
+                                status: 0
+                            });
+                        }
+
+                        newQuery.category_id = category._id;
                     }
 
-                    newQuery.category_id = category._id;
-                }
+                    if (query.productColor != "null") {
 
-                if(query.productColor != "null") {
+                        newQuery.colors = query.productColor;
+                    }
 
-                    newQuery.colors = query.productColor;
-                }
+                    if (query.size && query.size !== "null") {
+                        const sizeDoc = await SizeModel.findOne({ sizeSlug: query.size });
+
+                        if (!sizeDoc) {
+                            return reject({
+                                msg: "Size not found",
+                                status: 0
+                            });
+                        }
+
+                        newQuery.sizes = sizeDoc._id;
+                    }
+
+
+                    if (query.priceFrom || query.priceTo) {
+                        newQuery.finel_price = {};
+
+                        if (query.priceFrom && !isNaN(parseInt(query.priceFrom))) {
+                            newQuery.finel_price.$gte = parseInt(query.priceFrom);
+                        }
+
+                        if (query.priceTo && !isNaN(parseInt(query.priceTo))) {
+                            newQuery.finel_price.$lte = parseInt(query.priceTo);
+                        }
+
+                        // Remove empty object if both were invalid
+                        if (Object.keys(newQuery.finel_price).length === 0) {
+                            delete newQuery.finel_price;
+                        }
+                    }
+
+
 
                     let product;
                     if (id) {
-                        product = await ProductModel.findById(id);
+                        product = await ProductModel.findById(id).populate(["category_id", "colors"]);
                     } else {
                         const limit = parseInt(query.limit);
                         product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 10);
@@ -47,6 +82,48 @@ class ProductController {
                     reject(
                         {
                             msg: 'Internal server error',
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    readSingleProduct(id) {
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    if (!id) {
+                        return reject(
+                            {
+                                msg: "Product not found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    const single_product = await ProductModel.findById(id).populate(["category_id", "colors"]);
+
+                    if (!single_product) {
+                        return reject({
+                            msg: "Product not found",
+                            status: 0
+                        });
+                    }
+
+                    resolve(
+                        {
+                            msg: "Product found",
+                            status: 1,
+                            single_product
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: "Internal server error",
                             status: 0
                         }
                     )
@@ -77,6 +154,7 @@ class ProductController {
                                         {
                                             ...data,
                                             colors: JSON.parse(data.colors),
+                                            sizes: JSON.parse(data.sizes),
                                             main_img: newProductImageName
                                         }
                                     );
@@ -128,41 +206,41 @@ class ProductController {
     }
 
     delete(id) {
-            return new Promise(
-                (resolve, reject) => {
-                    try {
-                        ProductModel.deleteOne({_id: id}).then(
-                            (success) => {
-                                resolve(
-                                    {
-                                        msg: 'Product deleted successfully',
-                                        status: 1 
-                                    }
-                                )
-                            }
-                        ).catch(
-                            (error) => {
-                                console.log(error);
-                                reject(
-                                    {
-                                        msg: 'Product not deleted',
-                                        status: 0
-                                    }
-                                )
-                            }
-                        )
-                    } catch (error) {
-                        console.log(error);
-                        reject(
-                            {
-                                msg: 'Internal server error',
-                                status: 0
-                            }
-                        )
-                    }
+        return new Promise(
+            (resolve, reject) => {
+                try {
+                    ProductModel.deleteOne({ _id: id }).then(
+                        (success) => {
+                            resolve(
+                                {
+                                    msg: 'Product deleted successfully',
+                                    status: 1
+                                }
+                            )
+                        }
+                    ).catch(
+                        (error) => {
+                            console.log(error);
+                            reject(
+                                {
+                                    msg: 'Product not deleted',
+                                    status: 0
+                                }
+                            )
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: 'Internal server error',
+                            status: 0
+                        }
+                    )
                 }
-            )
-        }
+            }
+        )
+    }
 
     changePersentValue(id, flag) {
         return new Promise(

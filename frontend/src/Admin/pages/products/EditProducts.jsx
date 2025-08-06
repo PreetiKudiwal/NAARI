@@ -8,6 +8,8 @@ import { IoClose } from "react-icons/io5";
 
 export default function EditProducts() {
   const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const { product_id } = useParams();
   const productName = useRef();
   const productSlug = useRef();
@@ -24,6 +26,8 @@ export default function EditProducts() {
     fetchAllColor,
     fetchAllCategory,
     fetchAllproduct,
+    fetchAllSize,
+    allSize,
     allProduct,
     allCategory,
     PRODUCT_URL,
@@ -120,8 +124,12 @@ export default function EditProducts() {
     formData.append("finel_price", finalPrice.current.value);
     formData.append("short_description", event.target.shortDescription.value);
     formData.append("long_description", event.target.longDescription.value);
-    formData.append("category_id", event.target.category_id.value);
-    formData.append("colors", JSON.stringify(selectedColors));
+    formData.append("category_id", selectedCategory?.value);
+    formData.append(
+      "colors",
+      JSON.stringify(selectedColors.map((color) => color.value))
+    );
+    formData.append("sizes", JSON.stringify(selectedColors))
     if (fileInputRef.current?.files[0]) {
       formData.append("main_img", fileInputRef.current.files[0]);
     }
@@ -145,8 +153,36 @@ export default function EditProducts() {
   useEffect(() => {
     fetchAllCategory();
     fetchAllColor();
+    fetchAllSize();
     fetchAllproduct(product_id);
   }, []);
+
+  // if (!allSize || !allSize.sizeLabel) return null;
+  // if (!allSize || !allSize.sizeLabel) return null;
+  // if (!allSize || !allSize.sizeLabel) return null;
+  // useEffect(() => {
+  //   if (allProduct.category_id && allCategory.length > 0) {
+  //     const matchedCategory = allCategory.find(
+  //       (cat) => cat._id === allProduct.category_id
+  //     );
+  //     if (matchedCategory) {
+  //       setSelectedCategory({
+  //         value: matchedCategory._id,
+  //         label: matchedCategory.categoryName,
+  //       });
+  //     }
+  //   }
+
+  //   if (allProduct.colors && allColor.length > 0) {
+  //     const selected = allColor
+  //       .filter((color) => allProduct.colors.includes(color._id))
+  //       .map((color) => ({
+  //         value: color._id,
+  //         label: color.colorName,
+  //       }));
+  //     setSelectedColors(selected); // Now this is the array of label/value objects
+  //   }
+  // }, [allProduct, allCategory, allColor]);
 
   return (
     <>
@@ -231,6 +267,37 @@ export default function EditProducts() {
             </div>
 
             <div>
+            <label className="block font-medium mb-2">Size</label>
+            
+
+            <Select styles={customStyles}
+            onChange={
+              (options) => {
+                const allSizeId = options.map(
+                  (data, index) => {
+                    return data.value;
+                  }
+                )
+                setSelectedSizes(allSizeId);
+              }
+            }
+            closeMenuOnSelect={false}
+            isMulti
+            options={
+              Array.isArray(allSize)
+              &&
+              allSize?.map(
+                (size, index) => {
+                  return(
+                    { value: size._id, label: size.sizeLabel }
+                  )
+                }
+              )
+            } />
+          </div>
+          </div>
+
+          <div>
               <label className="block font-medium mb-2">
                 Short Description
               </label>
@@ -241,7 +308,6 @@ export default function EditProducts() {
                 placeholder="Enter short description"
               ></textarea>
             </div>
-          </div>
 
           <div>
             <label className="block font-medium mb-2">Long Description</label>
@@ -307,9 +373,14 @@ export default function EditProducts() {
               <Select
                 styles={customStyles}
                 name="category_id"
-                options={Array.isArray(allCategory) && allCategory?.map((category, index) => {
-                  return { value: category._id, label: category.categoryName };
-                })}
+                value={selectedCategory}
+                onChange={(selectedOption) =>
+                  setSelectedCategory(selectedOption)
+                }
+                options={allCategory?.map((category) => ({
+                  value: category?._id,
+                  label: category?.categoryName,
+                }))}
               />
             </div>
 
@@ -317,22 +388,20 @@ export default function EditProducts() {
               <label className="block font-medium mb-2">Color</label>
               <Select
                 styles={customStyles}
-                onChange={(options) => {
-                  const allColorId = options.map((data, index) => {
-                    return data.value;
-                  });
-                  setSelectedColors(allColorId);
-                }}
                 closeMenuOnSelect={false}
                 isMulti
-                options={Array.isArray(allColor) && allColor?.map((color, index) => {
-                  return { value: color._id, label: color.colorName };
-                })}
+                name="colors"
+                value={selectedColors}
+                onChange={(options) => setSelectedColors(options)}
+                options={allColor?.map((color) => ({
+                  value: color?._id,
+                  label: color?.colorName,
+                }))}
               />
             </div>
           </div>
           <div>
-            <button className="w-full bg-yellow-200 text-gray-700 py-3 rounded-md text-lg font-semibold hover:bg-yellow-300 transition duration-300">
+            <button className="w-full py-3 rounded-md bg-neutral-600 text-lg font-semibold addButton">
               Update Product
             </button>
           </div>

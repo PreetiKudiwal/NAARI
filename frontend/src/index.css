@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* login popup animation :start */
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* toast animation  */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation-name: fadeInUp;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
 /* Custom styles for slick arrows */
 .slick-prev {
     left: 10px !important;
@@ -13,10 +46,22 @@
     z-index: 10;
   }
 
+  /* Admin Panel css :end */
+
   .product-pop-up {
     background: linear-gradient(145deg, #2e2e2e 0%, #1a1a1a 25%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
     color: white;
     width: 100%;
+    box-shadow: -2px -2px 5px 0px #ccc;
+  }
+
+  .addButton {
+    color: white;
+    transition: 0.2s;
+  }
+
+  .addButton:hover {
+    box-shadow: -2px -2px 5px 0px #ccc;
   }
 
   .swal2-title {
@@ -24,13 +69,25 @@
     font-weight: normal !important;
   }
 
+  .swal2-close {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #7e7b7b; /* default color */
+
+  }
+
+  .swal2-close:hover {
+  color: rgb(54, 53, 53); /* change to your desired hover color */
+}
+  
   .swal2-html-container {
    padding: 5px 18px !important;
   }
   .backgroundColor {
     background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
   }
-
+  
   .background {
   background: url("/images/background.jpg");
   background-position: center;
@@ -38,7 +95,95 @@
   background-repeat: no-repeat;
 }
 
+.swal-title {
+  color: white;
+}
+
+.swal-text {
+ color: white;
+}
+
+.custom-icon {
+  color: #525252 !important;
+  border-color: #525252 !important;
+}
+
+.custom-confirm-btn {
+  background-color: #525252 !important;
+}
+
+.custom-confirm-btn:hover {
+  box-shadow: -2px -2px 5px 0px #ccc;
+}
+
 ::selection {
   color: #374151;
-  background-color: #FEF08A;
+  background-color: white;
+}
+
+  /* Admin Panel css :end */
+
+  /* Website css :start */
+
+.font {
+  font-family: "Italianno", cursive;
+  letter-spacing: 3px;
+}
+
+.naari-font {
+  font-family: "Kalam", cursive;
+}
+
+.tillana-extrabold {
+  font-family: "Tillana", system-ui;
+  font-style: normal;
+  position: absolute;
+}
+ 
+.color {
+  color: #444343;
+}
+  /* Website css :start */
+.product-slider .slick-dots li {
+    background-color: rgba(41, 40, 40, 0.2);
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+}
+
+.product-slider .slick-dots .slick-active {
+    background-color: #b45309;
+}
+.product-slider .slick-dots li button:before {
+    color: transparent;
+}
+.product-slider .slick-dots li.slick-active button:before {
+    color: transparent;
+}
+.product-slider .slick-dots {
+    bottom: -20px;
+}
+
+.custom-button {
+  @apply flex items-center justify-center gap-2 text-white w-full font-semibold border border-black py-2 rounded;
+  background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
+}
+
+.custom-button:hover {
+  @apply opacity-90;
+}
+
+/* size button animation */
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s;
 }

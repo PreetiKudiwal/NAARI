@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { data, NavLink, useNavigate } from "react-router-dom";
 import { login, logout } from "../../Redux/Reducer/AdminSlice";
 import { MainContext } from "../../context/Context";
+import { LiaRulerCombinedSolid } from "react-icons/lia";
 
 export default function AdminSidebar() {
 
@@ -25,18 +26,23 @@ export default function AdminSidebar() {
     },
     {
       path: "/admin/category",
-      name: "Category",
+      name: "Categories",
       icon: <FaThList />,
     },
     {
       path: "/admin/color",
-      name: "Color",
+      name: "Colors",
       icon: <FaPalette />,
     },
     {
       path: "/admin/products",
       name: "Products",
       icon: <FaBox />,
+    },
+    {
+      path: "/admin/size",
+      name: "Sizes",
+      icon: <LiaRulerCombinedSolid />
     },
     {
       path: "/admin/user",
@@ -73,7 +79,7 @@ export default function AdminSidebar() {
     style={{
       background: "linear-gradient(145deg, #1a1a1a 0%, #2e2e2e 5%, #000000 100%)"
     }}>
-      <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
+      <h2 className="text-xl font-bold mb-6 text-center border-b-2 pb-4 border-zinc-700">Admin Panel</h2>
       <div className="flex flex-col h-full">
       <nav className="flex flex-col gap-4 h-[89%] border-b-2 border-zinc-700">
         {navMenu.map((navItem, navIndex) => {
@@ -90,7 +96,7 @@ export default function AdminSidebar() {
             >
               {({ isActive }) => (
                 <>
-                  <span className={`bg-gray-700 p-2 rounded-md ${isActive ? "text-gray-700 bg-yellow-200" : "text-yellow-200"}`}>
+                  <span className={`bg-gray-700 p-2 rounded-md ${isActive ? "text-gray-700 bg-white" : "text-white"}`}>
                     {navItem.icon}
                   </span>
                   <span className={`text-white ${aSideBar === false ? 'hidden' : ''}`}>{navItem.name}</span>

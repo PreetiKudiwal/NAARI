@@ -162,7 +162,7 @@ export default function AddCategory() {
           
             <button
               type="submit"
-              className="w-full bg-yellow-200 font-semibold text-gray-700 py-3 rounded-lg hover:bg-yellow-300"
+              className="w-full font-semibold py-3 rounded-lg bg-neutral-600 addButton"
             >
               Update Category
             </button>

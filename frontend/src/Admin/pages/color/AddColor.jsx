@@ -45,7 +45,7 @@ export default function AddColor() {
             background:
               "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
           }}>
-         <h2 className="text-2xl font-semibold text-yellow-200 mb-4">Add Color</h2>
+         <h2 className="text-2xl font-semibold text-white mb-4">Add Color</h2>
          <form onSubmit={addColor}>
            <div className="mb-4">
              <label className="block font-medium mb-2">Color Name</label>
@@ -82,7 +82,7 @@ export default function AddColor() {
            </div>
            <button
              type="submit"
-             className="w-full bg-yellow-200 text-gray-700 text-[18px] font-medium py-2 rounded-md hover:bg-yellow-300"
+             className="w-full text-[18px] font-medium py-2 rounded-md bg-neutral-600 addButton"
            >
              Add Color
            </button>

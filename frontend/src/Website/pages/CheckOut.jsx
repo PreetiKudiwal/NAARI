@@ -1,16 +1,22 @@
 import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MainContext } from "../../context/Context";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { emptyCart } from "../../Redux/Reducer/CartSlice";
 
 export default function CheckOut() {
+  const { toastNotify } = useContext(MainContext);
+  const { error, isLoading, Razorpay } = useRazorpay();
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const user = useSelector((state) => state.user.data);
+  console.log(user, "User Data");
   const cart = useSelector((state) => state.cart);
   const {API_BASE_URL} = useContext(MainContext)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const placeOrder = () => {
     axios.post(API_BASE_URL + '/order/order-place', {
@@ -21,15 +27,80 @@ export default function CheckOut() {
     }).then(
       (success) => {
         if (success.data.status == 1) {
-          navigate('/thankyou');
+          if (selectedPayment === 0) {
+            dispatch(emptyCart());
+            console.log(success, "Order placed successfully");
+            navigate(`/thankyou/${success.data.order_id}`);
+        }else{
+          console.log(success, "Razorpay Order");
+          handlePayment(success.data.razorpay_order.order_id, success.data.razorpay_order.razorpay_order);
         }
-      }
+      }}
     ).catch(
       (error) => {
-
+        console.error("Order placing failed:", error);
       }
     )
   }
+
+  const handlePayment = async (order_id, razorpay_order_id) => {
+
+  const options = {
+    key: "rzp_test_EUY1YwTsZFcSqN", // Enter the Key ID generated from the Dashboard
+    currency: "INR",
+    name: "नारी",
+    description: "Test Transaction",
+    // image: "/images/naarilogo.png",
+    order_id: razorpay_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
+    handler: async function (response) {
+      console.log(response);
+
+      try {
+        const res = await axios.post("http://localhost:5001/order/payment-success", {
+          order_id,
+          razorpay_response: response,
+          user_id: user._id,
+        });
+        console.log(res, "Payment Success Response");
+        toastNotify(res.data.msg, res.data.status)
+        if (res.data.status === 1) {
+          console.log(res)
+          dispatch(emptyCart());
+          navigate(`/thankyou/${order_id}`);
+        }
+        
+      } catch (error) {
+        console.error("Payment failed:", error);
+        
+      }
+    },
+    prefill: {
+      name: "Piyush Garg",
+      email: user?.email,
+      contact: "9999999999",
+    },
+    notes: {
+      address: "Razorpay Corporate Office",
+    },
+    theme: {
+      color: "#3399cc",
+    },
+  };
+
+  const rzp1 = new Razorpay(options);
+
+  rzp1.on("payment.failed", function (response) {
+    alert(response.error.code);
+    alert(response.error.description);
+    alert(response.error.source);
+    alert(response.error.step);
+    alert(response.error.reason);
+    alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id);
+  });
+
+  rzp1.open();
+};
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
@@ -64,10 +135,11 @@ export default function CheckOut() {
                   </div>
                 );
               })}
-              
+              <Link to={"/add-address"}>
               <button className="mt-4 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                 + Add New Address
               </button>
+              </Link>
             </div>
 
             {/* Payment Options */}

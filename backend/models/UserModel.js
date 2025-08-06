@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const ShippingAddressSchema = new mongoose.Schema(
     {
+        name: { type: String, required: true },
+        contact: { type: String, required: true },
         addressLine1: { type: String, required: true }, // Required field
         addressLine2: { type: String, required: false }, // Optional field
         city: { type: String, required: true },
@@ -31,7 +33,7 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Password is required"],
-            minlength: [7, "Password must be at least 6 characters long"],
+            minlength: [7, "Password must be at least 7 characters long"],
         },
         shipping_address: {
             type: [ShippingAddressSchema],

@@ -26,7 +26,16 @@ import Thankyou from './Website/pages/Thankyou'
 import Setting from './Admin/pages/Setting'
 import ViewUser from './Admin/pages/user/ViewUser'
 import EditUser from './Admin/pages/user/EditUser'
-
+import MyLayout from './Website/pages/MyLayout'
+import ViewProfile from './Website/pages/My/Profile/ViewProfile'
+import EditProfile from './Website/pages/My/Profile/EditProfile'
+import ViewAddress from './Website/pages/My/Profile/Address/ViewAddress'
+import AddAddress from './Website/pages/My/Profile/Address/AddAddress'
+import Orders from './Website/pages/My/Orders'
+import AddSize from './Admin/pages/size/AddSize'
+import ViewSize from './Admin/pages/size/ViewSize'
+import EditSize from './Admin/pages/size/EditSize'
+import Wishlist from './Website/pages/Wishlist'
 
 export default function App() {
 
@@ -50,7 +59,7 @@ export default function App() {
             element: <Cart />
           },
           {
-            path: "/detail",
+            path: "/detail/:product_id",
             element: <Detail />
           },
           {
@@ -58,7 +67,37 @@ export default function App() {
             element: <CheckOut />
           },
           {
-            path: "/thankyou",
+            path: "/wishlist",
+            element: <Wishlist />
+          },
+          {
+            path: "/my",
+            element: <MyLayout />,
+            children: [
+              {
+                path: "profile",
+                element: <ViewProfile />,
+              },
+              {
+                path: "profile/edit",
+                element: <EditProfile />
+              },
+              {
+                path: "address",
+                element: <ViewAddress />
+              }, 
+              {
+                path: "address/add",
+                element: <AddAddress />
+              }, 
+              {
+                path: "orders",
+                element: <Orders />
+              }
+            ]
+          },
+          {
+            path: "/thankyou/:order_id?",
             element: <Thankyou />
           }
         ]
@@ -130,6 +169,18 @@ export default function App() {
           {
             path: "user/edit/:user_id",
             element: <EditUser />
+          },
+          {
+            path: "size",
+            element: <ViewSize />
+          }, 
+          {
+            path: "size/add",
+            element: <AddSize />
+          },
+          {
+            path: "size/edit/:size_id",
+            element: <EditSize />
           }
         ]
       },

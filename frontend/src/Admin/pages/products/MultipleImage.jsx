@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MainContext } from "../../../context/Context";
 import axios from "axios";
 import { LuImagePlus } from "react-icons/lu";
@@ -14,6 +14,7 @@ export default function MultipleImage() {
     allProduct,
     fetchAllproduct,
   } = useContext(MainContext);
+  const navigate = useNavigate();
   const { product_id } = useParams();
     const fileInputRef = useRef();
 
@@ -52,6 +53,7 @@ export default function MultipleImage() {
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           event.target.reset();
+          navigate("/admin/products")
         }
         console.log(success);
       })
@@ -135,7 +137,7 @@ export default function MultipleImage() {
           </div>
 
           <div>
-            <button className="w-full mt-6 col-span-1 bg-yellow-200 text-gray-700 py-3 rounded-md text-lg font-semibold hover:bg-yellow-300 transition duration-300">
+            <button className="w-full mt-6 col-span-1 py-3 bg-neutral-600 rounded-md text-lg font-semibold addButton">
               Upload Images
             </button>
           </div>
