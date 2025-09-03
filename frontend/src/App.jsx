@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { createBrowserRouter, RouterProvider, Routes } from "react-router-dom"
 import WebsiteLayout from './Website/WebsiteLayout'
 import AdminLayout from './Admin/pages/AdminLayout'
@@ -36,8 +36,31 @@ import AddSize from './Admin/pages/size/AddSize'
 import ViewSize from './Admin/pages/size/ViewSize'
 import EditSize from './Admin/pages/size/EditSize'
 import Wishlist from './Website/pages/Wishlist'
+import Contact from './Website/pages/Contact'
+import About from './Website/pages/About'
+import SplashScreen from './Website/components/SplashScreen'
+import AdminRoute from './Admin/components/AdminRoute'
+import { useDispatch } from 'react-redux'
+import { logout } from './Redux/Reducer/AdminSlice'
 
 export default function App() {
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if splash has been shown before
+    const hasShownSplash = localStorage.getItem("splashShown");
+
+    if (!hasShownSplash) {
+      setLoading(true);
+      const timer = setTimeout(() => {
+        setLoading(false);
+        localStorage.setItem("splashShown", "true"); 
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const routes = createBrowserRouter(
 
@@ -53,6 +76,14 @@ export default function App() {
           {
             path: "/shop/:categorySlug?",
             element: <Shop />
+          },
+          {
+            path: "/contact",
+            element: <Contact />
+          },
+          {
+            path: "/about",
+            element: <About />
           },
           {
             path: "/cart",
@@ -112,6 +143,10 @@ export default function App() {
       },
       {
         path: "/admin",
+        element: <AdminRoute />,
+        children: [
+      {
+        path: "",
         element: <AdminLayout />,
         children: [
           {
@@ -183,6 +218,7 @@ export default function App() {
             element: <EditSize />
           }
         ]
+      } ]
       },
       {
         path: "/admin/login",
@@ -190,7 +226,12 @@ export default function App() {
       }
 
     ]
-  )
+  );
+
+   if (loading) {
+    return <SplashScreen />;
+  }
+
   return (
     <Context>
     <RouterProvider router={routes} />

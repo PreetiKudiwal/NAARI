@@ -67,7 +67,7 @@ class ProductController {
                         product = await ProductModel.findById(id).populate(["category_id", "colors"]);
                     } else {
                         const limit = parseInt(query.limit);
-                        product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 10);
+                        product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 100);
                     }
                     resolve(
                         {
@@ -383,6 +383,7 @@ class ProductController {
                                             $set: {
                                                 ...data,
                                                 colors: JSON.parse(data.colors),
+                                                sizes: JSON.parse(data.sizes),
                                                 main_img: newProductImageName
                                             }
                                         }
@@ -415,7 +416,8 @@ class ProductController {
                             {
                                 $set: {
                                     ...data,
-                                    colors: JSON.parse(data.colors)
+                                    colors: JSON.parse(data.colors),
+                                    sizes: JSON.parse(data.sizes)
                                 }
                             }
                         ).then(
@@ -453,6 +455,147 @@ class ProductController {
         )
     }
 
+    fetchSarees() {
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const result = await ProductModel.find({ category_id: "68a850320d5f3fb09771adab" }).limit(8);
+                    if (!result) {
+                        return reject(
+                            {
+                                msg: "No sarees found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    resolve(
+                        {
+                            msg: "Sarees found",
+                            status: 1,
+                            sarees: result
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    resolve(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+
+            }
+        )
+    }
+    
+    fetchLehengas() {
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const result = await ProductModel.find({ category_id: "68a84e680d5f3fb09771ada7" }).limit(8);
+                    if (!result) {
+                        return reject(
+                            {
+                                msg: "No lehengas found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    resolve(
+                        {
+                            msg: "lehengas found",
+                            status: 1,
+                            lehengas: result
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    resolve(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+
+            }
+        )
+    }
+
+    fetchSalwar() {
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const result = await ProductModel.find({ category_id: "68a851640d5f3fb09771aded" }).limit(8);
+                    if (!result) {
+                        return reject(
+                            {
+                                msg: "No salwar found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    resolve(
+                        {
+                            msg: "salwar found",
+                            status: 1,
+                            salwar: result
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    resolve(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+
+            }
+        )
+    }
+
+     fetchNew() {
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const result = await ProductModel.find().sort({ createdAt: -1 })
+                    .limit(8);
+                    if (!result || result.length === 0) {
+                        return reject(
+                            {
+                                msg: "No products found",
+                                status: 0
+                            }
+                        )
+                    }
+
+                    resolve(
+                        {
+                            msg: "products found",
+                            status: 1,
+                            items: result
+                        }
+                    )
+                } catch (error) {
+                    console.log(error);
+                    resolve(
+                        {
+                            msg: "Internal server error",
+                            status: 0
+                        }
+                    )
+                }
+
+            }
+        )
+    }
 }
+        
 
 module.exports = ProductController;

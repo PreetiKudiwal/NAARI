@@ -6,7 +6,7 @@ export const WishlistSlice = createSlice({
         data: []
     },
     reducers: {
-        addToWishlist(state) {
+        addToWishlist(state, current) {
 
         },
 
@@ -15,3 +15,7 @@ export const WishlistSlice = createSlice({
         }
     }
 })
+
+
+export const { addToWishlist, removeFormWishlist } = WishlistSlice.actions;
+export default WishlistSlice.reducer

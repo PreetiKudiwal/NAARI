@@ -3,41 +3,50 @@ const mongoose = require('mongoose');
 const SizeSchema = mongoose.Schema({
   sizeLabel: {
     type: String,
-    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'OneSize'],
     required: true
   },
   sizeSlug: {
     type: String,
-    enum: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
     required: true
   },
   bust: {
     type: Number,
-    required: true,
     min: 28,
-    max: 50 // Adjust as needed
+    max: 50, 
+    required: function () {
+      return this.sizeLabel !== 'OneSize';
+    }
   },
   waist: {
     type: Number,
-    required: true,
     min: 24,
-    max: 48 // Adjust as needed
+    max: 48,
+    required: function () {
+      return this.sizeLabel !== 'OneSize';
+    } 
   },
   hip: {
     type: Number,
-    required: true,
     min: 30,
-    max: 52 // Adjust as needed
+    max: 52,
+    required: function () {
+      return this.sizeLabel !== 'OneSize';
+    }
   },
   indiaSize: {
     type: Number,
     enum: [32, 34, 36, 38, 40, 42, 44],
-    required: true
+    required: function () {
+      return this.sizeLabel !== 'OneSize';
+    }
   },
   intlSize: {
     type: String,
     enum: ['0-2', '4-6', '8-10', '12-14', '16-18', '20-22'],
-    required: true
+    required: function () {
+      return this.sizeLabel !== 'OneSize';
+    }
   },
   status: {
     type: Boolean,

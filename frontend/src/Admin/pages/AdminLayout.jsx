@@ -3,9 +3,14 @@ import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Outlet, useParams } from "react-router-dom";
 import { MainContext } from "../../context/Context";
+import { useSelector } from "react-redux";
 
 export default function AdminLayout() {
   const { aSideBar, setASideBar } = useContext(MainContext);
+  const admin = useSelector((state) => state.admin.data);
+  console.log(admin,"admin from admin layout");
+  const user = useSelector((state) => state.user.data);
+  console.log(user,"user from admin layout");
 
   return (
     <div className="relative grid grid-cols-6 bg-black min-h-screen">

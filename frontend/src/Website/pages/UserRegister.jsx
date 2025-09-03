@@ -36,68 +36,73 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="min-h-screen bg-[url('/images/b2.jpg')]">
+      <div className="bg-black/50 w-full min-h-screen flex justify-center p-6">
+      <div className="w-full max-w-md bg-white px-8 color">
+        <div className="flex justify-center">
+          <img src="/images/logo.png" alt="logo" className="w-11 md:w-28"/>
+        </div>
+        <h2 className="text-4xl font-bold mb-6 text-center font">
           Create a New Account
         </h2>
 
         <form className="space-y-4" onSubmit={userRegister}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Full Name
             </label>
             <input
               type="text"
               name="name"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#967b2a]"
-              placeholder="John Doe"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-zinc-600"
+              placeholder="Name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Email
             </label>
             <input
               name="email"
               type="email"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#967b2a]"
-              placeholder="you@example.com"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-zinc-600"
+              placeholder="Email"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Password
             </label>
             <input
               type="password"
               name="password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#967b2a]"
-              placeholder="••••••••"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-zinc-600"
+              placeholder="Password"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#967b2a] hover:bg-[#7d6722] text-white font-semibold py-2 rounded-lg transition"
+            className="custom-button"
           >
             Register
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center text-gray-600">
+        <p className="mt-4 text-sm text-center">
           Already have an account?{" "}
           <Link to={`/userlogin?${searchParams.toString()}`}>
-            <span className="text-[#967b2a] hover:underline font-medium">
+            <span className="text-red-800 hover:underline font-medium">
               Login
             </span>
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

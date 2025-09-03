@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { lsGetData } from "../Redux/Reducer/CartSlice";
 import { UserLogin } from "../Redux/Reducer/UserSlice";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function WebsiteLayout() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function WebsiteLayout() {
   }, []);
   return (
     <>
+    <ScrollToTop />
       <Header />
       <Outlet />
       <Footer />

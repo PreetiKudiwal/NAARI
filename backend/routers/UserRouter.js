@@ -226,6 +226,28 @@ UserRouter.patch(
 
 // update cart size end
 
+//add to wishlist start
+
+UserRouter.put(
+    '/addtowishlist',
+    (req, res) => {
+        const result = new UserController().addToWishList(req.body);
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                res.send(error);
+                console.log(error);
+            }
+        )
+    }
+)
+
+//add to wishlist start
+
+
 
 
 module.exports = UserRouter;

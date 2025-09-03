@@ -9,7 +9,7 @@ export default function MyLayout() {
   return (
     <>
     <div className="container mx-auto md:pb-14 min-h-svh bg-white">
-      <div className="px-6 md:px-14 pb-2 md:border-b hidden md:block pt-14 fixed top-20 container mx-auto bg-white z-10">
+      <div className="px-6 md:px-14 pb-2 md:border-b hidden md:block pt-16 fixed top-16 container mx-auto z-10 bg-white">
         <h1 className="text-2xl text-black font-semibold">Account</h1>
         <div className="text-sm color">{user?.name}</div>
       </div>

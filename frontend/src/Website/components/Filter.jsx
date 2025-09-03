@@ -16,7 +16,7 @@ export default function Filter({
   appliedPrice,
   appliedSize,
   setSize,
-  size
+  size,
 }) {
   const {
     fetchAllCategory,
@@ -30,14 +30,12 @@ export default function Filter({
     setProductColor,
   } = useContext(MainContext);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-  console.log("Selected size:", size);
-}, [size]);
+
   const handleCategoryChange = (e) => {
     // const slug = e.target.value;
     // console.log("Selected category slug:", slug);
-
     // if (selectedCategorySlug === slug) {
     //   setSelectedCategorySlug(null);
     //   navigate("/shop");
@@ -47,26 +45,21 @@ export default function Filter({
     // }
   };
 
-const handleSizeChange = (sizeLabel) => {
-
-  if (appliedSize.includes(sizeLabel)) {
-    // Unselect if already selected
-    setAppliedSize((prev) => prev.filter((item) => item !== sizeLabel));
-  } else {
-    setAppliedSize((prev) =>
-      prev.includes(sizeLabel) ? prev : [...prev, sizeLabel]
-    );
-  }
-
-};
-
-
+  const handleSizeChange = (sizeLabel) => {
+    if (appliedSize.includes(sizeLabel)) {
+      // Unselect if already selected
+      setAppliedSize((prev) => prev.filter((item) => item !== sizeLabel));
+    } else {
+      setAppliedSize((prev) =>
+        prev.includes(sizeLabel) ? prev : [...prev, sizeLabel]
+      );
+    }
+  };
 
   // Color handler
   const handleColorChange = (colorId) => {
     // const newColorId = productColor === colorId ? null : colorId;
     // setProductColor(newColorId);
-
     // // Update URL searchParams
     // const updatedParams = new URLSearchParams(searchParams);
     // if (newColorId) {
@@ -74,23 +67,10 @@ const handleSizeChange = (sizeLabel) => {
     // } else {
     //   updatedParams.delete("productColor");
     // }
-
     // setSearchParams(updatedParams);
-
     // // Apply filter
     // setProductColor(newColorId);
   };
-
-  // Update selected color on page load or URL change
-  // useEffect(() => {
-  //   const colorFromURL = searchParams.get("productColor");
-  //   if (colorFromURL) {
-  //     setSelectedColorId(colorFromURL);
-  //     filterByColor(colorFromURL);
-  //   } else {
-  //     setSelectedColorId(null);
-  //   }
-  // }, [searchParams]);
 
   useEffect(() => {
     const priceFrom = searchParams.get("priceFrom");
@@ -98,8 +78,6 @@ const handleSizeChange = (sizeLabel) => {
 
     if (priceFrom && priceTo) {
       setPriceRange({ from: Number(priceFrom), to: Number(priceTo) });
-
-      
     }
   }, []);
 
@@ -116,8 +94,8 @@ const handleSizeChange = (sizeLabel) => {
         const slug = matchedCategory.categorySlug;
         navigate(`/shop/${slug}`);
       }
-    }else if (appliedCategory.length === 0) {
-      navigate('/shop');
+    } else if (appliedCategory.length === 0) {
+      navigate("/shop");
     }
   }, [appliedCategory, allCategory]);
 
@@ -135,7 +113,6 @@ const handleSizeChange = (sizeLabel) => {
         // setSelectedColorId(matchedColor._id);
         setProductColor(matchedColor._id);
       }
-      
     } else {
       const updatedParams = new URLSearchParams(searchParams);
       updatedParams.delete("productColor");
@@ -145,14 +122,14 @@ const handleSizeChange = (sizeLabel) => {
     }
   }, [appliedColor, allColor]);
 
-  
-
-   useEffect(() => {
-    if (Array.isArray(appliedSize) && appliedSize.length > 0 && allSize.length > 0) {
+  useEffect(() => {
+    if (
+      Array.isArray(appliedSize) &&
+      appliedSize.length > 0 &&
+      allSize.length > 0
+    ) {
       const lastSize = appliedSize[appliedSize.length - 1];
-      const matchedSize = allSize.find(
-        (size) => size.sizeLabel === lastSize
-      );
+      const matchedSize = allSize.find((size) => size.sizeLabel === lastSize);
 
       if (matchedSize) {
         const updatedParams = new URLSearchParams(searchParams);
@@ -160,7 +137,6 @@ const handleSizeChange = (sizeLabel) => {
         setSearchParams(updatedParams);
         setSize(matchedSize.sizeSlug);
       }
-      
     } else {
       const updatedParams = new URLSearchParams(searchParams);
       updatedParams.delete("size");
@@ -175,6 +151,16 @@ const handleSizeChange = (sizeLabel) => {
     fetchAllSize();
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    fetchAllCategory();
+    fetchAllColor();
+    fetchAllSize();
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 border-e">
       {/* category section Start */}
@@ -184,7 +170,15 @@ const handleSizeChange = (sizeLabel) => {
 
         {Array.isArray(allCategory) &&
           allCategory.map((category, index) => {
-            return (
+            return loading ? (
+              <div
+                key={index}
+                className="items-center text-sm cursor-pointer p-2 rounded"
+              >
+                {/* Skeleton for categories */}
+                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
+              </div>
+            ) : (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -235,7 +229,7 @@ const handleSizeChange = (sizeLabel) => {
           thumbClassName="h-3 w-3 bg-white rounded-full border-4 border-black cursor-pointer -mt-[0px]" // ⬅️ shift thumb up to center
           trackClassName="bg-yellow-700 h-1 top-1/2 transform -translate-y-1/2"
           min={100}
-          max={10000}
+          max={100000}
           step={100}
           value={[Number(priceRange.from), Number(priceRange.to)]}
           onChange={([from, to]) => {
@@ -263,7 +257,15 @@ const handleSizeChange = (sizeLabel) => {
               bgColor = "bg-yellow-700";
             }
 
-            return (
+            return loading ? (
+              <div
+                key={key}
+                {...restProps}
+                className={`${baseClasses} ${bgColor} rounded`}
+              >
+                <div className="w-full h-full bg-gray-200 rounded shimmer"></div>
+              </div>
+            ) : (
               <div
                 key={key} // ⬅️ set key explicitly
                 {...restProps} // ⬅️ spread rest of the props safely
@@ -272,11 +274,17 @@ const handleSizeChange = (sizeLabel) => {
             );
           }}
         />
-
-        <div className="flex justify-between text-sm mt-2">
-          <span>₹{priceRange.from}</span>
-          <span>₹{priceRange.to}</span>
-        </div>
+        {loading ? (
+          <div className="flex justify-between text-sm mt-2">
+            <span className="h-4 w-10 bg-gray-200 rounded shimmer"></span>
+            <span className="h-4 w-10 bg-gray-200 rounded shimmer"></span>
+          </div>
+        ) : (
+          <div className="flex justify-between text-sm mt-2">
+            <span>₹{priceRange.from}</span>
+            <span>₹{priceRange.to}</span>
+          </div>
+        )}
       </div>
 
       <div className="p-3 w-full flex flex-col border-b">
@@ -284,7 +292,15 @@ const handleSizeChange = (sizeLabel) => {
 
         {Array.isArray(allColor) &&
           allColor.map((color, index) => {
-            return (
+            return loading ? (
+              <div
+                key={index}
+                className="flex gap-2 items-center text-sm cursor-pointer p-2 rounded"
+              >
+                {/* Skeleton for colors */}
+                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
+              </div>
+            ) : (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -328,7 +344,15 @@ const handleSizeChange = (sizeLabel) => {
 
         {Array.isArray(allSize) &&
           allSize.map((s, index) => {
-            return (
+            return loading ? (
+              <div
+                key={index}
+                className="flex gap-2 items-center text-sm cursor-pointer p-2 rounded"
+              >
+                {/* Skeleton for sizes */}
+                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
+              </div>
+            ) : (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -338,13 +362,13 @@ const handleSizeChange = (sizeLabel) => {
                   name="size"
                   value={s.sizeSlug}
                   className="accent-yellow-700"
-                  checked={Array.isArray(appliedSize) && appliedSize.includes(s.sizeLabel)}
+                  checked={
+                    Array.isArray(appliedSize) &&
+                    appliedSize.includes(s.sizeLabel)
+                  }
                   onChange={() => handleSizeChange(s.sizeLabel)}
-                  
                 />
-                <span className="flex items-center gap-2">
-                  {s.sizeLabel}
-                </span>
+                <span className="flex items-center gap-2">{s.sizeLabel}</span>
               </label>
             );
           })}

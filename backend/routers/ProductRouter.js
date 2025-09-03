@@ -179,4 +179,91 @@ ProductRouter.delete(
 
 //delete product start
 
+//fetch Sarees start
+
+ProductRouter.get(
+    "/sarees/:id",
+    (req, res) => {
+        console.log(req.params.id, "ids");
+        const result = new ProductController().fetchSarees();
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//fetch Sarees end
+
+//fetch Lehengas start
+
+ProductRouter.get(
+    "/lehengas/:id",
+    (req, res) => {
+        console.log(req.params.id, "ids");
+        const result = new ProductController().fetchLehengas();
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//fetch Lehengas end
+
+//fetch Salwar start
+
+ProductRouter.get(
+    "/salwar/:id",
+    (req, res) => {
+        console.log(req.params.id, "ids");
+        const result = new ProductController().fetchSalwar();
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//fetch Salwar end
+
+//fetch Salwar start
+
+ProductRouter.get(
+    "/new-arrivals/:id",
+    (req, res) => {
+        const result = new ProductController().fetchNew();
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//fetch Salwar end
+
 module.exports = ProductRouter;

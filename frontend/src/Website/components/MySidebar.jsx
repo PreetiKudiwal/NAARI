@@ -31,7 +31,7 @@ export default function MySidebar() {
       icon: <LuBoxes />,
     },
     {
-      path: "/my/address",
+      path: "/wishlist",
       name: "Wishlist",
       icon: <IoMdHeart />,
     },

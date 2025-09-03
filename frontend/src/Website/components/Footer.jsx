@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#444343] text-white py-6 md:py-12 px-6">
+    <footer className="w-full bg-[#631801] text-white py-4 md:pt-12 px-6">
       <div className="w-full grid grid-cols-1 gap-6 md:gap-0 md:grid-cols-4 justify-between">
         {/* Brand Section */}
         <div>
           <Link to={'/'}>
-          <div className='rounded-full flex items-center justify-start cursor-pointer group overflow-hidden bg-white w-[135px] h-[125px]'>
-            <img src="/images/naarilogo.png" alt="" className="w-20 md:w-32 group-hover:scale-105 transition duration-300" />
+          <div className='rounded-full flex items-center justify-center cursor-pointer group overflow-hidden bg-white w-24 h-24 md:w-[120px] md:h-[120px]'>
+            <img src="/images/logo.png" alt="" className="w-20 md:w-24 group-hover:scale-105 transition duration-300" />
           </div>
           </Link>
           <p className="mt-4 text-sm text-white">
@@ -69,7 +69,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
+      <div className="text-center text-sm mt-8 border-t pt-4">
+          &copy; 2025 <span className="text-sm font-semibold naari-font">
+            नारी
+            </span>. All rights reserved.
+        </div>
       
     </footer>
   )

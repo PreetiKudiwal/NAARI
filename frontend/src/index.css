@@ -84,6 +84,7 @@ body {
   .swal2-html-container {
    padding: 5px 18px !important;
   }
+  
   .backgroundColor {
     background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
   }
@@ -186,4 +187,121 @@ body {
 
 .shake {
   animation: shake 0.5s;
+}
+
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #e5e7eb; /* Tailwind gray-300 */
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  height: 100%;
+  width: 150%;
+  background: linear-gradient(
+    90deg,
+    rgba(229, 231, 235, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(229, 231, 235, 0) 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 150%;
+  }
+}
+
+@keyframes dropRight {
+  0% {
+    transform: translateY(-100px) rotate(15deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(20px) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes dropLeft {
+  0% {
+    transform: translateY(-100px) rotate(-15deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(20px) rotate(-15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-drop-right {
+  animation: dropRight 0.5s ease-out forwards;
+}
+
+.animate-drop-left {
+  animation: dropLeft 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+ 
+/* Bestseller tag css  */
+
+.bestseller-tag {
+position: absolute;
+top: 0;
+left: 0;
+background-color: #b45309; /* yellow-700 */
+color: white;
+overflow: hidden;
+}
+
+
+.bestseller-text {
+position: relative;
+z-index: 1;
+}
+
+
+.sparkle {
+position: absolute;
+top: 0;
+left: -100%;
+width: 90%;
+height: 100%;
+background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+z-index: 1;
+animation: sparkle-move 2.5s linear infinite;
+}
+
+
+@keyframes sparkle-move {
+0% { left: -40%; }
+100% { left: 100%; }
 }

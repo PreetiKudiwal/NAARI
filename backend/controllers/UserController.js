@@ -74,7 +74,7 @@ class UserController {
             async (resolve, reject) => {
                 try {
 
-                    const user = await UserModel.findOne({ email: data.email });
+                    const user = await UserModel.findOne({ email: data.email }).populate("wishlist","name main_img original_price discount_percentage finel_price sizes stock");
 
                     if (user) {
 
@@ -83,8 +83,8 @@ class UserController {
                                 {
                                     msg: 'Login successfully',
                                     status: 1,
-                                    user: { ...user.toJSON(), password: null },
-                                    token: accessToken(user.toJSON())
+                                    user: { ...user?.toJSON(), password: null },
+                                    token: accessToken(user?.toJSON())
                                 }
                             )
                         } else {
@@ -308,7 +308,7 @@ class UserController {
                         {
                             msg: "Address removed",
                             status: 1,
-                            user: {...user._doc, password: null}
+                            user: { ...user._doc, password: null }
                         }
                     )
 
@@ -381,7 +381,7 @@ class UserController {
                         )
                         await Promise.all(allPromise);
 
-                        const latestCart = await CartModel.find({ user_id: userId }).populate("product_id", "_id original_price finel_price ");
+                        const latestCart = await CartModel.find({ user_id: userId }).populate("product_id", "_id original_price finel_price sizes main_img name stock discount_percentage");
 
                         resolve(
                             {
@@ -425,10 +425,22 @@ class UserController {
                         ).then(
                             (success) => {
                                 console.log(success);
+                                resolve(
+                                    {
+                                        msg: 'Product added to cart',
+                                        status: 1
+                                    }
+                                )
                             }
                         ).catch(
                             (error) => {
                                 console.log(error);
+                                reject(
+                                    {
+                                        msg: 'Failed to add product',
+                                        status: 0
+                                    }
+                                )
                             }
                         )
 
@@ -571,11 +583,11 @@ class UserController {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    
-                    const existingProduct = await CartModel.findOne({product_id: data.product_id, user_id: data.user_id, size: data.oldSize});
+
+                    const existingProduct = await CartModel.findOne({ product_id: data.product_id, user_id: data.user_id, size: data.oldSize });
                     if (existingProduct) {
                         await CartModel.updateOne(
-                            {_id: existingProduct._id},
+                            { _id: existingProduct._id },
                             {
                                 $set: {
                                     size: data.newSize
@@ -596,12 +608,12 @@ class UserController {
                                 reject(
                                     {
                                         msg: 'Size not updated',
-                                        status: 0 
+                                        status: 0
                                     }
                                 )
                             }
                         )
-                    }else {
+                    } else {
                         reject(
                             {
                                 msg: 'Product not found in cart',
@@ -621,6 +633,62 @@ class UserController {
             }
         )
     }
+
+    addToWishList(data) {
+    console.log(data, 'addToWishList');
+    return new Promise(
+        async (resolve, reject) => {
+            try {
+                const { user_id, product_id } = data;
+                if (!user_id || !product_id) {
+                    return reject({
+                        msg: 'Missing user_id or product_id',
+                        status: 0
+                    });
+                }
+
+                let user = await UserModel.findById(user_id);
+
+                if (!user) {
+                    return reject({
+                        msg: 'User not found',
+                        status: 0
+                    });
+                }
+
+                if (user.wishlist.some(id => id.toString() === product_id.toString())) {
+                    // remove product from wishlist
+                    user.wishlist = user.wishlist.filter(
+                        id => id.toString() !== product_id.toString()
+                    );
+                    await user.save();
+                } else {
+                    // add product to wishlist
+                    user.wishlist.push(product_id);
+                    await user.save();
+                }
+
+                // Populate wishlist with product details
+                const populatedUser = await UserModel.findById(user_id).populate("wishlist","name main_img original_price discount_percentage finel_price sizes stock discount_percentage").lean();
+
+                return resolve({
+                    msg: user.wishlist.some(id => id.toString() === product_id.toString()) 
+                        ? 'Product added to wishlist' 
+                        : 'Product removed from wishlist',
+                    status: 1,
+                    user: { ...populatedUser, password: null }
+                });
+
+            } catch (error) {
+                console.log(error);
+                reject({
+                    msg: 'Internal server error',
+                    status: 0
+                });
+            }
+        }
+    );
+}
 
 }
 

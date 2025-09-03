@@ -1,10 +1,21 @@
-import React, { use } from 'react'
+import React, { use, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function ViewProfile() {
   const user = useSelector((state) => state.user.data);
+  const navigate = useNavigate();
   const displayOrNA = (value) => (value ? value : '- not added -');
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    if (!user) {
+      navigate("/userlogin?ref=profile");
+    }
+  }, 100); 
+
+  return () => clearTimeout(timer);
+}, [user]);
 
   return (
     

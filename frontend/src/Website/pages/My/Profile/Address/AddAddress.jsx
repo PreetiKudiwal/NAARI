@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { MainContext } from "../../../../../context/Context";
 import { useDispatch, useSelector } from "react-redux";
 import { UserLogin } from "../../../../../Redux/Reducer/UserSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 export default function AddAddress() {
   const { API_BASE_URL, toastNotify } = useContext(MainContext);
   const user = useSelector((state) => state.user.data);
+  const [searchParams, setSearchParams] = useSearchParams();
   console.log(user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,13 +49,31 @@ export default function AddAddress() {
             })
           );
           event.target.reset();
-          navigate("/my/address");
+          
         }
       })
       .catch((error) => {
         console.log(error);
       });
+
+      if (searchParams.get("ref") == "checkout" && user?.shipping_address?.length > 0) {
+      navigate("/checkout");
+    }else{
+      navigate("/my/address");
+    }
   };
+
+  
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!user) {
+        navigate("/userlogin?ref=profile");
+      }
+    }, 100); 
+  
+    return () => clearTimeout(timer);
+  }, [user]);
 
   return (
     <div className="w-full mx-auto px-2 pb-6 md:p-6 bg-white border-t-0 md:border-t border lg:px-20">

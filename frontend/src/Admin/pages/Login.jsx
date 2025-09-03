@@ -39,10 +39,10 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (admin || lsData) {
-      navigate("/admin");
-    }
-  });
+  if (admin || lsData) {
+    navigate("/admin", { replace: true });
+  }
+}, [admin, lsData, navigate]);
 
   return (
     <div className="min-h-screen flex justify-end background">

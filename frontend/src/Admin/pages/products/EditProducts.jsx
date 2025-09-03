@@ -20,6 +20,8 @@ export default function EditProducts() {
   const [previewURL, setPreviewURL] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  console.log(selectedSizes, 'selectedSizes');
+  console.log(selectedColors, 'selectedColors');
 
   const {
     allColor,
@@ -129,7 +131,7 @@ export default function EditProducts() {
       "colors",
       JSON.stringify(selectedColors.map((color) => color.value))
     );
-    formData.append("sizes", JSON.stringify(selectedColors))
+    formData.append("sizes", JSON.stringify(selectedSizes))
     if (fileInputRef.current?.files[0]) {
       formData.append("main_img", fileInputRef.current.files[0]);
     }

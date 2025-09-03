@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MainContext } from "../../../../context/Context";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +57,16 @@ export default function EditProfile() {
       showCloseButton: true,
     });
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!user) {
+        navigate("/userlogin?ref=profile");
+      }
+    }, 100); 
+  
+    return () => clearTimeout(timer);
+  }, [user]);
 
   return (
     <div className="w-full mx-auto px-2 pb-6 md:p-6 bg-white border-t-0 md:border-t border lg:px-16">

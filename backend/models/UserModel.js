@@ -38,7 +38,13 @@ const userSchema = new mongoose.Schema(
         shipping_address: {
             type: [ShippingAddressSchema],
             default: [],
-        }
+        },
+        wishlist: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: "products",
+            }
+        ]
     },
     {
         timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields

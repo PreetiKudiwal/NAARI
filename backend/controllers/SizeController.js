@@ -7,8 +7,25 @@ class SizeController {
             (resolve, reject) => {
                 try {
 
-                    if (data.sizeLabel && data.sizeSlug && data.bust && data.waist && data.hip && data.indiaSize && data.intlSize) {
-                        const size = new SizeModel(
+                    if (data.sizeLabel === "OneSize") {
+                if (!data.sizeLabel || !data.sizeSlug) {
+                    return reject({
+                        msg: 'Fill out all required fields',
+                        status: 0
+                    });
+                }
+            } 
+            // If it's NOT OneSize, require all fields
+            else {
+                if (!data.sizeLabel || !data.sizeSlug || !data.bust || !data.waist || !data.hip || !data.indiaSize || !data.intlSize) {
+                    return reject({
+                        msg: 'Fill out all required fields',
+                        status: 0
+                    });
+                }
+            }
+
+            const size = new SizeModel(
                             {
                                 ...data
                             }
@@ -33,14 +50,40 @@ class SizeController {
                                 )
                             }
                         )
-                    } else {
-                        reject(
-                            {
-                                msg: 'All fields are required',
-                                status: 0
-                            }
-                        )
-                    }
+                    // if (data.sizeLabel && data.sizeSlug && data.bust && data.waist && data.hip && data.indiaSize && data.intlSize) {
+                    //     const size = new SizeModel(
+                    //         {
+                    //             ...data
+                    //         }
+                    //     );
+                    //     size.save().then(
+                    //         (success) => {
+                    //             resolve(
+                    //                 {
+                    //                     msg: 'size created successfully',
+                    //                     status: 1
+                    //                 }
+                    //             )
+                    //         }
+                    //     ).catch(
+                    //         (error) => {
+                    //             console.log(error)
+                    //             reject(
+                    //                 {
+                    //                     msg: 'size not created',
+                    //                     status: 0
+                    //                 }
+                    //             )
+                    //         }
+                    //     )
+                    // } else {
+                    //     reject(
+                    //         {
+                    //             msg: 'All fields are required',
+                    //             status: 0
+                    //         }
+                    //     )
+                    // }
                 } catch (error) {
                     console.log(error);
                     reject(
