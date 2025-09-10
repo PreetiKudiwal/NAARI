@@ -159,33 +159,6 @@ export default function EditProducts() {
     fetchAllproduct(product_id);
   }, []);
 
-  // if (!allSize || !allSize.sizeLabel) return null;
-  // if (!allSize || !allSize.sizeLabel) return null;
-  // if (!allSize || !allSize.sizeLabel) return null;
-  // useEffect(() => {
-  //   if (allProduct.category_id && allCategory.length > 0) {
-  //     const matchedCategory = allCategory.find(
-  //       (cat) => cat._id === allProduct.category_id
-  //     );
-  //     if (matchedCategory) {
-  //       setSelectedCategory({
-  //         value: matchedCategory._id,
-  //         label: matchedCategory.categoryName,
-  //       });
-  //     }
-  //   }
-
-  //   if (allProduct.colors && allColor.length > 0) {
-  //     const selected = allColor
-  //       .filter((color) => allProduct.colors.includes(color._id))
-  //       .map((color) => ({
-  //         value: color._id,
-  //         label: color.colorName,
-  //       }));
-  //     setSelectedColors(selected); // Now this is the array of label/value objects
-  //   }
-  // }, [allProduct, allCategory, allColor]);
-
   return (
     <>
       <div className="container mx-auto p-8">

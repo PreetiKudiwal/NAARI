@@ -16,7 +16,6 @@ export default function Saree() {
       const fetchSarees = () => {
         axios.get(API_BASE_URL + PRODUCT_URL + '/sarees/68a850320d5f3fb09771adab').then(
           (success) => {
-            console.log(success.data.sarees, "saree");
             setProducts(success.data.sarees);
           }
         ).catch(
@@ -98,7 +97,7 @@ export default function Saree() {
                 &&
                 products?.map((product, index) => {
                 return(
-                  <Link to={`/detail/${product?._id}`}>
+                  <Link to={`/detail/${product?._id}`} key={index}>
                     <div>
                   <img
                     src={API_BASE_URL+`/images/product/${product?.main_img}`}

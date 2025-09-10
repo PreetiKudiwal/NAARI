@@ -8,7 +8,6 @@ export const UserSlice = createSlice({
   },
   reducers: {
     UserLogin(state, current) {
-      console.log(current.payload.data);
       localStorage.setItem('userLogin', JSON.stringify(current.payload.data));
       state.data = current.payload.data;
       localStorage.setItem('userToken', current.payload.token);

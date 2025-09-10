@@ -12,7 +12,6 @@ export default function Lehenga() {
   const fetchLehengas = () => {
           axios.get(API_BASE_URL + PRODUCT_URL + '/lehengas/68a84e680d5f3fb09771ada7').then(
             (success) => {
-              console.log(success.data.lehengas, "lehengas");
               setProducts(success.data.lehengas);
             }
           ).catch(
@@ -91,7 +90,7 @@ export default function Lehenga() {
         {Array.isArray(products) &&
           products?.map((product, index) => {
             return (
-              <Link to={`/detail/${product?._id}`}>
+              <Link to={`/detail/${product?._id}`} key={index}>
               <div>
                 <img
                   src={API_BASE_URL + `/images/product/${product?.main_img}`}

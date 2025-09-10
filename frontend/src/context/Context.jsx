@@ -16,7 +16,13 @@ export default function Context({ children }) {
   const [productColor, setProductColor] = useState(null);
   const [allOrder, setAllOrder] = useState([]);
   const [allSize, setAllSize] = useState([]);
+  const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem("searchTerm") || ""
+  ); //  new state
   const token = useSelector((state) => state.admin.token);
+  // detect screen size
+  const isMobileOrTablet = window.innerWidth < 1024;
 
   const API_BASE_URL = "http://localhost:5001";
   const CATEGORY_URL = "/category";
@@ -85,7 +91,7 @@ export default function Context({ children }) {
     priceFrom = null,
     priceTo = null
   ) => {
-    let productApiUrl = API_BASE_URL + PRODUCT_URL ;
+    let productApiUrl = API_BASE_URL + PRODUCT_URL;
 
     if (product_id) {
       productApiUrl += `/${product_id}`;
@@ -114,17 +120,15 @@ export default function Context({ children }) {
   //fetch single product start
 
   const fetchSingleProduct = (product_id) => {
-     console.log(product_id, "productidinfetch");
-    axios.get(API_BASE_URL + PRODUCT_URL + "/id" + `/${product_id}`).then(
-      (success) => {
+    axios
+      .get(API_BASE_URL + PRODUCT_URL + "/id" + `/${product_id}`)
+      .then((success) => {
         setSingleProduct(success.data.single_product);
-      }
-    ).catch(
-      (error) => {
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    )
-  } 
+      });
+  };
 
   //fetch single product end
 
@@ -160,24 +164,21 @@ export default function Context({ children }) {
   //fetch all order start
 
   const fetchAllOrder = (user_id = null) => {
-
     let orderApiUrl = API_BASE_URL + ORDER_URL;
 
-    if(user_id) {
+    if (user_id) {
       orderApiUrl += `/${user_id}`;
     }
 
-    axios.get(orderApiUrl).then(
-      (success) => {
-        console.log(success);
+    axios
+      .get(orderApiUrl)
+      .then((success) => {
         setAllOrder(success.data.order);
-      }
-    ).catch(
-      (error) => {
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    )
-  }
+      });
+  };
 
   //fetch all order end
 
@@ -190,16 +191,15 @@ export default function Context({ children }) {
       sizeApiUrl += `/${size_id}`;
     }
 
-    axios.get(sizeApiUrl).then(
-      (success) => {
+    axios
+      .get(sizeApiUrl)
+      .then((success) => {
         setAllSize(success.data.size);
-      }
-    ).catch(
-      (error) => {
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    )
-  }
+      });
+  };
 
   //fetch all size end
 
@@ -233,25 +233,36 @@ export default function Context({ children }) {
         filterByColor,
         aSideBar,
         setASideBar,
+        searchTerm,
+        setSearchTerm,
+        showMobileSearchBar,
+        setShowMobileSearchBar,
       }}
     >
       {children}
       <Toaster
-        position="top-right" // still required, but will be overridden
-  containerStyle={{
-    top: "20%",
-    right: "20px",
-  }}
-  reverseOrder={false}
+        position={isMobileOrTablet ? undefined : "top-right"}
+        containerStyle={
+          !isMobileOrTablet
+            ? {
+                top: "20%",
+                right: "20px",
+              }
+            : {
+                transform: "translatey(25%)",
+              }
+        }
+        reverseOrder={false}
         toastOptions={{
           success: {
             style: {
               padding: "10px",
               color: "#FFFFFF",
-              background: "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+              background:
+                "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
               borderRadius: "0px",
               fontWeight: "500",
-              animation: 'slideDown 0.3s ease-out',
+              animation: "slideDown 0.3s ease-out",
             },
             iconTheme: {
               primary: "#ffffff",
@@ -260,12 +271,13 @@ export default function Context({ children }) {
           },
           error: {
             style: {
-              background: "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
+              background:
+                "linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%)",
               color: "#FFFFFF",
               fontWeight: "500",
               padding: "10px",
               borderRadius: "0px",
-              animation: 'slideDown 0.3s ease-out',
+              animation: "slideDown 0.3s ease-out",
             },
             iconTheme: {
               primary: "#ffffff",
@@ -273,8 +285,6 @@ export default function Context({ children }) {
             },
           },
         }}
-
-        
       />
     </MainContext.Provider>
   );

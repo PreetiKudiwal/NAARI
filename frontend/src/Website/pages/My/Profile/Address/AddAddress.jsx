@@ -9,7 +9,6 @@ export default function AddAddress() {
   const { API_BASE_URL, toastNotify } = useContext(MainContext);
   const user = useSelector((state) => state.user.data);
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,7 +38,6 @@ export default function AddAddress() {
     axios
       .put(API_BASE_URL + "/user/add-address", addressData)
       .then((success) => {
-        console.log(success);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -56,7 +54,7 @@ export default function AddAddress() {
         console.log(error);
       });
 
-      if (searchParams.get("ref") == "checkout" && user?.shipping_address?.length > 0) {
+      if (searchParams.get("ref") === "checkout") {
       navigate("/checkout");
     }else{
       navigate("/my/address");

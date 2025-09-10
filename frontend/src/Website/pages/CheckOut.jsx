@@ -12,10 +12,8 @@ export default function CheckOut() {
   const { API_BASE_URL, toastNotify } = useContext(MainContext);
   const { error, isLoading, Razorpay } = useRazorpay();
   const user = useSelector((state) => state.user.data);
-  console.log(user?.shipping_address[0], "User Data");
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(0);
-  console.log(selectedAddress, "selectedAddress");
   const cart = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,7 +21,6 @@ export default function CheckOut() {
   //remove address start
 
   const removeAddress = (addressToRemove) => {
-    console.log(addressToRemove);
 
     const data = {
       _id: user._id,
@@ -32,7 +29,6 @@ export default function CheckOut() {
     axios
       .put(`${API_BASE_URL}/user/remove-address`, data)
       .then((success) => {
-        console.log(success.data);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -51,6 +47,10 @@ export default function CheckOut() {
   //remove address start
 
   const placeOrder = () => {
+    if (selectedPayment === null) {
+    toastNotify("Please select a payment method", 0); 
+    return;
+  }
     axios
       .post(API_BASE_URL + "/order/order-place", {
         user_id: user._id,
@@ -62,10 +62,8 @@ export default function CheckOut() {
         if (success.data.status == 1) {
           if (selectedPayment === 0) {
             dispatch(emptyCart());
-            console.log(success, "Order placed successfully");
             navigate(`/thankyou/${success.data.order_id}`);
           } else {
-            console.log(success, "Razorpay Order");
             handlePayment(
               success.data.razorpay_order.order_id,
               success.data.razorpay_order.razorpay_order
@@ -84,10 +82,9 @@ export default function CheckOut() {
       currency: "INR",
       name: "नारी",
       description: "Test Transaction",
-      // image: "/images/naarilogo.png",
+      image: "/images/logoR.jpg",
       order_id: razorpay_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
       handler: async function (response) {
-        console.log(response);
 
         try {
           const res = await axios.post(
@@ -98,10 +95,8 @@ export default function CheckOut() {
               user_id: user._id,
             }
           );
-          console.log(res, "Payment Success Response");
           toastNotify(res.data.msg, res.data.status);
           if (res.data.status === 1) {
-            console.log(res);
             dispatch(emptyCart());
             navigate(`/thankyou/${order_id}`);
           }
@@ -110,9 +105,9 @@ export default function CheckOut() {
         }
       },
       prefill: {
-        name: "Piyush Garg",
+        name: user?.shipping_address[selectedAddress]?.name,
         email: user?.email,
-        contact: "9999999999",
+        contact: user?.shipping_address[selectedAddress]?.contact,
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -195,7 +190,10 @@ export default function CheckOut() {
               })}
               <Link to={"/my/address/add?ref=checkout"}>
                 <button className="custom-button max-w-44">
-                  + Add New Address
+                  {
+                    user?.shipping_address.length === 0 ? "+ Add Address" : "+ Add New Address"
+                  }
+                  
                 </button>
               </Link>
             </div>

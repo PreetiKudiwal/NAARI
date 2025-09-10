@@ -8,7 +8,7 @@ class CategoryController {
             (resolve, reject) => {
                 try {
                     const newCategoryImageName = generateUniqueImageName(file.name);
-                    const destination ="./public/images/category/" + newCategoryImageName;
+                    const destination = "./public/images/category/" + newCategoryImageName;
                     file.mv(
                         destination,
                         (error) => {
@@ -19,7 +19,7 @@ class CategoryController {
                                         status: 0
                                     }
                                 )
-                            }else{
+                            } else {
                                 if (data.categoryName && data.categorySlug) {
                                     const category = new CategoryModel(
                                         {
@@ -47,7 +47,7 @@ class CategoryController {
                                             )
                                         }
                                     )
-                                }else {
+                                } else {
                                     reject(
                                         {
                                             msg: 'All fields are required',
@@ -58,8 +58,8 @@ class CategoryController {
                             }
                         }
                     )
-                    
-                    
+
+
                 } catch (error) {
                     console.log(error);
                     reject(
@@ -82,28 +82,25 @@ class CategoryController {
                     if (id) {
                         category = await CategoryModel.findById(id);
 
-                        resolve (
+                        resolve(
                             {
                                 msg: "Category found",
                                 status: 1,
                                 category
                             }
                         )
-                    }else {
-                        category = await CategoryModel.find();
+                    } else {
+                        category = await CategoryModel.find()
 
-                        const data = [];
+                        // ✅ Map returns an array of promises
+                        const data = await Promise.all(
+                            category.map(async (cat) => {
+                                const productCount = await ProductModel.countDocuments({ category_id: cat._id });
+                                return { ...cat.toJSON(), productCount };
+                            })
+                        );
 
-                        const allPromise = category.map(
-                            async (cat, index) => {
-                                const productCount = await ProductModel.find( {category_id: cat._id} ).countDocuments();
-                                data.push({...cat.toJSON(), productCount});
-                            }
-                        )
-
-                        await Promise.all(allPromise);
-
-                        resolve (
+                        resolve(
                             {
                                 msg: "Category found",
                                 status: 1,
@@ -111,8 +108,8 @@ class CategoryController {
                             }
                         )
                     }
-                    
-                    
+
+
                 } catch (error) {
                     console.log(error);
                     reject(
@@ -130,12 +127,12 @@ class CategoryController {
         return new Promise(
             (resolve, reject) => {
                 try {
-                    CategoryModel.deleteOne({_id: id}).then(
+                    CategoryModel.deleteOne({ _id: id }).then(
                         (success) => {
                             resolve(
                                 {
                                     msg: 'Category deleted successfully',
-                                    status: 1 
+                                    status: 1
                                 }
                             )
                         }
@@ -163,17 +160,17 @@ class CategoryController {
         )
     }
 
-    edit(data, id , file) {
+    edit(data, id, file) {
         return new Promise(
             (resolve, reject) => {
                 try {
-                    if(file) {
+                    if (file) {
                         const newCategoryImageName = generateUniqueImageName(file.name);
-                        const destination ="./public/images/category/" + newCategoryImageName;
+                        const destination = "./public/images/category/" + newCategoryImageName;
                         file.mv(
                             destination,
                             (error) => {
-                                if(error) {
+                                if (error) {
                                     console.log(error);
                                     reject(
                                         {
@@ -181,9 +178,9 @@ class CategoryController {
                                             status: 0
                                         }
                                     )
-                                }else {
+                                } else {
                                     CategoryModel.updateOne(
-                                        {_id: id}, 
+                                        { _id: id },
                                         {
                                             $set: {
                                                 categoryName: data.categoryName,
@@ -214,9 +211,9 @@ class CategoryController {
                                 }
                             }
                         )
-                    }else {
+                    } else {
                         CategoryModel.updateOne(
-                            {_id: id}, 
+                            { _id: id },
                             {
                                 $set: {
                                     categoryName: data.categoryName,
@@ -244,7 +241,7 @@ class CategoryController {
                             }
                         )
                     }
-                    
+
                 } catch (error) {
                     console.log(error);
                     reject(
@@ -264,7 +261,7 @@ class CategoryController {
                 try {
                     const category = await CategoryModel.findById(id);
                     CategoryModel.updateOne(
-                        {_id: id},
+                        { _id: id },
                         {
                             $set: {
                                 categoryStatus: !category.categoryStatus
@@ -279,7 +276,7 @@ class CategoryController {
                                         status: 1
                                     }
                                 )
-                            }else {
+                            } else {
                                 resolve(
                                     {
                                         msg: 'Status Deactivates',
@@ -287,20 +284,20 @@ class CategoryController {
                                     }
                                 )
                             }
-                            
+
                         }
                     ).catch(
                         (error) => {
                             console.log(error);
-                    reject(
-                        {
-                            msg: 'Status not updated',
-                            status: 0
+                            reject(
+                                {
+                                    msg: 'Status not updated',
+                                    status: 0
+                                }
+                            )
                         }
                     )
-                        }
-                    )
-                    
+
                 } catch (error) {
                     console.log(error);
                     reject(

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactSlider from "react-slider";
 import { MainContext } from "../../context/Context";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Filter({
   setAppliedCategory,
@@ -10,7 +10,6 @@ export default function Filter({
   setAppliedPrice,
   priceRange,
   setPriceRange,
-  setFilterList,
   appliedColor,
   appliedCategory,
   appliedPrice,
@@ -25,25 +24,12 @@ export default function Filter({
     allSize,
     allCategory,
     allColor,
-    filterByColor,
     productColor,
     setProductColor,
   } = useContext(MainContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleCategoryChange = (e) => {
-    // const slug = e.target.value;
-    // console.log("Selected category slug:", slug);
-    // if (selectedCategorySlug === slug) {
-    //   setSelectedCategorySlug(null);
-    //   navigate("/shop");
-    // } else {
-    //   setSelectedCategorySlug(slug);
-    //   navigate(`/shop/${slug}`);
-    // }
-  };
 
   const handleSizeChange = (sizeLabel) => {
     if (appliedSize.includes(sizeLabel)) {
@@ -56,21 +42,6 @@ export default function Filter({
     }
   };
 
-  // Color handler
-  const handleColorChange = (colorId) => {
-    // const newColorId = productColor === colorId ? null : colorId;
-    // setProductColor(newColorId);
-    // // Update URL searchParams
-    // const updatedParams = new URLSearchParams(searchParams);
-    // if (newColorId) {
-    //   updatedParams.set("productColor", newColorId);
-    // } else {
-    //   updatedParams.delete("productColor");
-    // }
-    // setSearchParams(updatedParams);
-    // // Apply filter
-    // setProductColor(newColorId);
-  };
 
   useEffect(() => {
     const priceFrom = searchParams.get("priceFrom");
@@ -189,7 +160,6 @@ export default function Filter({
                   value={category.categorySlug}
                   className="accent-yellow-700"
                   onChange={(e) => {
-                    handleCategoryChange(e);
 
                     if (e.target.checked) {
                       setAppliedCategory((prev) =>
@@ -204,7 +174,6 @@ export default function Filter({
                     }
                   }}
                   checked={
-                    // selectedCategorySlug === category.categorySlug ||
                     appliedCategory.includes(category.categoryName)
                   }
                 />
@@ -225,7 +194,7 @@ export default function Filter({
         <h1 className="text-md text-zinc-900 font-medium mb-3">PRICE</h1>
 
         <ReactSlider
-          className="w-full h-4 relative flex items-center" // h-4 for room to center thumbs
+          className="w-full h-4 relative flex items-center" 
           thumbClassName="h-3 w-3 bg-white rounded-full border-4 border-black cursor-pointer -mt-[0px]" // ⬅️ shift thumb up to center
           trackClassName="bg-yellow-700 h-1 top-1/2 transform -translate-y-1/2"
           min={100}
@@ -267,8 +236,8 @@ export default function Filter({
               </div>
             ) : (
               <div
-                key={key} // ⬅️ set key explicitly
-                {...restProps} // ⬅️ spread rest of the props safely
+                key={key} //set key explicitly
+                {...restProps} // spread rest of the props safely
                 className={`${baseClasses} ${bgColor}`}
               />
             );
@@ -312,7 +281,6 @@ export default function Filter({
                   className="accent-yellow-700"
                   checked={appliedColor.includes(color.colorName)}
                   onChange={(e) => {
-                    handleColorChange(color._id);
 
                     if (e.target.checked) {
                       setAppliedColor((prev) =>

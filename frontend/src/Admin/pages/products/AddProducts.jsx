@@ -369,10 +369,6 @@ export default function AddProducts() {
           </div>
           
         </div>
-      
-          
-
-          
 
           <div>
             <button className="w-full py-3 rounded-md text-lg font-semibold bg-neutral-600 addButton">

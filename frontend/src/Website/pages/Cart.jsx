@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../context/Context";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  lsGetData,
   removeFromCart,
   updateQty,
   updateSize,
@@ -13,35 +14,43 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import OutOfStockNotice from "../components/OutOfStockNotice";
 import { RxCross2 } from "react-icons/rx";
-        
-import About from "./About";
 
 export default function Cart() {
   const {
     API_BASE_URL,
     fetchAllproduct,
+    allProduct,
     fetchAllSize,
     allSize,
-    allProduct,
     toast,
   } = useContext(MainContext);
 
   const cartData = useSelector((state) => state.cart);
-  console.log(cartData, "cartData");
   const user = useSelector((state) => state.user.data);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showOOSNotice, setShowOOSNotice] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const hasOOSItems =
     Array.isArray(cartData.data) &&
     cartData.data.some((cartItem) => cartItem.product_id.stock === false);
-  console.log(hasOOSItems, "hasOOSItems");
 
   const verifyUser = () => {
     if (hasOOSItems) {
       setShowOOSNotice(true); // show modal
+      return;
+    }
+
+    if (cartData.totalFinelPrice > 40000) {
+      Swal.fire({
+        icon: "warning",
+        title: "Order Limit Exceeded",
+        text: "Maximum order amount allowed is ₹40,000",
+        confirmButtonColor: "#000",
+      });
       return;
     }
 
@@ -53,7 +62,7 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    if (showOOSNotice) {
+    if (showOOSNotice || cartData.totalFinelPrice > 40000) {
       const scrollBarWidth =
         window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
@@ -67,15 +76,20 @@ export default function Cart() {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0px";
     };
-  }, [showOOSNotice]);
+  }, [showOOSNotice, cartData.totalFinelPrice]);
+
 
   useEffect(() => {
     fetchAllproduct();
+    dispatch(lsGetData());
   }, []);
 
   useEffect(() => {
     setLoading(true);
-    fetchAllproduct();
+    setLoadingUser(true);
+    setTimeout(() => {
+      setLoadingUser(false);
+    }, 100);
     setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -83,7 +97,9 @@ export default function Cart() {
 
   return (
     <>
-      {cartData.data.length === 0 ? (
+      {loadingUser ? (
+        <div className="w-full min-h-svh flex mt-10 justify-center"></div>
+      ) : cartData.data.length === 0 ? (
         <div className="w-full min-h-svh flex mt-10 justify-center">
           <div className="text-center ">
             <div className="w-80 h-60">
@@ -94,7 +110,9 @@ export default function Cart() {
               />
             </div>
             <div className="text-sm font-bold color">YOUR BAG IS EMPTY</div>
-            <div className="text-sm font-medium color">Shop now to fill it.</div>
+            <div className="text-sm font-medium color">
+              Shop now to fill it.
+            </div>
           </div>
         </div>
       ) : (
@@ -200,7 +218,7 @@ export default function Cart() {
                     )}
                   </span>
                 </p>
-                <p className="font-medium flex justify-between px-6">
+                <p className="font-medium flex justify-between px-6 border-b border-zinc-300 pb-4">
                   Discount on MRP:{" "}
                   <span className="text-green-600">
                     - ₹
@@ -209,17 +227,11 @@ export default function Cart() {
                     ).toLocaleString("en-IN")}
                   </span>
                 </p>
-                <p className="font-medium flex justify-between border-b border-zinc-300 px-6 pb-4">
-                  Delivery Fee: <span>+ ₹100</span>
-                </p>
 
                 <p className="font-bold text-md mt-2 flex justify-between px-6">
                   Total Amount:{" "}
                   <span>
-                    ₹
-                    {(Number(cartData.totalFinelPrice) + 100).toLocaleString(
-                      "en-IN"
-                    )}
+                    ₹{Number(cartData.totalFinelPrice).toLocaleString("en-IN")}
                   </span>
                 </p>
                 <button
@@ -267,7 +279,6 @@ function CartProduct({
   allSize,
 }) {
   const [productSize, setProductSize] = useState(CartItem?.size);
-  console.log(productSize, "productSize");
   const dispatch = useDispatch();
   const MySwal = withReactContent(Swal);
   const handleRemoveFromCart = (data) => {
@@ -291,10 +302,10 @@ function CartProduct({
 
   const handleQtyChange = (newQty, size) => {
     newQty = parseInt(newQty);
-    console.log(size);
-    console.log(newQty);
+    if (newQty < 1) newQty = 1;
+    if (newQty > 5) newQty = 5;
 
-    if (newQty > 0) {
+    if (newQty >= 1 && newQty <= 5) {
       // First update MongoDB if user is logged in
       if (user) {
         axios
@@ -372,9 +383,6 @@ function CartProduct({
     fetchAllSize();
   }, []);
 
-  const isAnySizeAvailable =
-    Array.isArray(allSize) &&
-    allSize.some((size) => product?.sizes?.includes(size._id));
   return (
     <div className="relative flex items-center justify-between p-2 lg:p-4 lg:px-8 mb-2 border-y border-zinc-300 ">
       <Link to={`/detail/${product?._id}`}>
@@ -396,20 +404,25 @@ function CartProduct({
         </div>
       </Link>
       <div className="flex-1 ml-1 md:ml-4 w-40 md:w-auto pe-10 md:pe-20">
-        <h3 className="text-xs color font-medium">{product.name}</h3>
-        
-            {/* Price Details */}
+        <h3 className="truncate text-xs color font-medium md:w-60">
+          {product.name}
+        </h3>
 
-            <div className="flex items-center gap-2 whitespace-nowrap mt-1 text-xs">
+        {/* Price Details */}
+
+        <div className="flex items-center gap-2 whitespace-nowrap mt-1 text-xs">
           <div className="font-bold color">
             ₹{(product?.finel_price * CartItem.qty).toLocaleString("en-IN")}
           </div>
           <span className="text-gray-500 line-through">
-            {product?.discount_percentage > 0 && `₹${(product?.original_price * CartItem.qty).toLocaleString("en-IN")}`}
+            {product?.discount_percentage > 0 &&
+              `₹${(product?.original_price * CartItem.qty).toLocaleString(
+                "en-IN"
+              )}`}
           </span>
           <span className="text-green-600 font-semibold">
             {product?.discount_percentage > 0 &&
-            `${product?.discount_percentage} % off`}
+              `${product?.discount_percentage} % off`}
           </span>
         </div>
 
@@ -428,27 +441,46 @@ function CartProduct({
               <FaCaretDown />
             </div>
           </div>
+
           <div className="mt-2 flex items-center">
             <label htmlFor="qty" className="mr-2 text-xs">
               Qty:
             </label>
-            <input
-              type="number"
-              id="qty"
-              value={CartItem.qty}
-              min={1}
-              max={5}
-              className="w-14 px-2 py-1 border rounded text-center focus:outline-none text-[10px] lg:text-sm cursor-pointer"
-              onChange={(event) =>
-                handleQtyChange(event.target.value, CartItem?.size)
-              }
-            />
+            <div className="flex items-center border rounded overflow-hidden">
+              {/* Decrease Button */}
+              <button
+                type="button"
+                className="px-2 py-0.5 text-sm font-bold hover:bg-gray-200 active:scale-90 transition transform duration-150 disabled:opacity-50"
+                onClick={() =>
+                  handleQtyChange(Math.max(1, CartItem.qty - 1), CartItem?.size)
+                }
+                disabled={CartItem.qty <= 1}
+              >
+                -
+              </button>
+
+              {/* Quantity Display */}
+              <span className="px-2 text-sm font-medium">{CartItem.qty}</span>
+
+              {/* Increase Button */}
+              <button
+                type="button"
+                className="px-2 py-0.5 text-sm font-bold hover:bg-gray-200 active:scale-90 transition transform duration-150 disabled:opacity-50"
+                onClick={() =>
+                  handleQtyChange(Math.min(5, CartItem.qty + 1), CartItem?.size)
+                }
+                disabled={CartItem.qty >= 5}
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute right-2 top-2 md:hidden p-1 rounded-full cursor-pointer hover:bg-zinc-200 transition duration-300"
-       onClick={() =>
+      <div
+        className="absolute right-2 top-2 md:hidden p-1 rounded-full cursor-pointer hover:bg-zinc-200 transition duration-300"
+        onClick={() =>
           handleRemoveFromCart({
             product_id: product?._id,
             original_price: product?.original_price,
@@ -456,7 +488,8 @@ function CartProduct({
             qty: CartItem.qty,
             size: CartItem?.size,
           })
-        }>
+        }
+      >
         <RxCross2 />
       </div>
       <button
@@ -488,9 +521,6 @@ function SizePopUp({
   dispatch,
 }) {
   const [localSize, setLocalSize] = useState(productSize);
-  console.log(localSize, "localSize");
-  console.log(CartItem.product_id._id);
-  // const dispatch = useDispatch();
 
   // size select code
 
@@ -498,19 +528,16 @@ function SizePopUp({
     return s.sizeLabel == "OneSize";
   });
 
-  console.log(OneSize[0]?.sizeLabel, "onesize");
 
   const hasOneSize =
     Array.isArray(OneSize) &&
     OneSize.some((size) => product?.sizes?.includes(size._id));
-  console.log(hasOneSize, "hasOneSize");
 
   const sizeOptions =
     Array.isArray(allSize) &&
     allSize.filter((s, i) => {
       return s.sizeLabel !== "OneSize";
     });
-  console.log(sizeOptions, "sizeOptions");
 
   const updateProductSize = () => {
     if (user) {

@@ -6,7 +6,6 @@ const SizeModel = require("../models/SizeModel");
 class ProductController {
 
     read(id, query) {
-        console.log(query);
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -358,7 +357,6 @@ class ProductController {
     }
 
     editproduct(data, id, file) {
-        console.log(data);
         return new Promise(
             (resolve, reject) => {
                 try {

@@ -16,7 +16,6 @@ export default function Anarkali() {
       const fetchSuits = () => {
               axios.get(API_BASE_URL + PRODUCT_URL + '/salwar/68a851640d5f3fb09771aded').then(
                 (success) => {
-                  console.log(success.data.salwar, "salwar");
                   setProducts(success.data.salwar);
                 }
               ).catch(
@@ -98,7 +97,7 @@ export default function Anarkali() {
                 &&
                 products?.map((product, index) => {
                 return(
-                  <Link to={`/detail/${product?._id}`}>
+                  <Link to={`/detail/${product?._id}`} key={index}>
                     <div>
                   <img
                     src={API_BASE_URL+`/images/product/${product?.main_img}`}

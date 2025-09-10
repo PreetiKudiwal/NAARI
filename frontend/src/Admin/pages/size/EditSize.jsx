@@ -114,10 +114,10 @@ export default function EditSize() {
     fetchAllSize(size_id);
   }, []);
 
-  // ✅ Don’t render form until data is ready
+  //  Don’t render form until data is ready
 if (!allSize || !allSize.sizeLabel) return null;
 
-// ✅ Define selected options AFTER data is ready
+//  Define selected options AFTER data is ready
 const selectedSizeLabel = { value: allSize.sizeLabel, label: allSize.sizeLabel };
 const selectedIndiaSize = { value: allSize.indiaSize, label: allSize.indiaSize };
 const selectedIntlSize = { value: allSize.intlSize, label: allSize.intlSize };

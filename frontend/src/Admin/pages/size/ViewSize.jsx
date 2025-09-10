@@ -9,7 +9,6 @@ import axios from "axios";
 export default function ViewSize() {
   const { fetchAllSize, allSize, API_BASE_URL, SIZE_URL, toastNotify } =
     useContext(MainContext);
-  // console.log(allSize);
 
   //Status chage
 

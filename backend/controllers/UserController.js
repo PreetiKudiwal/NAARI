@@ -34,7 +34,7 @@ class UserController {
                             (success) => {
                                 resolve(
                                     {
-                                        msg: "User created successfully",
+                                        msg: "Account created successfully",
                                         status: 1,
                                         user: { ...user.toJSON(), password: null },
                                         token: accessToken(user.toJSON())
@@ -46,7 +46,7 @@ class UserController {
                                 console.log(error);
                                 resolve(
                                     {
-                                        msg: "User not created",
+                                        msg: "Account not created",
                                         status: 0
                                     }
                                 )
@@ -54,7 +54,6 @@ class UserController {
                         )
                     }
 
-                    console.log(data)
                 } catch (error) {
                     console.log(error);
                     reject(
@@ -74,7 +73,7 @@ class UserController {
             async (resolve, reject) => {
                 try {
 
-                    const user = await UserModel.findOne({ email: data.email }).populate("wishlist","name main_img original_price discount_percentage finel_price sizes stock");
+                    const user = await UserModel.findOne({ email: data.email }).populate("wishlist", "name main_img original_price discount_percentage finel_price sizes stock");
 
                     if (user) {
 
@@ -157,7 +156,6 @@ class UserController {
     }
 
     changePassword(data) {
-        console.log(data);
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -272,7 +270,6 @@ class UserController {
     }
 
     removeAddress(data) {
-        console.log(data, "c");
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -326,7 +323,6 @@ class UserController {
     }
 
     moveToDb(data, userId) {
-        console.log(data, "moveToDb")
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -334,7 +330,6 @@ class UserController {
                     if (data) {
                         const allPromise = data.map(
                             async (cartItem, cartIndex) => {
-                                console.log(cartItem, "cartItem in moveToDb");
                                 const existingProduct = await CartModel.findOne({ product_id: cartItem.product_id._id, user_id: userId, size: cartItem.size }) ?? null;
                                 if (existingProduct) {
                                     // update product qty in cart
@@ -410,7 +405,6 @@ class UserController {
     }
 
     addToCart(data) {
-        console.log(data, "data in c")
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -484,7 +478,6 @@ class UserController {
     }
 
     removeFromCart(data) {
-        console.log(data, "removeFromCart");
         return new Promise(async (resolve, reject) => {
             try {
                 const existingProduct = await CartModel.findOne({
@@ -495,7 +488,6 @@ class UserController {
 
                 if (existingProduct) {
                     const result = await CartModel.deleteOne({ _id: existingProduct._id });
-                    console.log(result);
 
                     resolve({
                         msg: "Product removed successfully",
@@ -520,19 +512,21 @@ class UserController {
     }
 
     updateCartQty(data) {
-        console.log(data);
         return new Promise(
             async (resolve, reject) => {
                 try {
                     const existingProduct = await CartModel.findOne({ product_id: data.product_id, user_id: data.user_id, size: data.size });
-                    console.log(existingProduct._id, "existingProduct");
 
                     if (existingProduct) {
+                        let newQty = parseInt(data.qty);
+                        if (isNaN(newQty)) newQty = 1; // default
+                        if (newQty < 1) newQty = 1;
+                        if (newQty > 5) newQty = 5;
                         await CartModel.updateOne(
                             { _id: existingProduct._id },
                             {
                                 $set: {
-                                    qty: data.qty
+                                    qty: newQty
                                 }
                             }
                         ).then(
@@ -579,7 +573,6 @@ class UserController {
     }
 
     updateSize(data) {
-        console.log(data, 'updateSize')
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -635,60 +628,59 @@ class UserController {
     }
 
     addToWishList(data) {
-    console.log(data, 'addToWishList');
-    return new Promise(
-        async (resolve, reject) => {
-            try {
-                const { user_id, product_id } = data;
-                if (!user_id || !product_id) {
-                    return reject({
-                        msg: 'Missing user_id or product_id',
+        return new Promise(
+            async (resolve, reject) => {
+                try {
+                    const { user_id, product_id } = data;
+                    if (!user_id || !product_id) {
+                        return reject({
+                            msg: 'Missing user_id or product_id',
+                            status: 0
+                        });
+                    }
+
+                    let user = await UserModel.findById(user_id);
+
+                    if (!user) {
+                        return reject({
+                            msg: 'User not found',
+                            status: 0
+                        });
+                    }
+
+                    if (user.wishlist.some(id => id.toString() === product_id.toString())) {
+                        // remove product from wishlist
+                        user.wishlist = user.wishlist.filter(
+                            id => id.toString() !== product_id.toString()
+                        );
+                        await user.save();
+                    } else {
+                        // add product to wishlist
+                        user.wishlist.push(product_id);
+                        await user.save();
+                    }
+
+                    // Populate wishlist with product details
+                    const populatedUser = await UserModel.findById(user_id).populate("wishlist", "name main_img original_price discount_percentage finel_price sizes stock discount_percentage").lean();
+
+                    return resolve({
+                        msg: user.wishlist.some(id => id.toString() === product_id.toString())
+                            ? 'Product added to wishlist'
+                            : 'Product removed from wishlist',
+                        status: 1,
+                        user: { ...populatedUser, password: null }
+                    });
+
+                } catch (error) {
+                    console.log(error);
+                    reject({
+                        msg: 'Internal server error',
                         status: 0
                     });
                 }
-
-                let user = await UserModel.findById(user_id);
-
-                if (!user) {
-                    return reject({
-                        msg: 'User not found',
-                        status: 0
-                    });
-                }
-
-                if (user.wishlist.some(id => id.toString() === product_id.toString())) {
-                    // remove product from wishlist
-                    user.wishlist = user.wishlist.filter(
-                        id => id.toString() !== product_id.toString()
-                    );
-                    await user.save();
-                } else {
-                    // add product to wishlist
-                    user.wishlist.push(product_id);
-                    await user.save();
-                }
-
-                // Populate wishlist with product details
-                const populatedUser = await UserModel.findById(user_id).populate("wishlist","name main_img original_price discount_percentage finel_price sizes stock discount_percentage").lean();
-
-                return resolve({
-                    msg: user.wishlist.some(id => id.toString() === product_id.toString()) 
-                        ? 'Product added to wishlist' 
-                        : 'Product removed from wishlist',
-                    status: 1,
-                    user: { ...populatedUser, password: null }
-                });
-
-            } catch (error) {
-                console.log(error);
-                reject({
-                    msg: 'Internal server error',
-                    status: 0
-                });
             }
-        }
-    );
-}
+        );
+    }
 
 }
 

@@ -1,25 +1,32 @@
 import React, { useContext, useState } from "react";
 import { FaTruck, FaUndo, FaHeadset, FaShieldAlt } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa6";
-import Saree from "../components/HomePageComponents/Saree";
-export default function Contact() {
+import { MainContext } from "../../context/Context";
+
+export default function Contact() { 
+  const { toastNotify } = useContext(MainContext);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [message, setMessage] = useState("");
+const [wordCount, setWordCount] = useState(0);
+
+const handleMessageChange = (e) => {
+  const words = e.target.value.trim().split(/\s+/);
+
+  if (words.length <= 50) {
+    setMessage(e.target.value);
+    setWordCount(words.filter(Boolean).length); // remove empty words
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email) {
-      setEmailError("Email is required");
-    } else if (!emailPattern.test(email)) {
-      setEmailError("Please enter a valid email address");
-    } else {
-      setEmailError("");
-      // form submission logic here
-      console.log("Form submitted:", email);
-    }
+    console.log({name, email, message});
+    toastNotify("Message sent successfully!",1);
+    setName("");
+    setEmail("");
+    setMessage("");
+    setWordCount(0);
   };
 
   const features = [
@@ -89,36 +96,47 @@ export default function Contact() {
                 <p className="mt-2">support@bynaari.com</p>
               </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="mb-2 flex gap-6">
+                <div className="w-1/2">
                 <input
                   type="name"
                   name="name"
                   placeholder="Name"
                   value={name}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
+                  required
                   className="w-full border border-gray-300 focus:outline-none  focus:border-black py-3  px-4 text-gray-700 placeholder-gray-400"
                 />
-
+                </div>
+                 
+                 <div className="w-1/2">
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full border border-gray-300 focus:outline-none  focus:border-black py-3 px-4 text-gray-700 placeholder-gray-400"
                 />
+                </div>
+                
               </div>
-              {emailError && (
-                <p className="text-red-600 text-sm mb-4">{emailError}</p>
-              )}
+              
 
               <div className="mb-6">
                 <textarea
                   name="msg"
                   placeholder="Message"
+                  value={message}
+                  onChange={handleMessageChange}
+                  required
                   className="w-full border border-gray-300p-4 h-40 resize-none px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-black"
                 ></textarea>
+                 <p className="text-xs text-gray-500 mt-1">
+    {wordCount} / 50 words
+  </p>
               </div>
 
               <button

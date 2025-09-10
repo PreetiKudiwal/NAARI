@@ -3,7 +3,6 @@ import { FaTruck, FaUndo, FaHeadset, FaShieldAlt } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa6";
 
 export default function About() {
-
   const features = [
     {
       icon: <FaRegHeart className="text-xl mb-3 color" />,
@@ -50,17 +49,30 @@ export default function About() {
                   Our Story
                 </h3>
                 <p className="text-justify tracking-wider leading-7 me-0 lg:me-8 text-gray-600 pb-6 text-sm md:text-base">
-                  At <span className="text-base md:text-lg font-semibold naari-font">
-            नारी
-            </span>, our journey began with a simple dream — to celebrate the timeless beauty of Indian women through outfits that blend tradition with modern elegance. <br />
-
-India’s rich culture has always been an endless source of inspiration for us. From the intricate weaves of sarees to the graceful flow of lehengas and the comfort of salwar suits, every piece in our collection reflects the artistry, heritage, and spirit of Indian craftsmanship. <br />
-
-We believe fashion is more than just clothing — it’s a way to express identity, confidence, and culture. That’s why our mission is to bring you outfits that honor Indian traditions while embracing the style and comfort of today’s world. <br />
-
-What started as a small idea has now grown into a journey of trust, passion, and connection with women who cherish authenticity and elegance. Every order we deliver is not just a product, but a piece of India’s story — carefully curated to make you feel confident, graceful, and proud of your roots. <br />
-
-Together, let’s celebrate the beauty of Indian women and the culture that inspires every outfit we create.
+                  At{" "}
+                  <span className="text-base md:text-lg font-semibold naari-font">
+                    नारी
+                  </span>
+                  , our journey began with a simple dream — to celebrate the
+                  timeless beauty of Indian women through outfits that blend
+                  tradition with modern elegance. <br />
+                  India’s rich culture has always been an endless source of
+                  inspiration for us. From the intricate weaves of sarees to the
+                  graceful flow of lehengas and the comfort of salwar suits,
+                  every piece in our collection reflects the artistry, heritage,
+                  and spirit of Indian craftsmanship. <br />
+                  We believe fashion is more than just clothing — it’s a way to
+                  express identity, confidence, and culture. That’s why our
+                  mission is to bring you outfits that honor Indian traditions
+                  while embracing the style and comfort of today’s world. <br />
+                  What started as a small idea has now grown into a journey of
+                  trust, passion, and connection with women who cherish
+                  authenticity and elegance. Every order we deliver is not just
+                  a product, but a piece of India’s story — carefully curated to
+                  make you feel confident, graceful, and proud of your roots.{" "}
+                  <br />
+                  Together, let’s celebrate the beauty of Indian women and the
+                  culture that inspires every outfit we create.
                 </p>
               </div>
             </div>
@@ -85,18 +97,43 @@ Together, let’s celebrate the beauty of Indian women and the culture that insp
                   Our Mission
                 </h3>
                 <div className="text-justify lg:ms-8 text-gray-600 pb-6 tracking-wider leading-7 text-sm md:text-base">
-                  At <span className="text-base md:text-lg font-semibold naari-font">
-            नारी
-            </span>, our mission is to empower every woman to embrace her individuality with elegance, confidence, and pride. We believe that fashion is not just about wearing clothes — it’s about carrying forward traditions, celebrating culture, and creating a style that feels authentic. <br />
-
-Our focus is simple: <br />
-<ul className="list-disc list-inside">
-  <li><span className="font-bold">Preserve Heritage</span> – Keep the beauty of Indian craftsmanship alive through sarees, lehengas, suits, and more.</li>
-  <li><span className="font-bold">Blend Tradition with Modernity</span> – Design outfits that honor culture while fitting today’s lifestyle.</li>
-  <li><span className="font-bold">Inspire Confidence</span> – Help women feel graceful, stylish, and proud in every outfit. </li>
-  <li><span className="font-bold">Commit to Quality</span> – Deliver timeless pieces crafted with love, care, and authenticity. </li>
-</ul>
-Every collection we create is a tribute to Indian culture and a promise to bring meaningful fashion that connects tradition with the modern spirit.
+                  At{" "}
+                  <span className="text-base md:text-lg font-semibold naari-font">
+                    नारी
+                  </span>
+                  , our mission is to empower every woman to embrace her
+                  individuality with elegance, confidence, and pride. We believe
+                  that fashion is not just about wearing clothes — it’s about
+                  carrying forward traditions, celebrating culture, and creating
+                  a style that feels authentic. <br />
+                  Our focus is simple: <br />
+                  <ul className="list-disc list-inside">
+                    <li>
+                      <span className="font-bold">Preserve Heritage</span> –
+                      Keep the beauty of Indian craftsmanship alive through
+                      sarees, lehengas, suits, and more.
+                    </li>
+                    <li>
+                      <span className="font-bold">
+                        Blend Tradition with Modernity
+                      </span>{" "}
+                      – Design outfits that honor culture while fitting today’s
+                      lifestyle.
+                    </li>
+                    <li>
+                      <span className="font-bold">Inspire Confidence</span> –
+                      Help women feel graceful, stylish, and proud in every
+                      outfit.{" "}
+                    </li>
+                    <li>
+                      <span className="font-bold">Commit to Quality</span> –
+                      Deliver timeless pieces crafted with love, care, and
+                      authenticity.{" "}
+                    </li>
+                  </ul>
+                  Every collection we create is a tribute to Indian culture and
+                  a promise to bring meaningful fashion that connects tradition
+                  with the modern spirit.
                 </div>
               </div>
             </div>

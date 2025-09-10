@@ -9,8 +9,10 @@ import Saree from "../components/HomePageComponents/Saree";
 import Lehenga from "../components/HomePageComponents/Lehenga";
 import Anarkali from "../components/HomePageComponents/Anarkali";
 import NewArrival from "../components/HomePageComponents/NewArrival";
+import { MainContext } from "../../context/Context";
 
 export default function Home() {
+  const { showMobileSearchBar, setShowMobileSearchBar, setSearchTerm } = useContext(MainContext);
   const lehengaRef = useRef();
   const sareeRef = useRef();
   const suitRef = useRef();
@@ -53,85 +55,7 @@ export default function Home() {
     slidesToScroll: 1,
     cssEase: "ease-in-out", // Smooth transition
   };
-  const newArrival_settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    arrows: true,
-    autoplay: true,
-    pauseOnHover: false,
-    autoplaySpeed: 2000,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 4,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
 
-  const lahenga_Section_Settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    arrows: true,
-    autoplay: true,
-    pauseOnHover: false,
-    autoplaySpeed: 2000,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 4,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-    ],
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -165,9 +89,17 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(
+    () => {
+      if (!showMobileSearchBar) {
+        setShowMobileSearchBar(true);
+      }
+    },[showMobileSearchBar]
+  )
+
   return (
     <>
-      <div className="pb-10">
+      <div className="pb-10 pt-5">
         {/* Banner section start */}
         <div className="w-full mt-4 lg:mt-4 pb-10">
           <div className="container mx-auto">
@@ -214,17 +146,6 @@ export default function Home() {
                 />
                 <div className="absolute top-0 flex justify-end items-center h-full p-4 md:p-32 text-white">
                   <div className="text-sm flex flex-col md:gap-3 md:text-4xl font-semibold text-center">
-                    {/* <div className="md:flex flex-col gap-8">
-                      <div>
-                        <span className="font text-xl md:text-6xl">Naari</span>
-                      </div>
-                      <div> turn every glance</div>
-                      <div> into a gaze </div>
-                      <div>
-                        {" "}
-                        <span className="font text-xl md:text-6xl">Saree.</span>
-                      </div>
-                    </div> */}
 
                     <div className="md:flex flex-col text-xl md:text-6xl font gap-8 text-center">
                       <div>turn every glance</div>
@@ -449,7 +370,9 @@ export default function Home() {
             </div>
           </div>
           <Link to={'/shop'}>
-          <div className="absolute top-[40%] md:top-1/2 right-1 md:right-3 transform -translate-y-1/2 text-[10px] md:text-sm bg-black p-1 md:p-2 text-white cursor-pointer rounded">
+          <div 
+          onClick={() => setSearchTerm("bridal lehengas")}
+          className="absolute top-[40%] md:top-1/2 right-1 md:right-3 transform -translate-y-1/2 text-[10px] md:text-sm bg-black p-1 md:p-2 text-white cursor-pointer rounded">
             <div className="flex items-center gap-1 md:gap-2">
               Explore Now{" "}
               <span className="text-black bg-white px-0.5 md:px-1 rounded">

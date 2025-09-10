@@ -9,7 +9,6 @@ export const CartSlice = createSlice({
   },
   reducers: {
     addToCart(state, current) {
-      console.log(current.payload, "addToCart payload");
       const product_id = state.data.find((item) => (item.product_id._id == current.payload._id && item.size == current.payload.size));
       if (product_id) {
         product_id.qty++;
@@ -37,7 +36,6 @@ export const CartSlice = createSlice({
     },
 
     moveToCart(state, { payload }) {
-      console.log(payload, "moveToCart payload");
       state.data = payload.data;
       state.totalOriginelPrice = state.data.reduce(
           (total, item) =>
@@ -57,10 +55,6 @@ export const CartSlice = createSlice({
     },
 
     updateQty(state, current) {
-      console.log(current.payload, "updateQty payload");
-      console.log(state.totalFinelPrice, "totalFinelPrice before updateQty");
-      console.log(state.totalOriginelPrice, "totalOriginelPrice before updateQty");
-      // const product = state.data.find((item) => (item.product_id._id == current.payload._id && item.product_id.size == current.payload.size));
       const product = state.data.find((item) => item.product_id._id == current.payload.product_id && item.size == current.payload.size);
       if (product) {
         product.qty = current.payload.qty;

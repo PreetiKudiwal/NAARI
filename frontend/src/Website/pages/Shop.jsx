@@ -22,11 +22,6 @@ export default function Shop() {
   const [appliedColor, setAppliedColor] = useState([]);
   const [appliedPrice, setAppliedPrice] = useState([]);
   const [appliedSize, setAppliedSize] = useState([]);
-  console.log(appliedSize, "appliedSize");
-  // console.log(filterList);
-  console.log(appliedCategory);
-  console.log(appliedColor);
-  // console.log(appliedPrice);
   const [priceRange, setPriceRange] = useState({ from: 100, to: 100000 });
   const [searchParams, setSearchParams] = useSearchParams();
   const { categorySlug } = useParams();
@@ -44,7 +39,7 @@ function handleRemoveFilter(filter) {
   setAppliedCategory((prev) => {
     const updated = prev.filter((item) => item !== filter);
     if (prev.includes(filter)) {
-      setShouldNavigate(true); // ✅ flag navigation instead
+      setShouldNavigate(true); //  flag navigation instead
     }
     return updated;
   });
@@ -221,7 +216,7 @@ function handleRemoveFilter(filter) {
       <div className="relative min-h-screen">
         {/* Limit Selector - large screens */}
 
-        <div className="grid grid-cols-6 border-b border-t items-center">
+        <div className="grid grid-cols-6 lg:border-b lg:border-t items-center">
           <div className="hidden col-span-2 md:block lg:col-span-1">
             <div className="w-full flex justify-between items-center p-4 font-semibold">
               <span>FILTERS</span>
@@ -287,7 +282,7 @@ function handleRemoveFilter(filter) {
         </div>
 
         {/* Main content */}
-        <div className="grid grid-cols-6 border-b">
+        <div className="grid grid-cols-6 md:border-b">
           <div className="hidden col-span-2 md:block lg:col-span-1">
             <div className="sticky top-0 lg:-top-[430px]">
             <Filter

@@ -13,7 +13,6 @@ export default function ViewAddress() {
   const dispatch = useDispatch();
 
   const removeAddress = (addressToRemove) => {
-    console.log(addressToRemove);
 
     const data = {
       _id: user._id,
@@ -22,7 +21,6 @@ export default function ViewAddress() {
     axios
       .put(`${API_BASE_URL}/user/remove-address`, data)
       .then((success) => {
-        console.log(success.data);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(

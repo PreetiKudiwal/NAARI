@@ -16,7 +16,6 @@ export default function EditProfile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const MySwal = withReactContent(Swal);
-  console.log(user);
 
   const editProfile = (event) => {
     event.preventDefault();
@@ -31,7 +30,6 @@ export default function EditProfile() {
     axios
       .put(API_BASE_URL + "/user/edit", profileData)
       .then((success) => {
-        console.log(success.data);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -210,7 +208,7 @@ function PasswordPopUp({ user_id, API_BASE_URL }) {
         password: password,
         newPassword: newPassword,
       });
-      // console.log(data, 'data');
+      
       if (data.status == 1) {
         MySwal.fire(
           "Success",

@@ -6,12 +6,10 @@ export default function OutOfStockNotice( {setShowOOSNotice} ) {
 
     const {API_BASE_URL} = useContext(MainContext);
        const cartData = useSelector((state) => state.cart.data);
-        console.log(cartData);
         const oosItems = Array.isArray(cartData) &&
       cartData.filter((cartItem) => {
         return cartItem.product_id.stock === false
     });
-      console.log(oosItems, 'oosItems');
       return (
           <div
             className="relative max-w-xl w-full rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm shadow-[0_20px_60px_-20px_rgba(2,6,23,0.16)] overflow-hidden"
@@ -22,7 +20,7 @@ export default function OutOfStockNotice( {setShowOOSNotice} ) {
             <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/5" />
     
             {/* Header */}
-            <div className="flex items-start gap-4 p-6 border-b border-slate-100 bg-gradient-to-r from-rose-100/80 to-amber-100/60">
+            <div className="flex items-start gap-2 md:gap-4 px-2 py-3 md:p-6 border-b border-slate-100 bg-gradient-to-r from-rose-100/80 to-amber-100/60">
               <div className="shrink-0 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 shadow-inner">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -35,17 +33,17 @@ export default function OutOfStockNotice( {setShowOOSNotice} ) {
                 </svg>
               </div>
               <div className="flex-1">
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+                <h2 className="text-sm md:text-lg font-bold text-slate-900 tracking-tight">
                   Some items are out of stock
                 </h2>
-                <p className="mt-1 text-sm text-slate-600 leading-relaxed">
+                <p className="mt-1 text-xs md:text-sm text-slate-600 leading-relaxed">
                   To continue checkout smoothly, remove unavailable products or review your cart.
                 </p>
               </div>
             </div>
     
             {/* OOS list preview */}
-            <div className="p-5 sm:p-6">
+            <div className="p-2 md:p-5">
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-medium tracking-wide text-slate-500 uppercase">Out of stock</span>
                 <span className="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">

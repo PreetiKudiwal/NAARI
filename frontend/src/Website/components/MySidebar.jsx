@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { MdLocationPin } from "react-icons/md";
 import { LuBoxes } from "react-icons/lu";
 import { IoMdHeart } from "react-icons/io";
@@ -10,9 +10,8 @@ import { UserLogout } from "../../Redux/Reducer/UserSlice";
 import { emptyCart } from "../../Redux/Reducer/CartSlice";
 
 export default function MySidebar() {
-
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const navMenu = [
     {
@@ -37,6 +36,15 @@ export default function MySidebar() {
     },
   ];
 
+  //logout notification after reload
+  useEffect(() => {
+    const message = localStorage.getItem("logoutMessage");
+    if (message) {
+      toastNotify(message, 1); // Show notification after reload
+      localStorage.removeItem("logoutMessage"); // Clear it
+    }
+  }, []);
+
   return (
     <div className="flex flex-col sticky top-52">
       <div className="space-y-4 border-b pb-4">
@@ -44,7 +52,7 @@ export default function MySidebar() {
           return (
             <NavLink
               key={navIndex}
-              end={navItem.path === "/my"} // 👈 only apply 'end' to Dashboard
+              end={navItem.path === "/my"} //  only apply 'end' to Dashboard
               to={navItem.path}
               className={({ isActive }) =>
                 `flex items-center gap-1 rounded-lg cursor-pointer hover:font-bold hover:text-zinc-900`
@@ -78,6 +86,8 @@ export default function MySidebar() {
           dispatch(UserLogout());
           dispatch(emptyCart());
           navigate("/");
+          localStorage.setItem("logoutMessage", "Logged out successfully!");
+          window.location.reload();
         }}
       >
         <TbLogout />

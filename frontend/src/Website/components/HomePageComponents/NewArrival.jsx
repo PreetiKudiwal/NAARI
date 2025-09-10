@@ -16,7 +16,6 @@ export default function NewArrival() {
           const fetchNewArrivals = () => {
         axios.get(API_BASE_URL + PRODUCT_URL + '/new-arrivals/id').then(
           (success) => {
-            console.log(success.data.items, "items");
             setProducts(success.data.items);
           }
         ).catch(
@@ -99,7 +98,7 @@ export default function NewArrival() {
                                 &&
                                 products?.map((product, index) => {
                                 return(
-                                  <Link to={`/detail/${product?._id}`}>
+                                  <Link to={`/detail/${product?._id}`} key={index}>
                                     <div>
                                   <img
                                     src={API_BASE_URL+`/images/product/${product?.main_img}`}

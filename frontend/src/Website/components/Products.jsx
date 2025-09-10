@@ -14,24 +14,92 @@ export default function Products({ priceRange, size, categorySlug, limit }) {
     allProduct,
     toastNotify,
     productColor,
+    searchTerm,
+    setSearchTerm,
   } = useContext(MainContext);
   const user = useSelector((state) => state.user.data);
   const [loading, setLoading] = useState(false);
-  console.log(user, "user");
+  const [loadingProduct, setLoadingProduct] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
     fetchAllproduct();
     setTimeout(() => {
-      setLoading(false);
-    }, 500);
+       setLoading(false);
+    }, 600);
   }, [priceRange, size, categorySlug, limit, productColor]);
 
+  function normalizeWord(word) {
+  word = word.toLowerCase();
+
+  // Basic plural → singular rules
+  if (word.endsWith("ies")) {
+    return word.slice(0, -3) + "y"; // sarees → saree
+  }
+  if (word.endsWith("es")) {
+    return word.slice(0, -2); // dresses → dress
+  }
+  if (word.endsWith("s") && word.length > 3) {
+    return word.slice(0, -1); // suits → suit
+  }
+
+  return word;
+}
+
+  const searchWords = searchTerm.toLowerCase().split(" ").map(normalizeWord);
+
+const filteredProducts = allProduct.filter((product) => {
+  const productName = normalizeWord(product.name.toLowerCase());
+  const categoryName = normalizeWord(product.category_id.categoryName.toLowerCase());
+  const colorName = normalizeWord(product.colors[0]?.colorName.toLowerCase() || "");
+
+  return searchWords.every((word) =>
+    productName.includes(word) ||
+    categoryName.includes(word) ||
+    colorName.includes(word)
+  );
+});
+
+   useEffect(() => {
+  const saved = localStorage.getItem("searchTerm");
+  if (saved) setSearchTerm(saved);
+}, []);
+
+useEffect(() => {
+    setLoadingProduct(true);
+    setTimeout(() => {
+      setLoadingProduct(false);
+    }, 300);
+  }, []);
+
   return (
-    <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
-      {Array.isArray(allProduct) &&
-        allProduct.map((product, index) => {
+    <>
+    {
+      loadingProduct ? (
+        <div className="w-full min-h-svh flex mt-10 justify-center"></div>
+      ) : (
+        <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
+      {
+        filteredProducts.length === 0 ? 
+        (
+          <div className="w-full min-h-svh flex mt-20 md:mt-10 justify-center">
+          <div className="text-center flex flex-col items-center">
+            <div className="w-60 md:w-80">
+              <img
+                src="/images/NoProductFound4.png"
+                alt="NoProductFound"
+                className="w-full h-full"
+              />
+            </div>
+            <div className="text-sm font-bold color">We couldn't find any matches!</div>
+            <div className="text-sm font-medium color px-5">Please check the spelling or try searching something else.</div>
+          </div>
+        </div>
+        ) :
+        (
+          Array.isArray(filteredProducts) &&
+        filteredProducts.map((product, index) => {
           return loading ? (
             <div
               key={index}
@@ -73,13 +141,19 @@ export default function Products({ priceRange, size, categorySlug, limit }) {
               toastNotify={toastNotify}
             />
           );
-        })}
+        })
+        )
+      }
+      
     </div>
+      )
+    }
+    
+  </>
   );
 }
 
 function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
-  console.log(product, "product");
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
 
@@ -104,7 +178,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
 
   const handleAddToWishlist = (product_id) => {
     if (!user) {
-      navigate('/wishlist');
+      navigate("/wishlist");
     }
     axios
       .put(API_BASE_URL + "/user/addtowishlist", {
@@ -112,7 +186,6 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
         product_id: product_id,
       })
       .then((success) => {
-        console.log(success.data.user);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -192,7 +265,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
         <div>
           <img src="/images/Brand_name.png" alt="" className="w-10 mx-auto" />
         </div>
-        <h3 className="text-xs color font-medium">{product.name}</h3>
+        <h3 className="w-full truncate text-sm color font-medium">{product.name}</h3>
 
         {/* Price Details */}
         <div className="flex items-center justify-center gap-2 whitespace-nowrap mt-1 text-xs">
@@ -202,7 +275,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
           </span>
           <span className="text-green-600 font-semibold">
             {product.discount_percentage > 0 &&
-            `${product.discount_percentage} % off`}
+              `${product.discount_percentage} % off`}
           </span>
         </div>
       </div>

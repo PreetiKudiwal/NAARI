@@ -31,8 +31,12 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-3">Company</h3>
 
           <ul className="space-y-2 text-sm text-white pe-1">
+            <Link to={'/about'}>
             <li className='hover:underline cursor-pointer'>About Us</li>
-            <li className='hover:underline cursor-pointer'>Customer Care</li>
+            </Link>
+            <Link to={'/contact'}>
+            <li className='hover:underline cursor-pointer mt-2'>Customer Care</li>
+            </Link>
             <li className='hover:underline cursor-pointer'>Terms & conditions for clients outside India</li>
             <li className='hover:underline cursor-pointer'>Terms & conditions for clients within India</li>
             <li className='hover:underline cursor-pointer'>Privacy and Cookies</li>

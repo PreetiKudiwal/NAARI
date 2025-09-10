@@ -13,6 +13,7 @@ import { LiaRulerCombinedSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 import { UserLogin } from "../../Redux/Reducer/UserSlice";
 import { FaHeart } from "react-icons/fa6";
+import ShowSizes from "../components/ShowSizes";
 
 export default function Detail() {
   const {
@@ -32,15 +33,12 @@ export default function Detail() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.data);
+  const cart = useSelector((state) => state.cart.data);
   const slug = singleProduct?.category_id?.categorySlug;
-  console.log(slug);
-  console.log(product_id);
-  console.log(singleProduct, "singleProduct");
-  console.log(allSize, "allsize");
   const [selectedSize, setSelectedSize] = useState(null);
-  console.log(selectedSize, "selectedSize");
   const [shake, setShake] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const settings = {
     arrows: false,
@@ -59,10 +57,6 @@ export default function Detail() {
   }, [product_id]);
 
   // size selection code
-
-  const isAnySizeAvailable =
-    Array.isArray(allSize) &&
-    allSize.some((size) => singleProduct?.sizes?.includes(size._id));
 
   const OneSize = allSize.filter((s, i) => {
     return s.sizeLabel == "OneSize";
@@ -113,7 +107,6 @@ export default function Detail() {
         product_id: singleProduct?._id,
       })
       .then((success) => {
-        console.log(success.data.user);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -131,6 +124,10 @@ export default function Detail() {
 
   const hasProductInWishlist = user?.wishlist?.some(
     (item) => item?._id?.toString() === singleProduct?._id?.toString()
+  );
+
+  const hasProductInCart = cart?.some(
+    (item) => item?.product_id?._id?.toString() === singleProduct?._id?.toString()
   );
 
   useEffect(() => {
@@ -208,14 +205,14 @@ export default function Detail() {
           <div className="flex justify-around gap-5 lg:gap-0 sticky top-24">
             <div className="space-y-2">
               {loading ? (
-                <div className="w-20 h-28 bg-gray-200 cursor-pointer border-2 rounded shimmer"></div>
+                <div className="w-20 h-20 lg:h-28 bg-gray-200 cursor-pointer border-2 rounded shimmer"></div>
               ) : (
                 <img
                   src={
                     API_BASE_URL + `/images/product/${singleProduct?.main_img}`
                   }
                   alt="Main Product"
-                  className={`w-20 h-28 cursor-pointer border-2 rounded ${
+                  className={`w-20 h-20 lg:h-28 cursor-pointer border-2 rounded ${
                     singleProduct?.main_img === selectedImg
                       ? "border-yellow-700"
                       : "border-gray-300"
@@ -230,14 +227,14 @@ export default function Detail() {
                   return loading ? (
                     <div
                       key={index}
-                      className="w-20 h-28 bg-gray-200 cursor-pointer border-2 rounded shimmer"
+                      className="w-20 h-20 lg:h-28 bg-gray-200 cursor-pointer border-2 rounded shimmer"
                     ></div>
                   ) : (
                     <img
                       key={index}
                       src={fullImgPath}
                       alt={`thumb-${index}`}
-                      className={`w-20 h-28 cursor-pointer border-2 rounded ${
+                      className={`w-20 h-20 lg:h-28 cursor-pointer border-2 rounded ${
                         isSelected ? "border-yellow-700" : "border-gray-300"
                       }`}
                       onClick={() => setSelectedImg(image)}
@@ -247,13 +244,13 @@ export default function Detail() {
             </div>
 
             {loading ? (
-              <div className="w-[450px] h-[600px] bg-gray-200 cursor-pointer rounded shimmer"></div>
+              <div className="w-[450px] md:h-[500px] lg:h-[600px] bg-gray-200 cursor-pointer rounded shimmer"></div>
             ) : (
               <div className="group relative overflow-hidden cursor-zoom-in">
                 <img
                   src={API_BASE_URL + `/images/product/${selectedImg}`}
                   alt="Main Product"
-                  className="w-[450px] h-[600px] group-hover:scale-105 transition duration-300"
+                  className="w-[450px] md:h-[500px] lg:h-[600px] group-hover:scale-105 transition duration-300"
                 />
                 {singleProduct?.top_selling && (
                   <div className="bestseller-tag font-bold text-lg px-8 py-1">
@@ -368,8 +365,10 @@ export default function Detail() {
             </div>
 
             {/* Reviews */}
-            <div className="flex items-center text-yellow-500">
-              {"★★★★★"}
+            <div className="flex items-center text-base">
+              <div className="flex items-center justify-center text-white bg-yellow-700 px-2 rounded-full">
+              <span className="text-sm font-medium mt-[2px]">5</span>{"★"}
+              </div>
               <span className="ml-2 text-sm text-gray-600">(120 reviews)</span>
             </div>
 
@@ -392,12 +391,18 @@ export default function Detail() {
               <div className="flex items-baseline gap-8">
                 <p className="font-bold mb-1 text-sm">SELECT SIZE</p>
                 {!hasOneSize && (
-                  <p className="text-xs text-yellow-700 mb-2 cursor-pointer flex items-end gap-1">
+                  <div>
+                  <p className="text-xs text-yellow-700 mb-2 cursor-pointer flex items-end gap-1"
+                  onClick={() => setShowPopup(true)}>
                     SIZE GUIDE{" "}
                     <span className="text-xl">
                       <LiaRulerCombinedSolid />
                     </span>
                   </p>
+                  {showPopup && (
+        <ShowSizes sizeOptions={sizeOptions} onClose={() => setShowPopup(false)} />
+      )}
+                  </div>
                 )}
               </div>
 
@@ -452,12 +457,23 @@ export default function Detail() {
                     OUT OF STOCK
                   </button>
                 ) : (
-                  <button
+                  
+                    hasProductInCart ? (
+                      <Link to={'/cart'}>
+                      <button
+                    className="flex items-center justify-center gap-2 rounded w-full font-semibold border py-2 transition duration-300 custom-button"
+                  >
+                    <BsFillHandbagFill />
+                    GO TO BAG
+                  </button>
+                  </Link>
+                    ) : (
+                      <button
                     onClick={() =>
                       handleAddToCart({
                         _id: singleProduct?._id,
                         original_price: singleProduct?.original_price,
-                        finel_price: singleProduct?.finel_price, // corrected
+                        finel_price: singleProduct?.finel_price,
                         sizes: singleProduct?.sizes,
                         main_img: singleProduct?.main_img,
                         name: singleProduct?.name,
@@ -471,6 +487,9 @@ export default function Detail() {
                     <BsFillHandbagFill />
                     ADD TO BAG
                   </button>
+                    )
+                  
+                  
                 )}
               </div>
 
@@ -500,12 +519,22 @@ export default function Detail() {
                     OUT OF STOCK
                   </button>
                 ) : (
-                  <button
+                  hasProductInCart ? (
+                      <Link to={'/cart'}>
+                      <button
+                    className="flex items-center justify-center gap-2 rounded w-full font-semibold border py-2 transition duration-300 custom-button"
+                  >
+                    <BsFillHandbagFill />
+                    GO TO BAG
+                  </button>
+                  </Link>
+                    ) : (
+                      <button
                     onClick={() =>
                       handleAddToCart({
                         _id: singleProduct?._id,
                         original_price: singleProduct?.original_price,
-                        finel_price: singleProduct?.finel_price, // corrected
+                        finel_price: singleProduct?.finel_price,
                         sizes: singleProduct?.sizes,
                         main_img: singleProduct?.main_img,
                         name: singleProduct?.name,
@@ -519,6 +548,7 @@ export default function Detail() {
                     <BsFillHandbagFill />
                     ADD TO BAG
                   </button>
+                    )
                 )}
               </div>
               <div className="hidden md:block w-1/2">
@@ -560,7 +590,7 @@ export default function Detail() {
 
               <ul className="text-xs text-gray-800 space-y-1">
                 <li>✔ 100% Original Products</li>
-                <li>✔ Pay on delivery might be available</li>
+                <li>✔ Pay on delivery is available</li>
                 <li>✔ Easy 14 days returns and exchanges</li>
               </ul>
             </div>
@@ -664,7 +694,6 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, navigate, toastNot
         product_id: product_id,
       })
       .then((success) => {
-        console.log(success.data.user);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -743,7 +772,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, navigate, toastNot
         <div>
           <img src="/images/Brand_name.png" alt="" className="w-10 mx-auto" />
         </div>
-        <h3 className="text-xs color font-medium">{product.name}</h3>
+        <h3 className="truncate text-sm color font-medium">{product.name}</h3>
 
         {/* Price Details */}
         <div className="flex items-center justify-center gap-2 mt-1 whitespace-nowrap text-xs">

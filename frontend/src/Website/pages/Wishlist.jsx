@@ -10,20 +10,27 @@ import { addToCart } from "../../Redux/Reducer/CartSlice";
 import { Link } from "react-router-dom";
 
 export default function Wishlist() {
-  const user = useSelector((state) => state.user.data);
+  const user = useSelector((state) => state.user.data); 
   const [loading, setLoading] = useState(false);
-  console.log(user, "userin wishlist");
+  
+  const [loadingUser, setLoadingUser] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
+    setLoadingUser(true);
+    setTimeout(() => {
+      setLoadingUser(false);
+    }, 100);
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, []);
   return (
-    <>
-      {user?.wishlist?.length === 0 || !user ? (
+    <>{loadingUser ? (
+        <div className="w-full min-h-svh flex mt-10 justify-center"></div>
+      ) : (
+        user?.wishlist?.length === 0 || !user ? (
         <div className="w-full min-h-svh flex mt-10 justify-center">
           <div className="text-center">
             <div className="w-80 h-60 mx-auto">
@@ -123,7 +130,9 @@ export default function Wishlist() {
             </div>
           </div>
         </div>
-      )}
+      )
+      )
+      }
     </>
   );
 }
@@ -131,7 +140,6 @@ export default function Wishlist() {
 function WishlistCard({ product, dispatch, user }) {
   const { API_BASE_URL, toastNotify, fetchAllSize, allSize, toast } =
     useContext(MainContext);
-  console.log(product, "WishlistCard");
   const MySwal = withReactContent(Swal);
   const handleRemoveFromWishlist = (product_id) => {
     axios
@@ -140,7 +148,6 @@ function WishlistCard({ product, dispatch, user }) {
         product_id: product_id,
       })
       .then((success) => {
-        console.log(success.data);
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -219,7 +226,7 @@ function WishlistCard({ product, dispatch, user }) {
         <div>
           <img src="/images/Brand_name.png" alt="" className="w-10 mx-auto" />
         </div>
-        <h3 className="text-xs color font-medium">{product.name}</h3>
+        <h3 className="truncate text-sm color font-medium">{product.name}</h3>
 
         {/* Price Details */}
         <div className="flex items-center justify-center gap-2 whitespace-nowrap mt-1 text-xs">
@@ -262,9 +269,6 @@ function SizePopUp({
   toast,
 }) {
   const [productSize, setProductSize] = useState(null);
-  console.log(productSize, "productSize");
-  // console.log(CartItem.product_id._id);
-  // const dispatch = useDispatch();
 
   // size select code
 
@@ -287,8 +291,7 @@ function SizePopUp({
       toast.error("Please select a size!");
       return;
     }
-    // dispatch(addToCart({data}));
-    // toast.success("Added to bag!");
+
     if (user) {
       axios
         .post(API_BASE_URL + "/user/addtocart", {
@@ -297,7 +300,6 @@ function SizePopUp({
           size: hasOneSize ? OneSize[0]?.sizeLabel : productSize,
         })
         .then((success) => {
-          console.log(success);
           toastNotify(success.data.msg, success.data.status);
           if (success.data.status == 1) {
             dispatch(
@@ -329,7 +331,6 @@ function SizePopUp({
       );
     }
     {
-      // setProductSize(localSize);
       Swal.close();
     }
   };
@@ -372,32 +373,6 @@ function SizePopUp({
         </div>
       )}
 
-      {/* {Array.isArray(allSize) &&
-          allSize?.map((size, index) => {
-            const isAvailable = product?.sizes?.some((s) => s === size._id);
-            const isSelected = productSize === size.sizeLabel;
-
-            return (
-              <button
-                key={index}
-                onClick={() => setProductSize(size.sizeLabel)}
-                className={`w-12 h-12 rounded-full text-sm font-bold
-  ${
-    isAvailable ? "hover:border-yellow-700" : "text-gray-400 cursor-not-allowed"
-  }
-  ${
-    isSelected
-      ? "border-2 border-yellow-700 text-yellow-700"
-      : "border-2 border-gray-400 text-black "
-  }
- 
-`}
-                disabled={!isAvailable}
-              >
-                {size.sizeLabel}
-              </button>
-            );
-          })} */}
       <button
         className="bg-zinc-800 text-white w-full py-2 hover:bg-zinc-900"
         onClick={handleAddToCart}

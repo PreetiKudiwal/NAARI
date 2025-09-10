@@ -50,40 +50,7 @@ class SizeController {
                                 )
                             }
                         )
-                    // if (data.sizeLabel && data.sizeSlug && data.bust && data.waist && data.hip && data.indiaSize && data.intlSize) {
-                    //     const size = new SizeModel(
-                    //         {
-                    //             ...data
-                    //         }
-                    //     );
-                    //     size.save().then(
-                    //         (success) => {
-                    //             resolve(
-                    //                 {
-                    //                     msg: 'size created successfully',
-                    //                     status: 1
-                    //                 }
-                    //             )
-                    //         }
-                    //     ).catch(
-                    //         (error) => {
-                    //             console.log(error)
-                    //             reject(
-                    //                 {
-                    //                     msg: 'size not created',
-                    //                     status: 0
-                    //                 }
-                    //             )
-                    //         }
-                    //     )
-                    // } else {
-                    //     reject(
-                    //         {
-                    //             msg: 'All fields are required',
-                    //             status: 0
-                    //         }
-                    //     )
-                    // }
+                    
                 } catch (error) {
                     console.log(error);
                     reject(

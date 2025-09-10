@@ -9,11 +9,15 @@ export default function Orders() {
     useContext(MainContext);
   const user = useSelector((state) => state.user.data);
   const navigate = useNavigate();
-  console.log(allOrder, "context");
+  const [loadingUser, setLoadingUser] = useState(true);
 
 
 
   useEffect(() => {
+    setLoadingUser(true);
+    setTimeout(() => {
+      setLoadingUser(false);
+    }, 100);
       fetchAllOrder(user?._id);
   }, [user]);
 
@@ -29,7 +33,11 @@ export default function Orders() {
 
   return (
     <>
-      {allOrder?.length === 0 ? (
+      {
+      loadingUser ? (
+        <div className="w-full min-h-svh flex mt-10 justify-center"></div>
+      ) : (
+        allOrder?.length === 0 ? (
         <div className="w-full min-h-svh flex justify-center mt-4 items-center md:items-start">
           <div className="text-center">
             <div className="w-64 h-56 mx-auto">
@@ -68,15 +76,10 @@ export default function Orders() {
                   </div>
                   <div className="text-right">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        order.order_status === 1
-                          ? "bg-green-100 text-green-600"
-                          : "bg-yellow-100 text-yellow-600"
-                      }`}
+                      className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap bg-yellow-100 text-yellow-600 
+                        `}
                     >
-                      {order.order_status === 1
-                        ? "Delivered"
-                        : "Out for Delivery"}
+                      Confirmed
                     </span>
                   </div>
                 </div>
@@ -90,9 +93,11 @@ export default function Orders() {
                         className="w-24 h-28 cover rounded-md border"
                       />
                       <div className="flex-1 space-y-4">
-                        <p className="font-semibold text-sm">{item.name}</p>
+                        <p className="truncate w-[200px] lg:w-auto font-semibold text-sm">{item.name}</p>
                         <p className="text-sm text-gray-600">
-                          Qty: {item.qty} | ₹{item.total}
+                          Qty: {item.qty} | ₹{(item.total).toLocaleString(
+                      "en-IN"
+                    )}
                         </p>
                       </div>
                     </div>
@@ -103,13 +108,17 @@ export default function Orders() {
                     Total Amount:
                   </p>
                   <p className="font-bold text-md text-gray-800">
-                    ₹{order.order_total}
+                    ₹{(order.order_total).toLocaleString(
+                      "en-IN"
+                    )}
                   </p>
                 </div>
               </div>
             ))}
         </div>
-      )}
+      )
+      )
+      }
     </>
   );
 }

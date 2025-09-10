@@ -12,7 +12,6 @@ export default function Login() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const cart = useSelector((state) => state.cart.data);
-  console.log(cart, 'cart');
 
   const loginUser = (event) => {
     event.preventDefault();
@@ -25,7 +24,6 @@ export default function Login() {
     axios
       .post(API_BASE_URL + "/user/login", data)
       .then((success) => {
-        console.log(success, 'user-login');
         toastNotify(success.data.msg, success.data.status);
         if (success.data.status == 1) {
           dispatch(
@@ -38,11 +36,9 @@ export default function Login() {
               cart
             )
             .then((res) => {
-              console.log(res, "user-movetodb");
               const latestCart = res.data.latestCart;
               let totalOriginalPrice = 0;
               let totalFinalPrice = 0;
-              console.log(latestCart, "latestCart");
 
               const data =
                 Array.isArray(latestCart) &&
@@ -92,12 +88,12 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[url('/images/b2.jpg')]">
-      <div className="bg-black/50 w-full min-h-screen flex justify-center p-8">
-      <div className="w-full max-w-md bg-white px-8 color">
+      <div className="bg-black/50 w-full min-h-screen flex justify-center md:items-center md:p-8">
+      <div className="w-full md:max-w-md bg-white px-8 color pb-8 pt-8 md:pt-4">
         <div className="flex justify-center">
-          <img src="/images/logo.png" alt="logo" className="w-11 md:w-28"/>
+          <img src="/images/logo.png" alt="logo" className="w-20 md:w-28"/>
         </div>
-        <h2 className="text-4xl font-bold mb-6 text-center font">
+        <h2 className="text-4xl font-bold mb-6 text-center font whitespace-nowrap">
           Login to Your Account
         </h2>
 

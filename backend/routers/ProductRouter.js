@@ -184,7 +184,6 @@ ProductRouter.delete(
 ProductRouter.get(
     "/sarees/:id",
     (req, res) => {
-        console.log(req.params.id, "ids");
         const result = new ProductController().fetchSarees();
         result.then(
             (success) => {
@@ -206,7 +205,6 @@ ProductRouter.get(
 ProductRouter.get(
     "/lehengas/:id",
     (req, res) => {
-        console.log(req.params.id, "ids");
         const result = new ProductController().fetchLehengas();
         result.then(
             (success) => {
@@ -228,7 +226,6 @@ ProductRouter.get(
 ProductRouter.get(
     "/salwar/:id",
     (req, res) => {
-        console.log(req.params.id, "ids");
         const result = new ProductController().fetchSalwar();
         result.then(
             (success) => {

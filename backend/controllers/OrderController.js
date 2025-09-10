@@ -150,7 +150,6 @@ class OrderController {
     }
 
     paymentSuccess(OrderData) {
-        // console.log(OrderData, "paymentData in paymentSuccess");
         return new Promise(
             async (resolve, reject) => {
                 try {

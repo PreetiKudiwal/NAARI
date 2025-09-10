@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 export default function SplashScreen() {
 
-    const words = ["Celebrate", "Yourself", "in", "every", "Thread", "With"]; // words you want to show
+    const words = ["Celebrate", "Yourself", "in", "every", "Thread"]; // words you want to show
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showLogo, setShowLogo] = useState(false);
 
@@ -10,7 +10,7 @@ export default function SplashScreen() {
     if (currentWordIndex < words.length) {
       const timer = setTimeout(() => {
         setCurrentWordIndex((prev) => prev + 1);
-      }, 600); // 1 second per word
+      }, 600);
       return () => clearTimeout(timer);
     } else {
       // After last word → show logo
@@ -39,7 +39,7 @@ export default function SplashScreen() {
       {/* Logo appears after words */}
       {showLogo && (
         <img
-          src="/images/naarilogo.png"
+          src="/images/logo.png"
           alt="App Logo"
           className="w-40 absolute bottom-[42%] opacity-100 transition-opacity duration-1000 animate-pulse"
         />

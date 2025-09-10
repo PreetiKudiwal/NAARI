@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
+import React, { useState, useEffect, useContext, use } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { UserLogout } from "../../Redux/Reducer/UserSlice";
 import { emptyCart } from "../../Redux/Reducer/CartSlice";
@@ -10,17 +9,27 @@ import { FaRegUser } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa6";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoSearch } from "react-icons/io5";
+import { MainContext } from "../../context/Context";
 
 export default function Header() {
+  const {
+    searchTerm,
+    setSearchTerm,
+    showMobileSearchBar,
+    setShowMobileSearchBar,
+    toastNotify,
+  } = useContext(MainContext);
   const [toggle, setToggle] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // ✅ new state
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showUserPopup, setShowUserPopup] = useState(false);
+  const [index, setIndex] = useState(0);
   const cart = useSelector((state) => state.cart.data);
   const user = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const words = ["Lehengas", "Sarees", "Suits"];
 
   // Handle scroll behavior
   useEffect(() => {
@@ -37,30 +46,62 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  useEffect(() => {
+    if (searchTerm) {
+      localStorage.setItem("searchTerm", searchTerm);
+    } else {
+      localStorage.removeItem("searchTerm"); // remove if empty
+    }
+  }, [searchTerm]);
+
   const handleSearch = (e) => {
-    if (e.key === "Enter" && searchTerm.trim() !== "") {
-      navigate(`/shop/${encodeURIComponent(searchTerm)}`);
+    if (e.key === "Enter") {
+      navigate(`/shop`);
     }
   };
 
   //Mobile Menu
 
-   useEffect(() => {
-      if (toggle) {
-        const scrollBarWidth =
-          window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = `${scrollBarWidth}px`; // prevent layout shift
-      } else {
-        document.body.style.overflow = "auto";
-        document.body.style.paddingRight = "0px"; // reset
-      }
-  
-      return () => {
-        document.body.style.overflow = "auto";
-        document.body.style.paddingRight = "0px";
-      };
-    }, [toggle]);
+  useEffect(() => {
+    if (toggle) {
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollBarWidth}px`; // prevent layout shift
+    } else {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px"; // reset
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+    };
+  }, [toggle]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 2000); 
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setShowMobileSearchBar(true);
+    } else {
+      setShowMobileSearchBar(false);
+    }
+  }, [location.pathname]);
+
+  //logout notification after reload
+  useEffect(() => {
+  const message = localStorage.getItem("logoutMessage");
+  if (message) {
+    toastNotify(message, 1); //  Show notification after reload
+    localStorage.removeItem("logoutMessage"); // Clear it
+  }
+}, []);
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -83,12 +124,22 @@ export default function Header() {
         <div className="relative w-1/3 hidden lg:block">
           <input
             type="text"
-            placeholder="Search..."
-            className="w-full p-2 ps-14 bg-gray-100 border border-transparent rounded-full focus:outline-none focus:border-gray-200 focus:bg-white"
-            onChange={(e) => setSearchTerm(e.target.value)} // ✅ update state
-            onKeyDown={handleSearch} // ✅ search on Enter
+            placeholder="Seach for"
+            className="w-full p-2 ps-14 border border-zinc-700 rounded-full focus:outline-none placeholder:text-zinc-800 placeholder:text-sm"
+            onChange={(e) => setSearchTerm(e.target.value)} //  update state
+            onKeyDown={handleSearch} //  search on Enter
+            value={searchTerm} // controlled input
           />
-          <FaSearch className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+          <IoSearch className="absolute left-3 top-2.5 w-5 h-5 color" />
+
+          {/* Animated Placeholder Text */}
+          {searchTerm === "" && (
+            <span className="absolute left-32 top-1/2 -translate-y-1/2 text-zinc-800 text-sm pointer-events-none overflow-hidden h-5">
+              <span key={index} className="block animate-slide">
+                "{words[index]}"
+              </span>
+            </span>
+          )}
         </div>
 
         {/* Desktop Navigation */}
@@ -120,15 +171,17 @@ export default function Header() {
 
         {/* Icons: Wishlist, Cart, Login */}
         <div className="flex items-center space-x-4">
-          <div>
-            <IoSearch className="text-xl md:text-3xl lg:hidden" />
-          </div>
+          {location.pathname !== "/" && (
+            <div onClick={() => setShowMobileSearchBar(!showMobileSearchBar)}>
+              <IoSearch className="text-xl md:text-3xl lg:hidden" />
+            </div>
+          )}
+
           <div
             className="relative group cursor-pointer transition py-3 hidden lg:block"
             onMouseEnter={() => setShowUserPopup(true)}
             onMouseLeave={() => setShowUserPopup(false)}
           >
-            
             <FaRegUser className="text-lg ms-2 md:text-3xl lg:text-lg hover:text-red-800" />
             {showUserPopup && (
               <div
@@ -181,7 +234,9 @@ export default function Header() {
                           dispatch(emptyCart());
                           setShowUserPopup(false);
                           navigate("/");
+                          localStorage.setItem("logoutMessage", "Logged out successfully!");
                           window.location.reload();
+
                         }}
                       >
                         Logout
@@ -193,48 +248,64 @@ export default function Header() {
             )}
           </div>
 
-          <NavLink to="/wishlist"
-          className={({ isActive }) =>
-                  `text-xl text-black hover:text-red-800 ${
-                    isActive ? "text-red-800" : ""
-                  }`
-                }
+          <NavLink
+            to="/wishlist"
+            className={({ isActive }) =>
+              `text-xl text-black hover:text-red-800 ${
+                isActive ? "text-red-800" : ""
+              }`
+            }
           >
             <FaRegHeart className="md:text-3xl lg:text-xl" />
           </NavLink>
 
-          <NavLink to="/cart"
-          className={({ isActive }) =>
-                  `text-2xl text-black hover:text-red-800 relative ${
-                    isActive ? "text-red-800" : ""
-                  }`
-                }
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              `text-2xl text-black hover:text-red-800 relative ${
+                isActive ? "text-red-800" : ""
+              }`
+            }
           >
             <HiOutlineShoppingBag className="text-xl md:text-3xl lg:text-[21px]" />
             <span className="absolute -top-3 -right-2  text-black text-xs px-1.5 py-0.5 font-bold rounded-full">
-              {cart.length}
+              {cart.length === 0 ? '' : cart.length}
             </span>
           </NavLink>
         </div>
       </div>
 
       {/* Mobile Search Bar */}
-      {/* <div
-        className={`lg:hidden transition-all duration-300 ease-in-out fixed w-full top-15 ${
-          showMobileSearch
-            ? "h-auto opacity-100"
-            : "h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="relative mb-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full p-2 ps-14 md:p-4 md:ps-16 border rounded-lg focus:outline-none"
-          />
-          <FaSearch className="absolute left-8 top-3 md:text-2xl md:top-[30%] text-gray-500" />
+      {showMobileSearchBar && (
+        <div
+          className={`lg:hidden fixed w-full  top-15 transition-all origin-top duration-500 ease-in-out transform ${
+            showMobileSearch
+              ? "scale-y-100 opacity-100"
+              : " scale-y-0 opacity-0"
+          }`}
+        >
+          <div className="relative mb-2">
+            <input
+              type="text"
+              placeholder="Search for"
+              className="w-full p-2 ps-14 md:p-4 md:ps-16 border rounded-b-lg focus:outline-none placeholder:text-sm text-gray-400"
+              onChange={(e) => setSearchTerm(e.target.value)} //  update state
+              onKeyDown={handleSearch} // search on Enter
+              value={searchTerm} //  controlled input
+            />
+            <IoSearch className="absolute left-8 top-[15px] md:text-2xl md:top-[30%] text-gray-400" />
+
+            {/* Animated Placeholder Text */}
+            {searchTerm === "" && (
+              <span className="absolute left-32 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none overflow-hidden h-5">
+                <span key={index} className="block animate-slide">
+                  "{words[index]}"
+                </span>
+              </span>
+            )}
+          </div>
         </div>
-      </div> */}
+      )}
 
       {/* Overlay */}
       {toggle && (
@@ -253,11 +324,7 @@ export default function Header() {
         {/* Logo and Close */}
         <div className="flex justify-between items-center px-4 border-b">
           <div>
-            <img
-              src="/images/naarilogo.png"
-              alt=""
-              className="w-20 md:w-32"
-            />
+            <img src="/images/naarilogo.png" alt="" className="w-20 md:w-32" />
           </div>
           <button onClick={() => setToggle(false)}>
             <RxCross2 className="text-xl md:text-4xl" />
@@ -265,7 +332,7 @@ export default function Header() {
         </div>
 
         {/* Nav Links */}
-        <nav className="flex flex-col">
+        <nav className="flex flex-col h-full overflow-auto">
           {[
             "/",
             "/shop",
@@ -295,6 +362,30 @@ export default function Header() {
               </NavLink>
             );
           })}
+          {user ? (
+            <NavLink
+              to={"/"}
+              onClick={() => 
+                {setToggle(false)
+                dispatch(UserLogout());
+                dispatch(emptyCart());
+                navigate("/");
+                localStorage.setItem("logoutMessage", "Logged out successfully!");
+                window.location.reload();
+                }}
+              className="text-black md:text-3xl text-base border-b px-6 py-4 md:py-10 font-semibold"
+            >
+              Logout
+            </NavLink>
+          ) : (
+            <NavLink
+              to={"/userlogin?ref=home"}
+              onClick={() => setToggle(false)}
+              className="text-black md:text-3xl text-base border-b px-6 py-4 md:py-10 font-semibold"
+            >
+              Login
+            </NavLink>
+          )}
         </nav>
       </div>
     </header>
