@@ -27,7 +27,6 @@ export default function Detail() {
     toast,
     toastNotify,
   } = useContext(MainContext);
-  console.log(allProduct, "allproduct in detail");
   const { product_id } = useParams();
   const [selectedImg, setSelectedImg] = useState("");
   const dispatch = useDispatch();
