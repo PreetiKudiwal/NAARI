@@ -24,13 +24,14 @@ export default function Context({ children }) {
   // detect screen size
   const isMobileOrTablet = window.innerWidth < 1024;
 
-  const API_BASE_URL = "http://localhost:5001";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const CATEGORY_URL = "/category";
   const COLOR_URL = "/color";
   const PRODUCT_URL = "/product";
   const ADMIN_USER_URL = "/admin";
   const ORDER_URL = "/order";
   const SIZE_URL = "/size";
+  console.log(import.meta.env.VITE_API_BASE_URL, 'url')
 
   const toastNotify = (msg, status) =>
     toast(msg, { type: status == true ? "success" : "error" });
