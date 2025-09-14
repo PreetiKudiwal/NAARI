@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 5001;
 server.use(express.json());
 server.use(cors(
     {
-        origin: process.env.FRONTEND_URL
+        origin: process.env.FRONTEND_URL,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true
     }
 ))
 server.use(express.static("public"));
