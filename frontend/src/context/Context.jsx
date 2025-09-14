@@ -31,7 +31,6 @@ export default function Context({ children }) {
   const ADMIN_USER_URL = "/admin";
   const ORDER_URL = "/order";
   const SIZE_URL = "/size";
-  console.log(import.meta.env.VITE_API_BASE_URL, 'url')
 
   const toastNotify = (msg, status) =>
     toast(msg, { type: status == true ? "success" : "error" });

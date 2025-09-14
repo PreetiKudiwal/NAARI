@@ -10,12 +10,13 @@ const AdminRouter = require("./routers/AdminRouter");
 const UserRouter = require('./routers/UserRouter');
 const OrderRouter = require('./routers/OrderRouter');
 const SizeRouter = require('./routers/SizeRouter');
+const PORT = process.env.PORT || 5001;
 //middleware
 
 server.use(express.json());
 server.use(cors(
     {
-        origin: ["http://localhost:5173"]
+        origin: process.env.FRONTEND_URL
     }
 ))
 server.use(express.static("public"));
@@ -28,16 +29,15 @@ server.use("/user", UserRouter);
 server.use("/order", OrderRouter);
 server.use("/size", SizeRouter);
 
-console.log(process.env.MONGODB_KEY);
 mongoose.connect(
     process.env.MONGODB_KEY,
     { dbName: 'Ishop' }
 ).then(
     (success) => {
         server.listen(
-            5001,
+            PORT,
             () => {
-                console.log("server starts at port 5001");
+                console.log(`Server running on port ${PORT}`);
             }
         )
     }
