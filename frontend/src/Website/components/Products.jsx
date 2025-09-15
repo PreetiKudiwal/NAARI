@@ -49,7 +49,7 @@ export default function Products({ priceRange, size, categorySlug, limit }) {
 
   const searchWords = searchTerm.toLowerCase().split(" ").map(normalizeWord);
 
-const filteredProducts = allProduct.filter((product) => {
+const filteredProducts = allProduct?.filter((product) => {
   const productName = normalizeWord(product.name.toLowerCase());
   const categoryName = normalizeWord(product.category_id.categoryName.toLowerCase());
   const colorName = normalizeWord(product.colors[0]?.colorName.toLowerCase() || "");
@@ -81,7 +81,7 @@ useEffect(() => {
       ) : (
         <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
       {
-        filteredProducts.length === 0 ? 
+        filteredProducts?.length === 0 ? 
         (
           <div className="w-full min-h-svh flex mt-20 md:mt-10 justify-center">
           <div className="text-center flex flex-col items-center">
@@ -157,6 +157,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
   console.log(product, 'product');
+  console.log(API_BASE_URL, 'API_BASE_URL');
   const sliderSettings = {
     arrows: false,
     dots: true,
