@@ -23,6 +23,10 @@ server.use(cors(
     }
 ))
 
+server.get('/', (req, res) => {
+    res.send('Backend is running!');
+});
+
 server.use('/images', express.static('images'));
 server.use(express.static("public"));
 server.use("/category", CategoryRouter);
