@@ -22,8 +22,9 @@ server.use(cors(
         credentials: true
     }
 ))
-server.use(express.static("public"));
 
+server.use('/images', express.static('images'));
+server.use(express.static("public"));
 server.use("/category", CategoryRouter);
 server.use("/color", ColorRouter);
 server.use("/product", ProductRouter);
