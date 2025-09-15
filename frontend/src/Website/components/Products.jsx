@@ -156,7 +156,7 @@ useEffect(() => {
 function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
-
+  console.log(product, 'product');
   const sliderSettings = {
     arrows: false,
     dots: true,
