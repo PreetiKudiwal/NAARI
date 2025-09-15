@@ -324,7 +324,7 @@ export default function Header() {
         {/* Logo and Close */}
         <div className="flex justify-between items-center px-4 border-b">
           <div>
-            <img src="/images/naarilogo.png" alt="" className="w-20 md:w-32" />
+            <img src="/images/logo.png" alt="" className="w-20 md:w-32" />
           </div>
           <button onClick={() => setToggle(false)}>
             <RxCross2 className="text-xl md:text-4xl" />
