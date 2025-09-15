@@ -27,7 +27,7 @@ server.get('/', (req, res) => {
     res.send('Backend is running!');
 });
 
-server.use('/images', express.static('images'));
+server.use('/images', express.static('public/images'));
 server.use(express.static("public"));
 server.use("/category", CategoryRouter);
 server.use("/color", ColorRouter);
