@@ -171,9 +171,9 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
   };
 
   const imageSources = [
-    API_BASE_URL + `/images/product/${product.main_img}`,
+    `${product.main_img}`,
     ...(product.other_img || []).map(
-      (img) => API_BASE_URL + `/images/product/${img}`
+      (img) => `${img}`
     ),
   ];
 

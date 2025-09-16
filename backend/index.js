@@ -11,6 +11,9 @@ const UserRouter = require('./routers/UserRouter');
 const OrderRouter = require('./routers/OrderRouter');
 const SizeRouter = require('./routers/SizeRouter');
 const PORT = process.env.PORT || 5001;
+const fileUpload = require("express-fileupload");
+const cloudinary = require("./config/Cloudinary");
+
 //middleware
 
 server.use(express.json());
@@ -23,9 +26,39 @@ server.use(cors(
     }
 ))
 
+// server.use(fileUpload({ useTempFiles: true }));
+
 server.get('/', (req, res) => {
     res.send('Backend is running!');
 });
+
+// server.post("/upload", async (req, res) => {
+//   try {
+//     if (!req.files || !req.files.image) {
+//       return res.status(400).json({ success: false, msg: "No file uploaded" });
+//     }
+
+//     const file = req.files.image;
+
+//     // Cloudinary me upload
+//     const result = await cloudinary.uploader.upload(file.tempFilePath, {
+//       folder: "products", // optional: Cloudinary folder ka naam
+//     });
+
+//     // temp file delete
+//     const fs = require("fs");
+//     fs.unlinkSync(file.tempFilePath);
+
+//     res.json({
+//       success: true,
+//       url: result.secure_url, // ye URL tum frontend me use karogi
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
+
 
 server.use('/images/product', express.static('public/images/product'));
 server.use(express.static("public"));

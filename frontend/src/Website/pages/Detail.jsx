@@ -161,7 +161,7 @@ export default function Detail() {
             singleProduct?.other_img.length === 0 ? (
             <div className="w-full h-[500px]">
               <img
-                src={`${API_BASE_URL}/images/product/${singleProduct?.main_img}`}
+                src={`${singleProduct?.main_img}`}
                 alt={`thumb-main_img`}
                 className="w-full h-full cursor-pointer bg-white focus:outline-none"
               />
@@ -170,14 +170,14 @@ export default function Detail() {
             <Slider {...settings}>
               <div className="w-full h-[500px]">
                 <img
-                  src={`${API_BASE_URL}/images/product/${singleProduct?.main_img}`}
+                  src={`${singleProduct?.main_img}`}
                   alt={`thumb-main_img`}
                   className="w-full h-full cursor-pointer bg-white focus:outline-none"
                 />
               </div>
               {Array.isArray(singleProduct?.other_img) &&
                 singleProduct?.other_img.map((image, index) => {
-                  const fullImgPath = `${API_BASE_URL}/images/product/${image}`;
+                  const fullImgPath = `${image}`;
                   return (
                     <div key={index}>
                       <img
@@ -208,7 +208,7 @@ export default function Detail() {
               ) : (
                 <img
                   src={
-                    API_BASE_URL + `/images/product/${singleProduct?.main_img}`
+                    `${singleProduct?.main_img}`
                   }
                   alt="Main Product"
                   className={`w-20 h-20 lg:h-28 cursor-pointer border-2 rounded ${
@@ -221,7 +221,7 @@ export default function Detail() {
               )}
               {Array.isArray(singleProduct?.other_img) &&
                 singleProduct?.other_img.map((image, index) => {
-                  const fullImgPath = `${API_BASE_URL}/images/product/${image}`;
+                  const fullImgPath = `${image}`;
                   const isSelected = image === selectedImg;
                   return loading ? (
                     <div
@@ -247,7 +247,7 @@ export default function Detail() {
             ) : (
               <div className="group relative overflow-hidden cursor-zoom-in">
                 <img
-                  src={API_BASE_URL + `/images/product/${selectedImg}`}
+                  src={`${selectedImg}`}
                   alt="Main Product"
                   className="w-[450px] md:h-[500px] lg:h-[600px] group-hover:scale-105 transition duration-300"
                 />
@@ -677,9 +677,9 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, navigate, toastNot
   };
 
   const imageSources = [
-    API_BASE_URL + `/images/product/${product?.main_img}`,
+    `${product?.main_img}`,
     ...(product?.other_img || []).map(
-      (img) => API_BASE_URL + `/images/product/${img}`
+      (img) => `${img}`
     ),
   ];
 
