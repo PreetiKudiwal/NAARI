@@ -42,7 +42,6 @@ export default function Filter({
     }
   };
 
-
   useEffect(() => {
     const priceFrom = searchParams.get("priceFrom");
     const priceTo = searchParams.get("priceTo");
@@ -138,18 +137,21 @@ export default function Filter({
 
       <div className="p-3 w-full flex flex-col border-b">
         <h1 className="text-md text-zinc-900 font-medium">CATEGORIES</h1>
-
-        {Array.isArray(allCategory) &&
+        {!allCategory || allCategory.length === 0 ? (
+          <div className="items-center text-sm cursor-pointer p-2 rounded space-y-4">
+            {[1, 2, 3, 4, 5].map((num, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"
+                ></div>
+              );
+            })}
+          </div>
+        ) : (
+          Array.isArray(allCategory) &&
           allCategory.map((category, index) => {
-            return loading ? (
-              <div
-                key={index}
-                className="items-center text-sm cursor-pointer p-2 rounded"
-              >
-                {/* Skeleton for categories */}
-                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
-              </div>
-            ) : (
+            return (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -160,7 +162,6 @@ export default function Filter({
                   value={category.categorySlug}
                   className="accent-yellow-700"
                   onChange={(e) => {
-
                     if (e.target.checked) {
                       setAppliedCategory((prev) =>
                         prev.includes(category.categoryName)
@@ -173,9 +174,7 @@ export default function Filter({
                       );
                     }
                   }}
-                  checked={
-                    appliedCategory.includes(category.categoryName)
-                  }
+                  checked={appliedCategory.includes(category.categoryName)}
                 />
                 <span>{category.categoryName}</span>
                 <span className="lg:text-xs text-gray-500">
@@ -183,7 +182,8 @@ export default function Filter({
                 </span>
               </label>
             );
-          })}
+          })
+        )}
       </div>
 
       {/* category section End */}
@@ -194,7 +194,7 @@ export default function Filter({
         <h1 className="text-md text-zinc-900 font-medium mb-3">PRICE</h1>
 
         <ReactSlider
-          className="w-full h-4 relative flex items-center" 
+          className="w-full h-4 relative flex items-center"
           thumbClassName="h-3 w-3 bg-white rounded-full border-4 border-black cursor-pointer -mt-[0px]" // ⬅️ shift thumb up to center
           trackClassName="bg-yellow-700 h-1 top-1/2 transform -translate-y-1/2"
           min={100}
@@ -226,15 +226,7 @@ export default function Filter({
               bgColor = "bg-yellow-700";
             }
 
-            return loading ? (
-              <div
-                key={key}
-                {...restProps}
-                className={`${baseClasses} ${bgColor} rounded`}
-              >
-                <div className="w-full h-full bg-gray-200 rounded shimmer"></div>
-              </div>
-            ) : (
+            return (
               <div
                 key={key} //set key explicitly
                 {...restProps} // spread rest of the props safely
@@ -243,33 +235,30 @@ export default function Filter({
             );
           }}
         />
-        {loading ? (
-          <div className="flex justify-between text-sm mt-2">
-            <span className="h-4 w-10 bg-gray-200 rounded shimmer"></span>
-            <span className="h-4 w-10 bg-gray-200 rounded shimmer"></span>
-          </div>
-        ) : (
           <div className="flex justify-between text-sm mt-2">
             <span>₹{priceRange.from}</span>
             <span>₹{priceRange.to}</span>
           </div>
-        )}
       </div>
 
       <div className="p-3 w-full flex flex-col border-b">
         <h1 className="text-md text-zinc-900 font-medium">COLOR</h1>
 
-        {Array.isArray(allColor) &&
+        {!allColor || allColor.length === 0 ? (
+          <div className="items-center text-sm cursor-pointer p-2 rounded space-y-4">
+            {[1, 2, 3, 4, 5].map((num, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"
+                ></div>
+              );
+            })}
+          </div>
+        ) : (
+          Array.isArray(allColor) &&
           allColor.map((color, index) => {
-            return loading ? (
-              <div
-                key={index}
-                className="flex gap-2 items-center text-sm cursor-pointer p-2 rounded"
-              >
-                {/* Skeleton for colors */}
-                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
-              </div>
-            ) : (
+            return (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -281,7 +270,6 @@ export default function Filter({
                   className="accent-yellow-700"
                   checked={appliedColor.includes(color.colorName)}
                   onChange={(e) => {
-
                     if (e.target.checked) {
                       setAppliedColor((prev) =>
                         prev.includes(color.colorName)
@@ -304,23 +292,28 @@ export default function Filter({
                 </span>
               </label>
             );
-          })}
+          })
+        )}
       </div>
 
       <div className="p-3 w-full flex flex-col border-b">
         <h1 className="text-md text-zinc-900 font-medium">SIZE</h1>
 
-        {Array.isArray(allSize) &&
+        {!allSize || allSize.length === 0 ? (
+          <div className="items-center text-sm cursor-pointer p-2 rounded space-y-4">
+            {[1, 2, 3, 4, 5].map((num, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"
+                ></div>
+              );
+            })}
+          </div>
+        ) : (
+          Array.isArray(allSize) &&
           allSize.map((s, index) => {
-            return loading ? (
-              <div
-                key={index}
-                className="flex gap-2 items-center text-sm cursor-pointer p-2 rounded"
-              >
-                {/* Skeleton for sizes */}
-                <div className="w-full h-5 rounded bg-gray-200 shimmer cursor-pointer"></div>
-              </div>
-            ) : (
+            return (
               <label
                 key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
@@ -339,7 +332,8 @@ export default function Filter({
                 <span className="flex items-center gap-2">{s.sizeLabel}</span>
               </label>
             );
-          })}
+          })
+        )}
       </div>
     </div>
   );

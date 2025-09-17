@@ -213,7 +213,7 @@ function WishlistCard({ product, dispatch, user }) {
       <Link to={`/detail/${product?._id}`}>
         <div>
           <img
-            src={API_BASE_URL + `/images/product/${product?.main_img}`}
+            src={`${product?.main_img}`}
             alt="Product image"
             className={`w-full h-64 md:h-72 cursor-pointer ${
               product?.stock === false ? "opacity-40" : "opacity-100"

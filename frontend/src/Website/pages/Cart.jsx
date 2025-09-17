@@ -388,7 +388,7 @@ function CartProduct({
       <Link to={`/detail/${product?._id}`}>
         <div className="relative w-20 h-20 md:w-24 md:h-24">
           <img
-            src={API_BASE_URL + `/images/product/${product?.main_img}`}
+            src={`${product?.main_img}`}
             alt="Product"
             className={`w-full h-full rounded cursor-pointer ${
               product?.stock === false ? "opacity-50" : "opacity-100"

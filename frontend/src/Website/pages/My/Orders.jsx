@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../../context/Context";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Orders() {
-  const { API_BASE_URL, fetchAllOrder, allOrder, toastNotify } =
+  const { fetchAllOrder, allOrder } =
     useContext(MainContext);
   const user = useSelector((state) => state.user.data);
   const navigate = useNavigate();
@@ -88,7 +87,7 @@ export default function Orders() {
                   order.product_details.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-4 mb-4">
                       <img
-                        src={API_BASE_URL + `/images/product/${item.image}`}
+                        src={`${item.image}`}
                         alt={item.name}
                         className="w-24 h-28 cover rounded-md border"
                       />

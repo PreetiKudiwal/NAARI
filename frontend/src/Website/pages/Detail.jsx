@@ -52,8 +52,9 @@ export default function Detail() {
   };
 
   useEffect(() => {
-    fetchSingleProduct(product_id);
-  }, [product_id]);
+  fetchSingleProduct(product_id)
+}, [product_id]);
+
 
   // size selection code
 
@@ -145,7 +146,7 @@ export default function Detail() {
     setTimeout(() => {
       setLoading(false);
     }, 500);
-  }, [slug]);
+  }, [slug, product_id]);
 
   return (
     <>

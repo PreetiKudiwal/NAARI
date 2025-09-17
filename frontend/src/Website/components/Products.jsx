@@ -76,9 +76,48 @@ useEffect(() => {
   return (
     <>
     {
-      loadingProduct ? (
-        <div className="w-full min-h-svh flex mt-10 justify-center"></div>
-      ) : (
+      !allProduct || allProduct.length === 0 ? 
+      (
+        <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
+        {
+        [1,2].map(
+          (nub, idx) => {
+            <div
+              key={idx}
+              className="relative group p-3 bg-white overflow-hidden w-1/2 border md:border-none md:w-56 lg:w-60"
+            >
+              {/* Wishlist Icon Placeholder */}
+              <div className="absolute right-5 z-10 top-4">
+                <div className="w-6 h-6 rounded-full shimmer"></div>
+              </div>
+
+              {/* Product Image */}
+              <div className="w-full">
+                <div className="w-full h-64 md:h-72 rounded shimmer"></div>
+              </div>
+
+              {/* Product Details */}
+              <div className="pt-3 text-center space-y-2">
+                {/* Brand Logo */}
+                <div className="w-10 h-4 mx-auto rounded shimmer"></div>
+
+                {/* Product Name */}
+                <div className="w-3/4 h-4 mx-auto rounded shimmer"></div>
+
+                {/* Price Details */}
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <div className="w-12 h-4 rounded shimmer"></div>
+                  <div className="w-10 h-3 rounded shimmer"></div>
+                  <div className="w-12 h-3 rounded shimmer"></div>
+                </div>
+              </div>
+            </div>
+          }
+        )
+      }
+        </div>
+      ) :
+      (
         <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
       {
         filteredProducts?.length === 0 ? 

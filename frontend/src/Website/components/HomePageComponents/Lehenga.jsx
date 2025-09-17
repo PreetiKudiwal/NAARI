@@ -93,7 +93,7 @@ export default function Lehenga() {
               <Link to={`/detail/${product?._id}`} key={index}>
               <div>
                 <img
-                  src={API_BASE_URL + `/images/product/${product?.main_img}`}
+                  src={`${product?.main_img}`}
                   alt=""
                   className="w-60 h-80 rounded-md"
                 />
