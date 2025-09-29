@@ -59,9 +59,9 @@ export default function OutOfStockNotice( {setShowOOSNotice} ) {
                   >
                     <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg ring-1 ring-slate-200">
                       <img
-                        src={API_BASE_URL + `/images/product/${item?.product_id?.main_img}`}
+                        src={`${item?.product_id?.main_img}`}
                         alt={item?.product_id?.name}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full"
                         loading="lazy"
                       />
                     </div>

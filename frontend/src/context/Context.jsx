@@ -13,7 +13,6 @@ export default function Context({ children }) {
   const [allProduct, setAllProduct] = useState([]);
   const [singleProduct, setSingleProduct] = useState({});
   const [allAdminUser, setAllAdminUser] = useState([]);
-  const [productColor, setProductColor] = useState(null);
   const [allOrder, setAllOrder] = useState([]);
   const [allSize, setAllSize] = useState([]);
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
@@ -98,7 +97,7 @@ export default function Context({ children }) {
     }
 
     const query = new URLSearchParams();
-    if (limit) query.append("limit", limit);
+    query.append("limit", limit);
     query.append("categorySlug", categorySlug);
     query.append("productColor", productColor);
     query.append("size", size);
@@ -155,9 +154,9 @@ export default function Context({ children }) {
 
   //filter by color start
 
-  const filterByColor = (id) => {
-    setProductColor(id);
-  };
+  // const filterByColor = (id) => {
+  //   setProductColor(id);
+  // };
 
   //filter by color end
 
@@ -228,9 +227,9 @@ export default function Context({ children }) {
         PRODUCT_URL,
         ADMIN_USER_URL,
         SIZE_URL,
-        productColor,
-        setProductColor,
-        filterByColor,
+        // productColor,
+        // setProductColor,
+        // filterByColor,
         aSideBar,
         setASideBar,
         searchTerm,

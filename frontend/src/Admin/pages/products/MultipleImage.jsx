@@ -128,7 +128,7 @@ export default function MultipleImage() {
               return (
                 <img
                   key={index}
-                  src={API_BASE_URL + `/images/product/${image}`}
+                  src={`${image}`}
                   alt="Other Images"
                   className="w-14 rounded-md"
                 />

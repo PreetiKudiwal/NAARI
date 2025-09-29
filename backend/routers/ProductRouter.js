@@ -8,7 +8,7 @@ const fileUpload = require("express-fileupload");
 ProductRouter.get(
     "/:id?",
     (req, res) => {
-        
+
         const result = new ProductController().read(req.params.id, req.query);
 
         result.then(
@@ -55,11 +55,14 @@ ProductRouter.post(
 
     fileUpload(
         {
-            createParentPath: true
+            createParentPath: true,
+            useTempFiles: true,   
+            tempFileDir: '/tmp/'  
         }
     ),
 
     (req, res) => {
+        console.log(req.files?.main_img, 'image in router');
         const result = new ProductController().create(req.body, req.files?.main_img);
 
         result.then(
@@ -105,7 +108,9 @@ ProductRouter.post(
 
     fileUpload(
         {
-            createParentPath: true
+            createParentPath: true,
+            useTempFiles: true,   
+            tempFileDir: '/tmp/'  
         }
     ),
 
@@ -134,7 +139,9 @@ ProductRouter.put(
 
     fileUpload(
         {
-            createParentPath: true
+            createParentPath: true,
+            useTempFiles: true,   
+            tempFileDir: '/tmp/'  
         }
     ),
 

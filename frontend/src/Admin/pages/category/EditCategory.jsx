@@ -137,7 +137,7 @@ export default function AddCategory() {
           {/* Image Preview */}
           {!previewURL ? (
             <img
-              src={API_BASE_URL + `/images/category/${allCategory.categoryImageName}`}
+              src={`${allCategory.categoryImageName}`}
               alt="Current Category"
               className="max-w-20 rounded border border-gray-500 mt-2"
             />

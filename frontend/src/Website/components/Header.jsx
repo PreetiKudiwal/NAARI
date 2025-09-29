@@ -231,9 +231,9 @@ export default function Header() {
                         className="cursor-pointer hover:font-semibold"
                         onClick={() => {
                           dispatch(UserLogout());
-                          dispatch(emptyCart());
-                          setShowUserPopup(false);
                           navigate("/");
+                          setShowUserPopup(false);
+                          dispatch(emptyCart());
                           localStorage.setItem("logoutMessage", "Logged out successfully!");
                           window.location.reload();
 

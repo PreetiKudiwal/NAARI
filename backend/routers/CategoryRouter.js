@@ -12,26 +12,28 @@ CategoryRouter.post(
     [
         fileUpload(
             {
-                createParentPath: true
+                createParentPath: true,
+                useTempFiles: true,
+                tempFileDir: '/tmp/'
             }
         ),
         authAdmin
     ],
 
-        (req, res) => {
-    const result = new CategoryController().create(req.body, req.files.categoryImageName);
+    (req, res) => {
+        const result = new CategoryController().create(req.body, req.files.categoryImageName);
 
-    result.then(
-        (success) => {
-            res.send(success);
-        }
-    ).catch(
-        (error) => {
-            console.log(error);
-            res.send(error);
-        }
-    )
-}
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
 )
 
 //create category end
@@ -88,7 +90,9 @@ CategoryRouter.put(
     "/edit/:id",
     fileUpload(
         {
-            createParentPath: true
+            createParentPath: true,
+            useTempFiles: true,   
+            tempFileDir: '/tmp/'  
         }
     ),
     (req, res) => {

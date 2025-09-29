@@ -4,6 +4,7 @@ import Products from "../components/Products";
 import { MainContext } from "../../context/Context";
 import {
   Link,
+  useLocation,
   useNavigate,
   useParams,
   useSearchParams,
@@ -13,194 +14,39 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { BiSort } from "react-icons/bi";
 
 export default function Shop() {
-  const { fetchAllproduct, productColor, setProductColor } =
-    useContext(MainContext);
+    const [searchParams, setSearchParams] = useSearchParams();
+    console.log(searchParams, 'searchParams');
+      const location = useLocation();
+      console.log(location, "location");
+
+    const initSize = searchParams.get("size") !== "null"
+    ? searchParams.get("size")
+    : null;
+
+const initColor = searchParams.get("productColor") !== "null"
+    ? searchParams.get("productColor")
+    : null;
+
+   const initPriceFrom = searchParams.get("priceFrom") && searchParams.get("priceFrom") !== "null"
+  ? Number(searchParams.get("priceFrom"))
+  : 100;
+
+const initPriceTo = searchParams.get("priceTo") && searchParams.get("priceTo") !== "null"
+  ? Number(searchParams.get("priceTo"))
+  : 100000;
+
+const [size, setSize] = useState(initSize);
+const [productColor, setProductColor] = useState(initColor);
   const [limit, setLimit] = useState(0);
-  const [size, setSize] = useState(null);
-  const [filterList, setFilterList] = useState([]);
-  const [appliedCategory, setAppliedCategory] = useState([]);
-  const [appliedColor, setAppliedColor] = useState([]);
-  const [appliedPrice, setAppliedPrice] = useState([]);
-  const [appliedSize, setAppliedSize] = useState([]);
-  const [priceRange, setPriceRange] = useState({ from: 100, to: 100000 });
-  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [priceRange, setPriceRange] = useState({ from: initPriceFrom, to: initPriceTo });
+  console.log(priceRange.from, priceRange.to, "priceRange");
+  
   const { categorySlug } = useParams();
   const [showFilter, setShowFilter] = useState(false);
   const [showLimit, setShowLimit] = useState(false);
-  const [shouldNavigate, setShouldNavigate] = useState(false);
+  const [filterList, setFilterList] = useState([]);
   const navigate = useNavigate();
-
-
-function handleRemoveFilter(filter) {
-  setFilterList((prev) => prev.filter((item) => item !== filter));
-
-  const updatedSearchParams = new URLSearchParams(searchParams.toString());
-
-  setAppliedCategory((prev) => {
-    const updated = prev.filter((item) => item !== filter);
-    if (prev.includes(filter)) {
-      setShouldNavigate(true); //  flag navigation instead
-    }
-    return updated;
-  });
-
-  setAppliedColor((prev) => {
-    const updated = prev.filter((item) => item !== filter);
-    if (prev.includes(filter)) {
-      setProductColor(null);
-      updatedSearchParams.delete("productColor");
-    }
-    return updated;
-  });
-
-    // Remove from appliedPrice
-    setAppliedPrice((prev) => {
-      const updated = prev.filter((item) => item !== filter);
-
-      if (prev.includes(filter)) {
-        if (updated.length > 0) {
-          const last = updated[updated.length - 1];
-
-          // Extract numbers from format like "₹500 - ₹1000"
-          const match = last.match(/₹?(\d+)\s*-\s*₹?(\d+)/);
-          if (match) {
-            const from = parseInt(match[1]);
-            const to = parseInt(match[2]);
-
-            setPriceRange({ from, to });
-            updatedSearchParams.set("priceFrom", from);
-            updatedSearchParams.set("priceTo", to);
-          }
-        } else {
-          // No prices left
-          setPriceRange({ from: 100, to: 100000 });
-          updatedSearchParams.delete("priceFrom");
-          updatedSearchParams.delete("priceTo");
-        }
-      }
-
-      return updated;
-    });
-
-
-    //Remove from appliedSize
-    setAppliedSize((prev) => {
-      const updated = prev.filter((item) => item !== filter);
-      if (prev.includes(filter)) {
-      setSize(null);
-      updatedSearchParams.delete("size");
-    }
-    return updated;
-  });
-
-    // Remove limit only if no filters left
-    if (filterList.length === 1) {
-      updatedSearchParams.delete("limit");
-    }
-
-    // Apply updated URL
-    setSearchParams(updatedSearchParams);
-  }
-
-  useEffect(() => {
-    const storedCategories = JSON.parse(
-      localStorage.getItem("appliedCategory")
-    );
-    if (storedCategories && Array.isArray(storedCategories)) {
-      setAppliedCategory(storedCategories);
-    }
-
-    const storedColors = JSON.parse(localStorage.getItem("appliedColor"));
-    if (storedColors && Array.isArray(storedColors)) {
-      setAppliedColor(storedColors);
-    }
-
-    const storedPrices = JSON.parse(localStorage.getItem("appliedPrice"));
-    if (storedPrices && Array.isArray(storedPrices)) {
-      setAppliedPrice(storedPrices);
-    }
-
-    const storedSizes = JSON.parse(localStorage.getItem("appliedSize"));
-
-    if (storedSizes && Array.isArray(storedSizes)) {
-      setAppliedSize(storedSizes);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("appliedCategory", JSON.stringify(appliedCategory));
-  }, [appliedCategory]);
-
-  useEffect(() => {
-    localStorage.setItem("appliedColor", JSON.stringify(appliedColor));
-  }, [appliedColor]);
-
-  useEffect(() => {
-    localStorage.setItem("appliedPrice", JSON.stringify(appliedPrice));
-  }, [appliedPrice]);
-
-  useEffect(() => {
-    localStorage.setItem("appliedSize", JSON.stringify(appliedSize));
-  }, [appliedSize]);
-  useEffect(() => {
-    const merged = [
-      ...appliedCategory,
-      ...appliedColor,
-      ...appliedPrice,
-      ...appliedSize,
-    ];
-    setFilterList(merged);
-  }, [appliedCategory, appliedColor, appliedPrice, appliedSize]);
-
-  useEffect(() => {
-    if (searchParams.get("limit")) {
-      setLimit(searchParams.get("limit"));
-    }
-  }, []);
-
-  useEffect(() => {
-    const query = {};
-
-    if (limit !== 0) {
-      query.limit = limit;
-    }
-
-    if (productColor) {
-      query.productColor = productColor;
-    }
-
-    if (size) {
-      query.size = size;
-    }
-
-    if (priceRange.from !== 100 || priceRange.to !== 100000) {
-      query.priceFrom = priceRange.from;
-      query.priceTo = priceRange.to;
-    }
-
-    if (filterList.length > 0) {
-      fetchAllproduct(
-        null,
-        limit,
-        categorySlug,
-        productColor,
-        size,
-        priceRange?.from,
-        priceRange?.to
-      );
-    } else {
-      fetchAllproduct(null, limit);
-    }
-
-    setSearchParams(query);
-  }, [limit, categorySlug, productColor, size, priceRange, filterList]);
-
-  useEffect(() => {
-  if (shouldNavigate) {
-    navigate("/shop");
-    setShouldNavigate(false);
-  }
-}, [shouldNavigate, navigate]);
 
   return (
     <div>
@@ -222,27 +68,22 @@ function handleRemoveFilter(filter) {
               <span>FILTERS</span>
               <span
                 className={`text-xs text-yellow-700 cursor-pointer ${
-                  filterList.length === 0 ? "hidden" : "block"
+                  location.pathname === '/shop' && location.search === '' ? "hidden" : "block"
                 }`}
                 onClick={() => {
-                  setFilterList([]);
-                  setAppliedCategory([]);
-                  setAppliedColor([]);
-                  setAppliedPrice([]);
-                  setAppliedSize([]);
-                  setPriceRange({ from: 100, to: 100000 });
-                  // Clear query params from URL
-                  setSearchParams({});
+                  navigate('/shop');
                   setProductColor(null);
-                  setShouldNavigate(true);
+                  setSize(null);
+                  setPriceRange({ from: 100, to: 100000 });
+                  setLimit(0);
                 }}
               >
                 CLEAR ALL
               </span>
             </div>
           </div>
-          <div className="hidden md:block md:col-span-3 lg:col-span-4 px-4 py-3">
-            {/* Applied Filter Badges */}
+          {/* <div className="hidden md:block md:col-span-3 lg:col-span-4 px-4 py-3">
+           
             {filterList.length > 0 && (
               <div className="flex flex-wrap gap-2 items-center">
                 {filterList.map((item, index) => (
@@ -261,8 +102,8 @@ function handleRemoveFilter(filter) {
                 ))}
               </div>
             )}
-          </div>
-          <div className="hidden md:block md:col-span-1 lg:col-span-1 md:pe-4 lg:px-4 py-3">
+          </div> */}
+          <div className="hidden md:block md:col-span-1 lg:col-span-5 md:pe-4 lg:px-4 py-3">
             <div className="flex justify-end">
               <div className="border color text-sm bg-slate-100">
                 <span className="px-2">Show</span>
@@ -286,28 +127,28 @@ function handleRemoveFilter(filter) {
           <div className="hidden col-span-2 md:block lg:col-span-1">
             <div className="sticky top-0 lg:-top-[430px]">
             <Filter
-              appliedCategory={appliedCategory}
-              setAppliedCategory={setAppliedCategory}
-              appliedColor={appliedColor}
-              setAppliedColor={setAppliedColor}
-              appliedPrice={appliedPrice}
-              setAppliedPrice={setAppliedPrice}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
-              setFilterList={setFilterList}
               size={size}
               setSize={setSize}
-              appliedSize={appliedSize}
-              setAppliedSize={setAppliedSize}
+              setFilterList={setFilterList}
+              filterList={filterList}
+              productColor={productColor}
+              setProductColor={setProductColor}
             />
             </div>
           </div>
           <div className="col-span-6 md:col-span-4 lg:col-span-5">
             <Products
               priceRange={priceRange}
+              setPriceRange={setPriceRange}
               size={size}
+              setSize={setSize}
               categorySlug={categorySlug}
               limit={limit}
+              setLimit={setLimit}
+              productColor={productColor}
+              setProductColor={setProductColor}
             />
           </div>
         </div>
@@ -347,24 +188,20 @@ function handleRemoveFilter(filter) {
           <div className="grid grid-cols-2 px-4 flex-1 overflow-hidden">
             <div className="col-span-1 pb-11 overflow-y-auto">
               <Filter
-                appliedCategory={appliedCategory}
-                setAppliedCategory={setAppliedCategory}
-                appliedColor={appliedColor}
-                setAppliedColor={setAppliedColor}
-                appliedPrice={appliedPrice}
-                setAppliedPrice={setAppliedPrice}
+                
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
-                setFilterList={setFilterList}
                 setSize={setSize}
                 size={size}
-                appliedSize={appliedSize}
-                setAppliedSize={setAppliedSize}
+                setFilterList={setFilterList}
+                filterList={filterList}
+              productColor={productColor}
+              setProductColor={setProductColor}
               />
             </div>
 
             <div className="col-span-1 p-4 space-y-2 pb-14 overflow-y-auto">
-              <span
+              {/* <span
                 className={`text-xs text-yellow-700 cursor-pointer ${
                   filterList.length === 0 ? "hidden" : "block"
                 }`}
@@ -375,14 +212,12 @@ function handleRemoveFilter(filter) {
                   setAppliedPrice([]);
                   setAppliedSize([]);
                   setPriceRange({ from: 100, to: 100000 });
-                  // Clear query params from URL
-                  setSearchParams({});
                   setProductColor(null);
                 }}
               >
                 CLEAR ALL
-              </span>
-              <div>
+              </span> */}
+              {/* <div>
                 {filterList.length > 0 && (
                   <div className="flex flex-wrap gap-2 items-center">
                     {filterList.map((item, index) => (
@@ -401,7 +236,7 @@ function handleRemoveFilter(filter) {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

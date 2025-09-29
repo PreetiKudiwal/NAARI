@@ -110,8 +110,7 @@ export default function ViewCategory() {
                   <td className="py-2 px-4">
                     <img
                       src={
-                        API_BASE_URL +
-                        `/images/category/${categoryData.categoryImageName}`
+                        `${categoryData.categoryImageName}`
                       }
                       alt="Sample"
                       className="w-12 h-12 rounded"

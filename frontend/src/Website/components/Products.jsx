@@ -1,19 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../context/Context";
 import Slider from "react-slick";
-import { data, Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FaHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { UserLogin } from "../../Redux/Reducer/UserSlice";
 import axios from "axios";
 
-export default function Products({ priceRange, size, categorySlug, limit }) {
+export default function Products({ productColor, setProductColor, priceRange, setPriceRange, size, setSize, limit, setLimit }) {
   const {
     API_BASE_URL,
     fetchAllproduct,
     allProduct,
     toastNotify,
-    productColor,
     searchTerm,
     setSearchTerm,
   } = useContext(MainContext);
@@ -21,57 +20,100 @@ export default function Products({ priceRange, size, categorySlug, limit }) {
   const [loading, setLoading] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(false);
   const dispatch = useDispatch();
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const {categorySlug} = useParams();
+  console.log(productColor, 'productColor in product');
 
-  useEffect(() => {
-    setLoading(true);
-    fetchAllproduct();
-    setTimeout(() => {
-       setLoading(false);
-    }, 600);
-  }, [priceRange, size, categorySlug, limit, productColor]);
+useEffect(() => {
+  if (!allProduct) return;
 
   function normalizeWord(word) {
-  word = word.toLowerCase();
-
-  // Basic plural → singular rules
-  if (word.endsWith("ies")) {
-    return word.slice(0, -3) + "y"; // sarees → saree
+    word = word.toLowerCase();
+    if (word.endsWith("ies")) return word.slice(0, -3) + "y"; // sarees → saree
+    if (word.endsWith("es")) return word.slice(0, -2); // dresses → dress
+    if (word.endsWith("s") && word.length > 3) return word.slice(0, -1); // suits → suit
+    return word;
   }
-  if (word.endsWith("es")) {
-    return word.slice(0, -2); // dresses → dress
-  }
-  if (word.endsWith("s") && word.length > 3) {
-    return word.slice(0, -1); // suits → suit
-  }
-
-  return word;
-}
 
   const searchWords = searchTerm.toLowerCase().split(" ").map(normalizeWord);
 
-const filteredProducts = allProduct?.filter((product) => {
-  const productName = normalizeWord(product.name.toLowerCase());
-  const categoryName = normalizeWord(product.category_id.categoryName.toLowerCase());
-  const colorName = normalizeWord(product.colors[0]?.colorName.toLowerCase() || "");
+  const filtered = allProduct.filter((product) => {
+    const productName = normalizeWord(product.name.toLowerCase());
+    const categoryName = normalizeWord(product.category_id.categoryName.toLowerCase());
+    const colorName = normalizeWord(product.colors[0]?.colorName.toLowerCase() || "");
 
-  return searchWords.every((word) =>
-    productName.includes(word) ||
-    categoryName.includes(word) ||
-    colorName.includes(word)
-  );
-});
+    return searchWords.every(
+      (word) =>
+        productName.includes(word) ||
+        categoryName.includes(word) ||
+        colorName.includes(word)
+    );
+  });
+
+  setFilteredProducts(filtered);
+}, [allProduct, searchTerm]); // ✅ depends on both
 
    useEffect(() => {
   const saved = localStorage.getItem("searchTerm");
   if (saved) setSearchTerm(saved);
 }, []);
 
-useEffect(() => {
-    setLoadingProduct(true);
-    setTimeout(() => {
-      setLoadingProduct(false);
-    }, 300);
-  }, []);
+useEffect(
+  () => {
+   if(searchParams.get('limit')) {
+    setLimit(searchParams.get('limit'));
+   }
+   if(searchParams.get('size')) {
+    setSize(searchParams.get('size'));
+   }
+   if(searchParams.get('productColor')) {
+    setProductColor(searchParams.get('productColor'));
+   }
+   if (searchParams.get('priceFrom')) {
+  setPriceRange({
+    from: Number(searchParams.get('priceFrom')),
+    to: priceRange.to
+  });
+}
+
+if (searchParams.get('priceTo')) {
+  setPriceRange({
+    from: priceRange.from,
+    to: Number(searchParams.get('priceTo'))
+  });
+}
+   console.log(searchParams.get('limit'), 'seaarch');
+   console.log(searchParams.get('productColor'), 'productColor');
+   console.log(searchParams.get('size'), 'size');
+   console.log(searchParams.get('priceFrom'), 'priceFrom');
+   console.log(searchParams.get('priceTo'), 'priceTo');
+  }, []
+);
+
+useEffect(
+  () => {
+    const query = {};
+    if(productColor) {
+      query.productColor = productColor;
+    }
+    if(limit > 0 ) {
+      query.limit = limit;
+    }
+    if(size) {
+      query.size = size;
+    }
+    if(priceRange.from !== 100 || priceRange.to !== 100000) {
+      query.priceFrom = priceRange.from;
+    }
+    if(priceRange.from !== 100 || priceRange.to !== 100000) {
+      query.priceTo = priceRange.to;
+    }
+    setSearchParams(query);
+    fetchAllproduct(null, limit, categorySlug, productColor, size, priceRange.from, priceRange.to);
+  },[limit, categorySlug, productColor, size, priceRange]
+)
+
 
   return (
     <>
@@ -79,10 +121,11 @@ useEffect(() => {
       !allProduct || allProduct.length === 0 ? 
       (
         <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
-        {
-        [1,2].map(
-          (nub, idx) => {
-            <div
+          {
+            [1,2,3,4,5,6,7,8].map(
+              (num, idx) => {
+                return(
+                  <div
               key={idx}
               className="relative group p-3 bg-white overflow-hidden w-1/2 border md:border-none md:w-56 lg:w-60"
             >
@@ -112,12 +155,13 @@ useEffect(() => {
                 </div>
               </div>
             </div>
+                )
+              }
+            )
           }
-        )
-      }
+          
         </div>
-      ) :
-      (
+      ) : (
         <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
       {
         filteredProducts?.length === 0 ? 
@@ -188,6 +232,7 @@ useEffect(() => {
       )
     }
     
+    
   </>
   );
 }
@@ -195,8 +240,6 @@ useEffect(() => {
 function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
-  console.log(product, 'product');
-  console.log(API_BASE_URL, 'API_BASE_URL');
   const sliderSettings = {
     arrows: false,
     dots: true,

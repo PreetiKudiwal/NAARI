@@ -10,6 +10,7 @@ import Lehenga from "../components/HomePageComponents/Lehenga";
 import Anarkali from "../components/HomePageComponents/Anarkali";
 import NewArrival from "../components/HomePageComponents/NewArrival";
 import { MainContext } from "../../context/Context";
+import SplashScreen from "../components/SplashScreen";
 
 export default function Home() {
   const { showMobileSearchBar, setShowMobileSearchBar, setSearchTerm } = useContext(MainContext);
@@ -19,6 +20,24 @@ export default function Home() {
   const [isLehengaVisible, setIsLehengaVisible] = useState(false);
   const [isSareeVisible, setIsSareeVisible] = useState(false);
   const [isSuitVisible, setIsSuitVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if splash has been shown before
+    const hasShownSplash = localStorage.getItem("splashShown");
+
+    if (!hasShownSplash) {
+      setLoading(true);
+      const timer = setTimeout(() => {
+        setLoading(false);
+        localStorage.setItem("splashShown", "true"); 
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  
 
   const NextArrow = ({ onClick }) => (
     <div
@@ -96,6 +115,10 @@ export default function Home() {
       }
     },[showMobileSearchBar]
   )
+
+  if (loading) {
+    return <SplashScreen />;
+  }
 
   return (
     <>

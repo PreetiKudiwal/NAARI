@@ -319,7 +319,7 @@ export default function EditProducts() {
             {/* Image Preview */}
             {!previewURL ? (
               <img
-                src={API_BASE_URL + `/images/product/${allProduct.main_img}`}
+                src={`${allProduct.main_img}`}
                 alt="Current Product"
                 className="max-w-20 rounded border border-gray-500 mt-2"
               />

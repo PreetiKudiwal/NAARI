@@ -145,7 +145,7 @@ export default function ViewProducts() {
                   <td className="py-2 px-4">
                     <img
                       src={
-                        API_BASE_URL + `/images/product/${productData.main_img}`
+                        `${productData.main_img}`
                       }
                       alt="Product"
                       className="w-12 h-12 rounded"
@@ -168,7 +168,7 @@ export default function ViewProducts() {
                       </button>
                     )}
                   </td>
-                  <td className="py-4 px-4 flex gap-1 items-center justify-center">
+                  <td className="py-4 px-4 flex flex-wrap justify-center items-center gap-2">
                     {productData.status == true ? (
                       <button
                         onClick={() => changePersentValue(productData._id, 2)}

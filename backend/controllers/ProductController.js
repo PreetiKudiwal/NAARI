@@ -2,10 +2,13 @@ const { generateUniqueImageName } = require("../helping");
 const CategoryModel = require("../models/CategoryModel");
 const ProductModel = require("../models/ProductModel");
 const SizeModel = require("../models/SizeModel");
+const cloudinary = require("../config/Cloudinary"); // Cloudinary config
+const fs = require("fs");
 
 class ProductController {
 
     read(id, query) {
+        console.log(query, 'query');
         return new Promise(
             async (resolve, reject) => {
                 try {
@@ -27,7 +30,7 @@ class ProductController {
 
                         newQuery.colors = query.productColor;
                     }
-
+                    
                     if (query.size && query.size !== "null") {
                         const sizeDoc = await SizeModel.findOne({ sizeSlug: query.size });
 
@@ -68,6 +71,12 @@ class ProductController {
                         const limit = parseInt(query.limit);
                         product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 100);
                     }
+                    // let product;
+                    // if (id) {
+                    //     product = await ProductModel.findById(id).populate(["category_id", "colors"]);
+                    // } else {
+                    //     product = await ProductModel.find().populate(["category_id", "colors"]).limit(query.limit);
+                    // }
                     resolve(
                         {
                             msg: "product found",
@@ -131,78 +140,122 @@ class ProductController {
         )
     }
 
+    // create(data, file) {
+    //     return new Promise(
+    //         (resolve, reject) => {
+    //             try {
+    //                 const newProductImageName = generateUniqueImageName(file.name);
+    //                 const destination = "./public/images/product/" + newProductImageName;
+    //                 file.mv(
+    //                     destination,
+    //                     (error) => {
+    //                         if (error) {
+    //                             reject(
+    //                                 {
+    //                                     msg: 'product not created due to image upload',
+    //                                     status: 0
+    //                                 }
+    //                             )
+    //                         } else {
+    //                             if (data.name && data.slug) {
+    //                                 const product = new ProductModel(
+    //                                     {
+    //                                         ...data,
+    //                                         colors: JSON.parse(data.colors),
+    //                                         sizes: JSON.parse(data.sizes),
+    //                                         main_img: newProductImageName
+    //                                     }
+    //                                 );
+    //                                 product.save().then(
+    //                                     (success) => {
+    //                                         resolve(
+    //                                             {
+    //                                                 msg: 'product created successfully',
+    //                                                 status: 1
+    //                                             }
+    //                                         )
+    //                                     }
+    //                                 ).catch(
+    //                                     (error) => {
+    //                                         console.log(error)
+    //                                         reject(
+    //                                             {
+    //                                                 msg: 'product not created',
+    //                                                 status: 0
+    //                                             }
+    //                                         )
+    //                                     }
+    //                                 )
+    //                             } else {
+    //                                 reject(
+    //                                     {
+    //                                         msg: 'All fields are required',
+    //                                         status: 0
+    //                                     }
+    //                                 )
+    //                             }
+    //                         }
+    //                     }
+    //                 )
+
+
+    //             } catch (error) {
+    //                 console.log(error);
+    //                 reject(
+    //                     {
+    //                         msg: 'Internal server error',
+    //                         status: 0
+    //                     }
+    //                 )
+    //             }
+
+    //         }
+    //     )
+    // }
+
     create(data, file) {
-        return new Promise(
-            (resolve, reject) => {
-                try {
-                    const newProductImageName = generateUniqueImageName(file.name);
-                    const destination = "./public/images/product/" + newProductImageName;
-                    file.mv(
-                        destination,
-                        (error) => {
-                            if (error) {
-                                reject(
-                                    {
-                                        msg: 'product not created due to image upload',
-                                        status: 0
-                                    }
-                                )
-                            } else {
-                                if (data.name && data.slug) {
-                                    const product = new ProductModel(
-                                        {
-                                            ...data,
-                                            colors: JSON.parse(data.colors),
-                                            sizes: JSON.parse(data.sizes),
-                                            main_img: newProductImageName
-                                        }
-                                    );
-                                    product.save().then(
-                                        (success) => {
-                                            resolve(
-                                                {
-                                                    msg: 'product created successfully',
-                                                    status: 1
-                                                }
-                                            )
-                                        }
-                                    ).catch(
-                                        (error) => {
-                                            console.log(error)
-                                            reject(
-                                                {
-                                                    msg: 'product not created',
-                                                    status: 0
-                                                }
-                                            )
-                                        }
-                                    )
-                                } else {
-                                    reject(
-                                        {
-                                            msg: 'All fields are required',
-                                            status: 0
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    )
-
-
-                } catch (error) {
-                    console.log(error);
-                    reject(
-                        {
-                            msg: 'Internal server error',
-                            status: 0
-                        }
-                    )
-                }
-
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name || !data.slug) {
+                return reject({ msg: "All fields are required", status: 0 });
             }
-        )
-    }
+
+            let main_img_url = null;
+
+            if (file) {
+                // Cloudinary upload
+                const result = await cloudinary.uploader.upload(file.tempFilePath, {
+                    folder: "shop_images/product", // folder name
+                });
+
+                main_img_url = result.secure_url;
+
+                // Temp file delete
+                fs.unlinkSync(file.tempFilePath);
+            }
+
+            const product = new ProductModel({
+                ...data,
+                colors: JSON.parse(data.colors),
+                sizes: JSON.parse(data.sizes),
+                main_img: main_img_url, // Cloudinary URL save
+            });
+
+            product.save()
+                .then(success => {
+                    resolve({ msg: "Product created successfully", status: 1 });
+                })
+                .catch(error => {
+                    console.log(error);
+                    reject({ msg: "Product not created", status: 0 });
+                });
+
+        } catch (error) {
+            console.log(error);
+            reject({ msg: "Internal server error", status: 0 });
+        }
+    });
+}
 
     delete(id) {
         return new Promise(
@@ -301,13 +354,19 @@ class ProductController {
                         const allNewFiles = Array.isArray(allfiles) ? allfiles : [allfiles];
 
                         for (let file of allNewFiles) {
-                            const newProductImageName = generateUniqueImageName(file.name);
-                            currentImages.push(newProductImageName);
-                            const destination = "./public/images/product/" + newProductImageName;
-                            file.mv(destination)
-                        }
+                            // const newProductImageName = generateUniqueImageName(file.name);
+                            // currentImages.push(newProductImageName);
+                            // const destination = "./public/images/product/" + newProductImageName;
+                            // file.mv(destination)
+                        // Cloudinary upload
+                        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+                            folder: 'shop_images/product', // optional folder
+                        });
 
-                        ProductModel.updateOne(
+                        currentImages.push(result.secure_url); // Cloudinary URL MongoDB me save karenge
+                    }
+
+                        await ProductModel.updateOne(
                             { _id: id },
                             {
                                 $set: {
@@ -356,102 +415,141 @@ class ProductController {
         )
     }
 
-    editproduct(data, id, file) {
-        return new Promise(
-            (resolve, reject) => {
-                try {
-                    if (file) {
-                        const newProductImageName = generateUniqueImageName(file.name);
-                        const destination = "./public/images/product/" + newProductImageName;
-                        file.mv(
-                            destination,
-                            (error) => {
-                                if (error) {
-                                    console.log(error);
-                                    reject(
-                                        {
-                                            msg: 'product not updated due to image',
-                                            status: 0
-                                        }
-                                    )
-                                } else {
-                                    ProductModel.updateOne(
-                                        { _id: id },
-                                        {
-                                            $set: {
-                                                ...data,
-                                                colors: JSON.parse(data.colors),
-                                                sizes: JSON.parse(data.sizes),
-                                                main_img: newProductImageName
-                                            }
-                                        }
-                                    ).then(
-                                        (success) => {
-                                            resolve(
-                                                {
-                                                    msg: "Product updated",
-                                                    status: 1
-                                                }
-                                            )
-                                        }
-                                    ).catch(
-                                        (error) => {
-                                            console.log(error);
-                                            reject(
-                                                {
-                                                    msg: 'Product not updated',
-                                                    status: 0
-                                                }
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        )
-                    } else {
-                        ProductModel.updateOne(
-                            { _id: id },
-                            {
-                                $set: {
-                                    ...data,
-                                    colors: JSON.parse(data.colors),
-                                    sizes: JSON.parse(data.sizes)
-                                }
-                            }
-                        ).then(
-                            (success) => {
-                                resolve(
-                                    {
-                                        msg: "Product updated",
-                                        status: 1
-                                    }
-                                )
-                            }
-                        ).catch(
-                            (error) => {
-                                console.log(error);
-                                reject(
-                                    {
-                                        msg: 'Product not updated',
-                                        status: 0
-                                    }
-                                )
-                            }
-                        )
-                    }
+    // editproduct(data, id, file) {
+    //     return new Promise(
+    //         (resolve, reject) => {
+    //             try {
+    //                 if (file) {
+    //                     const newProductImageName = generateUniqueImageName(file.name);
+    //                     const destination = "./public/images/product/" + newProductImageName;
+    //                     file.mv(
+    //                         destination,
+    //                         (error) => {
+    //                             if (error) {
+    //                                 console.log(error);
+    //                                 reject(
+    //                                     {
+    //                                         msg: 'product not updated due to image',
+    //                                         status: 0
+    //                                     }
+    //                                 )
+    //                             } else {
+    //                                 ProductModel.updateOne(
+    //                                     { _id: id },
+    //                                     {
+    //                                         $set: {
+    //                                             ...data,
+    //                                             colors: JSON.parse(data.colors),
+    //                                             sizes: JSON.parse(data.sizes),
+    //                                             main_img: newProductImageName
+    //                                         }
+    //                                     }
+    //                                 ).then(
+    //                                     (success) => {
+    //                                         resolve(
+    //                                             {
+    //                                                 msg: "Product updated",
+    //                                                 status: 1
+    //                                             }
+    //                                         )
+    //                                     }
+    //                                 ).catch(
+    //                                     (error) => {
+    //                                         console.log(error);
+    //                                         reject(
+    //                                             {
+    //                                                 msg: 'Product not updated',
+    //                                                 status: 0
+    //                                             }
+    //                                         )
+    //                                     }
+    //                                 )
+    //                             }
+    //                         }
+    //                     )
+    //                 } else {
+    //                     ProductModel.updateOne(
+    //                         { _id: id },
+    //                         {
+    //                             $set: {
+    //                                 ...data,
+    //                                 colors: JSON.parse(data.colors),
+    //                                 sizes: JSON.parse(data.sizes)
+    //                             }
+    //                         }
+    //                     ).then(
+    //                         (success) => {
+    //                             resolve(
+    //                                 {
+    //                                     msg: "Product updated",
+    //                                     status: 1
+    //                                 }
+    //                             )
+    //                         }
+    //                     ).catch(
+    //                         (error) => {
+    //                             console.log(error);
+    //                             reject(
+    //                                 {
+    //                                     msg: 'Product not updated',
+    //                                     status: 0
+    //                                 }
+    //                             )
+    //                         }
+    //                     )
+    //                 }
 
-                } catch (error) {
-                    console.log(error);
-                    reject(
-                        {
-                            msg: 'Internal server error',
-                            status: 0
-                        }
-                    )
+    //             } catch (error) {
+    //                 console.log(error);
+    //                 reject(
+    //                     {
+    //                         msg: 'Internal server error',
+    //                         status: 0
+    //                     }
+    //                 )
+    //             }
+    //         }
+    //     )
+    // }
+
+    editproduct(data, id, file) {
+    return new Promise(
+        async (resolve, reject) => {
+            try {
+                const updateData = {
+                    ...data,
+                    colors: JSON.parse(data.colors),
+                    sizes: JSON.parse(data.sizes)
+                };
+
+                if (file) {
+                    // Cloudinary upload
+                    const result = await cloudinary.uploader.upload(file.tempFilePath, {
+                        folder: 'shop_images/product',
+                    });
+                    updateData.main_img = result.secure_url; // Cloudinary URL save karenge
                 }
+
+                await ProductModel.updateOne(
+                    { _id: id },
+                    { $set: updateData }
+                );
+
+                resolve({
+                    msg: "Product updated successfully",
+                    status: 1
+                });
+
+            } catch (error) {
+                console.log(error);
+                reject({
+                    msg: 'Product not updated',
+                    status: 0
+                });
             }
-        )
-    }
+        }
+    )
+}
 
     fetchSarees() {
         return new Promise(

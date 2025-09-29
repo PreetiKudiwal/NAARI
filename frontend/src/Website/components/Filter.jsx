@@ -1,21 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactSlider from "react-slider";
 import { MainContext } from "../../context/Context";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export default function Filter({
-  setAppliedCategory,
-  setAppliedColor,
-  setAppliedSize,
-  setAppliedPrice,
+  
   priceRange,
   setPriceRange,
-  appliedColor,
-  appliedCategory,
-  appliedPrice,
-  appliedSize,
+  setFilterList,
+  filterList,
   setSize,
   size,
+    productColor,
+    setProductColor,
 }) {
   const {
     fetchAllCategory,
@@ -24,115 +21,22 @@ export default function Filter({
     allSize,
     allCategory,
     allColor,
-    productColor,
-    setProductColor,
   } = useContext(MainContext);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
-
-  const handleSizeChange = (sizeLabel) => {
-    if (appliedSize.includes(sizeLabel)) {
-      // Unselect if already selected
-      setAppliedSize((prev) => prev.filter((item) => item !== sizeLabel));
-    } else {
-      setAppliedSize((prev) =>
-        prev.includes(sizeLabel) ? prev : [...prev, sizeLabel]
-      );
-    }
-  };
-
-  useEffect(() => {
-    const priceFrom = searchParams.get("priceFrom");
-    const priceTo = searchParams.get("priceTo");
-
-    if (priceFrom && priceTo) {
-      setPriceRange({ from: Number(priceFrom), to: Number(priceTo) });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (appliedCategory.length > 0 && allCategory.length > 0) {
-      const lastCategoryName = appliedCategory[appliedCategory.length - 1];
-
-      // Find slug from category name
-      const matchedCategory = allCategory.find(
-        (cat) => cat.categoryName === lastCategoryName
-      );
-
-      if (matchedCategory) {
-        const slug = matchedCategory.categorySlug;
-        navigate(`/shop/${slug}`);
-      }
-    } else if (appliedCategory.length === 0) {
-      navigate("/shop");
-    }
-  }, [appliedCategory, allCategory]);
-
-  useEffect(() => {
-    if (appliedColor.length > 0 && allColor.length > 0) {
-      const lastColorName = appliedColor[appliedColor.length - 1];
-      const matchedColor = allColor.find(
-        (clr) => clr.colorName === lastColorName
-      );
-
-      if (matchedColor) {
-        const updatedParams = new URLSearchParams(searchParams);
-        updatedParams.set("productColor", matchedColor._id);
-        setSearchParams(updatedParams);
-        // setSelectedColorId(matchedColor._id);
-        setProductColor(matchedColor._id);
-      }
-    } else {
-      const updatedParams = new URLSearchParams(searchParams);
-      updatedParams.delete("productColor");
-      setSearchParams(updatedParams);
-      // setSelectedColorId(null);
-      setProductColor(null);
-    }
-  }, [appliedColor, allColor]);
-
-  useEffect(() => {
-    if (
-      Array.isArray(appliedSize) &&
-      appliedSize.length > 0 &&
-      allSize.length > 0
-    ) {
-      const lastSize = appliedSize[appliedSize.length - 1];
-      const matchedSize = allSize.find((size) => size.sizeLabel === lastSize);
-
-      if (matchedSize) {
-        const updatedParams = new URLSearchParams(searchParams);
-        updatedParams.set("size", matchedSize.sizeSlug);
-        setSearchParams(updatedParams);
-        setSize(matchedSize.sizeSlug);
-      }
-    } else {
-      const updatedParams = new URLSearchParams(searchParams);
-      updatedParams.delete("size");
-      setSearchParams(updatedParams);
-      setSize(null);
-    }
-  }, [appliedSize, allSize]);
-
+  const {categorySlug} = useParams();
+  
   useEffect(() => {
     fetchAllCategory();
     fetchAllColor();
     fetchAllSize();
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    fetchAllCategory();
-    fetchAllColor();
-    fetchAllSize();
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, []);
 
   return (
     <div className="flex flex-col gap-2 border-e">
+
       {/* category section Start */}
 
       <div className="p-3 w-full flex flex-col border-b">
@@ -152,8 +56,8 @@ export default function Filter({
           Array.isArray(allCategory) &&
           allCategory.map((category, index) => {
             return (
+              <Link to={`/shop/${category.categorySlug}`} key={index}>
               <label
-                key={index}
                 className="flex gap-2 items-center text-sm cursor-pointer p-2 hover:bg-gray-100 rounded"
               >
                 <input
@@ -161,26 +65,14 @@ export default function Filter({
                   name="category"
                   value={category.categorySlug}
                   className="accent-yellow-700"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setAppliedCategory((prev) =>
-                        prev.includes(category.categoryName)
-                          ? prev
-                          : [...prev, category.categoryName]
-                      );
-                    } else {
-                      setAppliedCategory((prev) =>
-                        prev.filter((item) => item !== category.categoryName)
-                      );
-                    }
-                  }}
-                  checked={appliedCategory.includes(category.categoryName)}
+                  checked={categorySlug === category.categorySlug}
                 />
                 <span>{category.categoryName}</span>
                 <span className="lg:text-xs text-gray-500">
                   ({category.productCount})
                 </span>
               </label>
+              </Link>
             );
           })
         )}
@@ -201,21 +93,22 @@ export default function Filter({
           max={100000}
           step={100}
           value={[Number(priceRange.from), Number(priceRange.to)]}
-          onChange={([from, to]) => {
+          onAfterChange={([from, to]) => {
             setPriceRange({ from, to });
 
-            // Update URL searchParams
-            const updatedParams = new URLSearchParams(searchParams);
-            updatedParams.set("priceFrom", from);
-            updatedParams.set("priceTo", to);
-            setSearchParams(updatedParams);
+            
+            // const updatedParams = new URLSearchParams(searchParams);
+            // updatedParams.set("priceFrom", from);
+            // updatedParams.set("priceTo", to);
+            // setSearchParams(updatedParams);
           }}
-          onAfterChange={([from, to]) => {
-            const priceLabel = `₹${from} - ₹${to}`;
-            setAppliedPrice((prev) =>
-              prev.includes(priceLabel) ? prev : [...prev, priceLabel]
-            );
-          }}
+          // onAfterChange={([from, to]) => {
+          //   const priceLabel = `₹${from} - ₹${to}`;
+          //   setAppliedPrice((prev) =>
+          //     prev.includes(priceLabel) ? prev : [...prev, priceLabel]
+          //   );
+          // }
+        // }
           renderTrack={(props, state) => {
             const { key, ...restProps } = props; // extract key separately
 
@@ -268,19 +161,9 @@ export default function Filter({
                   name="color"
                   value={color._id}
                   className="accent-yellow-700"
-                  checked={appliedColor.includes(color.colorName)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setAppliedColor((prev) =>
-                        prev.includes(color.colorName)
-                          ? prev
-                          : [...prev, color.colorName]
-                      );
-                    } else {
-                      setAppliedColor((prev) =>
-                        prev.filter((item) => item !== color.colorName)
-                      );
-                    }
+                  checked={color._id === productColor}
+                  onChange={() => {
+                    setProductColor(color._id)
                   }}
                 />
                 <span className="flex items-center gap-2">
@@ -323,11 +206,8 @@ export default function Filter({
                   name="size"
                   value={s.sizeSlug}
                   className="accent-yellow-700"
-                  checked={
-                    Array.isArray(appliedSize) &&
-                    appliedSize.includes(s.sizeLabel)
-                  }
-                  onChange={() => handleSizeChange(s.sizeLabel)}
+                  checked={s.sizeSlug === size}
+                  onChange={() => setSize(s.sizeSlug)}
                 />
                 <span className="flex items-center gap-2">{s.sizeLabel}</span>
               </label>
