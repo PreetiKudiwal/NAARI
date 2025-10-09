@@ -7,8 +7,6 @@ export default function Filter({
   
   priceRange,
   setPriceRange,
-  setFilterList,
-  filterList,
   setSize,
   size,
     productColor,
@@ -22,9 +20,7 @@ export default function Filter({
     allCategory,
     allColor,
   } = useContext(MainContext);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isChecked, setIsChecked] = useState(false);
-  const navigate = useNavigate();
+
   const {categorySlug} = useParams();
   
   useEffect(() => {
@@ -159,11 +155,11 @@ export default function Filter({
                 <input
                   type="checkbox"
                   name="color"
-                  value={color._id}
+                  value={color.colorSlug}
                   className="accent-yellow-700"
-                  checked={color._id === productColor}
+                  checked={color.colorSlug === productColor}
                   onChange={() => {
-                    setProductColor(color._id)
+                    setProductColor(color.colorSlug)
                   }}
                 />
                 <span className="flex items-center gap-2">

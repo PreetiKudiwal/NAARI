@@ -116,7 +116,7 @@ export default function Header() {
         {/* Logo */}
         <div className="flex-1 text-start lg:text-left lg:flex-none cursor-pointer">
           <Link to={"/"}>
-            <img src="/images/logo.png" alt="logo" className="w-11 md:w-16" />
+            <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999596/logo_yldy7i.png" alt="logo" className="w-11 md:w-16" />
           </Link>
         </div>
 
@@ -324,7 +324,7 @@ export default function Header() {
         {/* Logo and Close */}
         <div className="flex justify-between items-center px-4 border-b">
           <div>
-            <img src="/images/logo.png" alt="" className="w-20 md:w-32" />
+            <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999596/logo_yldy7i.png" alt="" className="w-11 md:w-16" />
           </div>
           <button onClick={() => setToggle(false)}>
             <RxCross2 className="text-xl md:text-4xl" />

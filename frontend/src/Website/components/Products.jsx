@@ -23,7 +23,6 @@ export default function Products({ productColor, setProductColor, priceRange, se
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const {categorySlug} = useParams();
-  console.log(productColor, 'productColor in product');
 
 useEffect(() => {
   if (!allProduct) return;
@@ -83,11 +82,6 @@ if (searchParams.get('priceTo')) {
     to: Number(searchParams.get('priceTo'))
   });
 }
-   console.log(searchParams.get('limit'), 'seaarch');
-   console.log(searchParams.get('productColor'), 'productColor');
-   console.log(searchParams.get('size'), 'size');
-   console.log(searchParams.get('priceFrom'), 'priceFrom');
-   console.log(searchParams.get('priceTo'), 'priceTo');
   }, []
 );
 
@@ -114,11 +108,20 @@ useEffect(
   },[limit, categorySlug, productColor, size, priceRange]
 )
 
+useEffect(
+  () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []
+)
+
 
   return (
     <>
     {
-      !allProduct || allProduct.length === 0 ? 
+      loading ? 
       (
         <div className="flex flex-wrap md:p-6 justify-between lg:justify-start md:gap-4 lg:gap-9">
           {
@@ -170,7 +173,7 @@ useEffect(
           <div className="text-center flex flex-col items-center">
             <div className="w-60 md:w-80">
               <img
-                src="/images/NoProductFound4.png"
+                src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000253/NoProductFound4_l3giya.png"
                 alt="NoProductFound"
                 className="w-full h-full"
               />
@@ -346,7 +349,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, toastNotify }) {
       {/* Product Details */}
       <div className="pt-3 text-center">
         <div>
-          <img src="/images/Brand_name.png" alt="" className="w-10 mx-auto" />
+          <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000193/Brand_name_av79dx.png" alt="" className="w-10 mx-auto" />
         </div>
         <h3 className="w-full truncate text-sm color font-medium">{product.name}</h3>
 

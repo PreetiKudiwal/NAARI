@@ -33,7 +33,7 @@ export default function About() {
 
   return (
     <div>
-      <div className="bg-[url('/images/about.webp')] bg-contain lg:bg-cover lg:bg-center text-center bg-fixed">
+      <div className="bg-[url('https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000144/about_neja4z.jpg')] bg-contain lg:bg-cover lg:bg-center text-center bg-fixed">
         <h2 className="text-[2.5rem] md:text-[4rem] font-bold text-white text-center bg-black/50 py-12 md:py-24">
           About
         </h2>
@@ -80,7 +80,7 @@ export default function About() {
               <div className="border-2 border-gray-200 p-2">
                 <div className="overflow-hidden h-[450px]">
                   <img
-                    src="/images/redLehenga2.jpg"
+                    src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000348/redLehenga2_ozezpi.jpg"
                     alt="About"
                     className="w-full h-full hover:scale-105 transition duration-300"
                   />
@@ -141,7 +141,7 @@ export default function About() {
               <div className="border-2 border-gray-200 p-2">
                 <div className="overflow-hidden h-[450px]">
                   <img
-                    src="/images/newArrival6.jpg"
+                    src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000225/newArrival6_sd6q4s.jpg"
                     alt="Mission"
                     className="w-full h-full hover:scale-105 transition duration-300"
                   />

@@ -344,7 +344,7 @@ export default function Detail() {
         ) : (
           <div className="space-y-4">
             <div>
-              <img src="/images/Brand_name.png" alt="" className="w-14" />
+              <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000193/Brand_name_av79dx.png" alt="" className="w-14" />
             </div>
             <p className="text-black font-bold text-md">
               {singleProduct?.name}
@@ -770,7 +770,7 @@ function ProductCard({ product, API_BASE_URL, user, dispatch, navigate, toastNot
       {/* Product Details */}
       <div className="pt-3 text-center">
         <div>
-          <img src="/images/Brand_name.png" alt="" className="w-10 mx-auto" />
+          <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000193/Brand_name_av79dx.png" alt="" className="w-10 mx-auto" />
         </div>
         <h3 className="truncate text-sm color font-medium">{product.name}</h3>
 

@@ -4,6 +4,7 @@ const ProductModel = require("../models/ProductModel");
 const SizeModel = require("../models/SizeModel");
 const cloudinary = require("../config/Cloudinary"); // Cloudinary config
 const fs = require("fs");
+const ColorModel = require("../models/ColorModel");
 
 class ProductController {
 
@@ -27,8 +28,15 @@ class ProductController {
                     }
 
                     if (query.productColor != "null") {
+                        const colorDoc = await ColorModel.findOne({ colorSlug: query.productColor });
+                        if (!colorDoc) {
+                            return reject ({
+                                msg: "Color not found",
+                                status: 0
+                            });
+                        }
 
-                        newQuery.colors = query.productColor;
+                        newQuery.colors = colorDoc._id;
                     }
                     
                     if (query.size && query.size !== "null") {

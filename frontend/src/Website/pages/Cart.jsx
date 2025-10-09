@@ -104,7 +104,7 @@ export default function Cart() {
           <div className="text-center ">
             <div className="w-80 h-60">
               <img
-                src="/images/empty_cart.png"
+                src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000203/empty_cart_mqiquw.png"
                 alt="empty_cart"
                 className="w-full h-full"
               />

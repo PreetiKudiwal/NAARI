@@ -14,39 +14,42 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { BiSort } from "react-icons/bi";
 
 export default function Shop() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    console.log(searchParams, 'searchParams');
-      const location = useLocation();
-      console.log(location, "location");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
-    const initSize = searchParams.get("size") !== "null"
-    ? searchParams.get("size")
-    : null;
+  const initSize =
+    searchParams.get("size") !== "null" ? searchParams.get("size") : null;
 
-const initColor = searchParams.get("productColor") !== "null"
-    ? searchParams.get("productColor")
-    : null;
+  const initColor =
+    searchParams.get("productColor") !== "null"
+      ? searchParams.get("productColor")
+      : null;
 
-   const initPriceFrom = searchParams.get("priceFrom") && searchParams.get("priceFrom") !== "null"
-  ? Number(searchParams.get("priceFrom"))
-  : 100;
+  const initPriceFrom =
+    searchParams.get("priceFrom") && searchParams.get("priceFrom") !== "null"
+      ? Number(searchParams.get("priceFrom"))
+      : 100;
 
-const initPriceTo = searchParams.get("priceTo") && searchParams.get("priceTo") !== "null"
-  ? Number(searchParams.get("priceTo"))
-  : 100000;
+  const initPriceTo =
+    searchParams.get("priceTo") && searchParams.get("priceTo") !== "null"
+      ? Number(searchParams.get("priceTo"))
+      : 100000;
 
-const [size, setSize] = useState(initSize);
-const [productColor, setProductColor] = useState(initColor);
+  const [size, setSize] = useState(initSize);
+  const [productColor, setProductColor] = useState(initColor);
   const [limit, setLimit] = useState(0);
 
-  const [priceRange, setPriceRange] = useState({ from: initPriceFrom, to: initPriceTo });
-  console.log(priceRange.from, priceRange.to, "priceRange");
-  
+  const [priceRange, setPriceRange] = useState({
+    from: initPriceFrom,
+    to: initPriceTo,
+  });
+
   const { categorySlug } = useParams();
   const [showFilter, setShowFilter] = useState(false);
   const [showLimit, setShowLimit] = useState(false);
-  const [filterList, setFilterList] = useState([]);
   const navigate = useNavigate();
+
+//  
 
   return (
     <div>
@@ -68,10 +71,12 @@ const [productColor, setProductColor] = useState(initColor);
               <span>FILTERS</span>
               <span
                 className={`text-xs text-yellow-700 cursor-pointer ${
-                  location.pathname === '/shop' && location.search === '' ? "hidden" : "block"
+                  location.pathname === "/shop" && location.search === ""
+                    ? "hidden"
+                    : "block"
                 }`}
                 onClick={() => {
-                  navigate('/shop');
+                  navigate("/shop");
                   setProductColor(null);
                   setSize(null);
                   setPriceRange({ from: 100, to: 100000 });
@@ -82,28 +87,84 @@ const [productColor, setProductColor] = useState(initColor);
               </span>
             </div>
           </div>
-          {/* <div className="hidden md:block md:col-span-3 lg:col-span-4 px-4 py-3">
+          <div className="hidden md:block md:col-span-3 lg:col-span-4 px-4 py-3 ">
+            <div className="flex gap-2">
            
-            {filterList.length > 0 && (
-              <div className="flex flex-wrap gap-2 items-center">
-                {filterList.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs"
+            {
+              categorySlug && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
                   >
-                    <span>{item}</span>
+                    {categorySlug}
                     <button
-                      onClick={() => handleRemoveFilter(item)}
+                      onClick={() => navigate("/shop")}
                       className="text-zinc-500 hover:text-zinc-700 font-bold"
                     >
                       ×
                     </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div> */}
-          <div className="hidden md:block md:col-span-1 lg:col-span-5 md:pe-4 lg:px-4 py-3">
+                    
+                  </span>
+              )
+              
+            }
+            {
+              productColor && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
+                  >
+                    {productColor}
+                    <button
+                      onClick={() => setProductColor(null)}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            {
+              priceRange && (
+                <span
+                    
+                    className={`flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit ${priceRange.from === 100 && priceRange.to === 100000 ? 'hidden' : 'block'}`}
+                  >
+                    ₹{priceRange.from} - ₹{priceRange.to}
+                    <button
+                      onClick={() => setPriceRange({ from: 100, to: 100000 })}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            {
+              size && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
+                  >
+                    {size}
+                    <button
+                      onClick={() => setSize(null)}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            </div>
+          </div>
+          <div className="hidden md:block md:col-span-1 lg:col-span-1 md:pe-4 lg:px-4 py-3">
             <div className="flex justify-end">
               <div className="border color text-sm bg-slate-100">
                 <span className="px-2">Show</span>
@@ -126,16 +187,14 @@ const [productColor, setProductColor] = useState(initColor);
         <div className="grid grid-cols-6 md:border-b">
           <div className="hidden col-span-2 md:block lg:col-span-1">
             <div className="sticky top-0 lg:-top-[430px]">
-            <Filter
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              size={size}
-              setSize={setSize}
-              setFilterList={setFilterList}
-              filterList={filterList}
-              productColor={productColor}
-              setProductColor={setProductColor}
-            />
+              <Filter
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                size={size}
+                setSize={setSize}
+                productColor={productColor}
+                setProductColor={setProductColor}
+              />
             </div>
           </div>
           <div className="col-span-6 md:col-span-4 lg:col-span-5">
@@ -188,55 +247,107 @@ const [productColor, setProductColor] = useState(initColor);
           <div className="grid grid-cols-2 px-4 flex-1 overflow-hidden">
             <div className="col-span-1 pb-11 overflow-y-auto">
               <Filter
-                
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
                 setSize={setSize}
                 size={size}
-                setFilterList={setFilterList}
-                filterList={filterList}
-              productColor={productColor}
-              setProductColor={setProductColor}
+                productColor={productColor}
+                setProductColor={setProductColor}
               />
             </div>
 
             <div className="col-span-1 p-4 space-y-2 pb-14 overflow-y-auto">
-              {/* <span
+              <span
                 className={`text-xs text-yellow-700 cursor-pointer ${
-                  filterList.length === 0 ? "hidden" : "block"
+                  location.pathname === "/shop" && location.search === ""
+                    ? "hidden"
+                    : "block"
                 }`}
                 onClick={() => {
-                  setFilterList([]);
-                  setAppliedCategory([]);
-                  setAppliedColor([]);
-                  setAppliedPrice([]);
-                  setAppliedSize([]);
-                  setPriceRange({ from: 100, to: 100000 });
+                  navigate("/shop");
                   setProductColor(null);
+                  setSize(null);
+                  setPriceRange({ from: 100, to: 100000 });
+                  setLimit(0);
                 }}
               >
                 CLEAR ALL
-              </span> */}
-              {/* <div>
-                {filterList.length > 0 && (
-                  <div className="flex flex-wrap gap-2 items-center">
-                    {filterList.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs"
-                      >
-                        <span>{item}</span>
-                        <button
-                          onClick={() => handleRemoveFilter(item)}
-                          className="text-zinc-500 hover:text-zinc-700 font-bold"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div> */}
+              </span>
+              <div className="space-y-2">
+           
+            {
+              categorySlug && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
+                  >
+                    {categorySlug}
+                    <button
+                      onClick={() => navigate("/shop")}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            {
+              productColor && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
+                  >
+                    {productColor}
+                    <button
+                      onClick={() => setProductColor(null)}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            {
+              priceRange && (
+                <span
+                    
+                    className={`flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit ${priceRange.from === 100 && priceRange.to === 100000 ? 'hidden' : 'block'}`}
+                  >
+                    ₹{priceRange.from} - ₹{priceRange.to}
+                    <button
+                      onClick={() => setPriceRange({ from: 100, to: 100000 })}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            {
+              size && (
+                <span
+                    
+                    className="flex items-center gap-2 bg-gray-100 text-zinc-500 px-3 py-1 rounded-full text-xs max-w-fit"
+                  >
+                    {size}
+                    <button
+                      onClick={() => setSize(null)}
+                      className="text-zinc-500 hover:text-zinc-700 font-bold"
+                    >
+                      ×
+                    </button>
+                    
+                  </span>
+              )
+              
+            }
+            </div>
             </div>
           </div>
         </div>

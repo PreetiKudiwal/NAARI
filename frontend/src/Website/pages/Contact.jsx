@@ -60,7 +60,7 @@ const handleMessageChange = (e) => {
   return (
     <>
       {/* Title Section */}
-      <div className="bg-[url('/images/about.webp')] bg-contain lg:bg-cover lg:bg-center text-center bg-fixed">
+      <div className="bg-[url('https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000144/about_neja4z.jpg')] bg-contain lg:bg-cover lg:bg-center text-center bg-fixed">
         <h2 className="text-[2.5rem] md:text-[4rem] font-bold text-white text-center bg-black/50 py-12 md:py-24">
           Contact
         </h2>

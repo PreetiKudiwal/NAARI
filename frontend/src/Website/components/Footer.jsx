@@ -12,7 +12,7 @@ export default function Footer() {
         <div>
           <Link to={'/'}>
           <div className='rounded-full flex items-center justify-center cursor-pointer group overflow-hidden bg-white w-24 h-24 md:w-[120px] md:h-[120px]'>
-            <img src="/images/logo.png" alt="" className="w-20 md:w-24 group-hover:scale-105 transition duration-300" />
+            <img src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999596/logo_yldy7i.png" alt="" className="w-20 md:w-24 group-hover:scale-105 transition duration-300" />
           </div>
           </Link>
           <p className="mt-4 text-sm text-white">

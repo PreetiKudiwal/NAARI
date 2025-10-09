@@ -82,7 +82,7 @@ export default function CheckOut() {
       currency: "INR",
       name: "नारी",
       description: "Test Transaction",
-      image: "/images/logoR.jpg",
+      image: "https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999538/logoT_sdqqox.png",
       order_id: razorpay_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
       handler: async function (response) {
 

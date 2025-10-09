@@ -128,7 +128,7 @@ export default function Home() {
           <div className="container mx-auto">
             <Slider {...settings}>
               {/* Slide 1 */}
-              <div className="h-[250px] md:h-[550px] bg-cover bg-center bg-[url('/images/Banner1.png')]">
+              <div className="h-[250px] md:h-[550px] bg-cover bg-center bg-[url('https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999726/Banner1_adaxj3.png')]">
                 <div className="flex justify-end items-center h-full p-4 md:p-32 text-white">
                   <div className="text-sm text-center flex flex-col md:gap-3 md:text-4xl font-semibold">
                     <div className="md:flex flex-col gap-8">
@@ -163,7 +163,7 @@ export default function Home() {
               {/* Slide 2 */}
               <div className="relative h-[250px] md:h-[550px]">
                 <img
-                  src="/images/Banner2.png"
+                  src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999807/Banner2_i2ldld.png"
                   alt=""
                   className="w-full h-full"
                 />
@@ -190,7 +190,7 @@ export default function Home() {
               </div>
 
               {/* Slide 3 */}
-              <div className="relative h-[250px] md:h-[550px] bg-cover bg-[url('/images/Banner3.png')]">
+              <div className="relative h-[250px] md:h-[550px] bg-cover bg-[url('https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999895/Banner3_fv546k.png')]">
                 <div className="flex justify-end items-center h-full p-4 md:p-32 text-white">
                   <div className="text-sm text-center flex flex-col md:gap-3 md:text-4xl font-semibold">
                     <div className="md:flex flex-col text-xl md:text-6xl font gap-8">
@@ -234,7 +234,7 @@ export default function Home() {
         <div className="grid grid-cols-10 items-center justify-between mt-8 mb-10 py-4">
           <div className="relative col-span-5 md:col-span-4 lg:col-span-2 bg-white">
             <img
-              src="/images/slogan.jpg"
+              src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999995/slogan_wpfwyg.jpg"
               alt=""
               className="w-full h-72 md:h-full"
             />
@@ -347,7 +347,7 @@ export default function Home() {
             <div className="w-1/2 lg:w-1/3 cursor-pointer bg-white">
               <div className="w-full h-80 md:h-96 lg:h-[480px] overflow-hidden">
                 <img
-                  src="/images/redLehenga5.png"
+                  src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999999/redLehenga5_o5jt82.png"
                   alt=""
                   className="w-full h-full hover:scale-110 transition duration-300"
                 />
@@ -363,7 +363,7 @@ export default function Home() {
             <div className="w-1/3 cursor-pointer bg-white hidden lg:block">
               <div className="w-full h-[480px] overflow-hidden">
                 <img
-                  src="/images/redLehenga4.png"
+                  src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000019/redLehenga4_gmbojb.png"
                   alt=""
                   className="w-full h-full hover:scale-110 transition duration-300"
                 />
@@ -379,7 +379,7 @@ export default function Home() {
             <div className="w-1/2 lg:w-1/3 cursor-pointer bg-white">
               <div className="w-full h-80 md:h-96 lg:h-[480px] overflow-hidden">
                 <img
-                  src="/images/redLehenga3.png"
+                  src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000023/redLehenga3_wyopvp.png"
                   alt=""
                   className="w-full h-full hover:scale-110 transition duration-300"
                 />

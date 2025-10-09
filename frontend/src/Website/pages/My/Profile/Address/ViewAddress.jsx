@@ -54,7 +54,7 @@ export default function ViewAddress() {
           <div className="text-center">
             <div className="w-80 h-60">
               <img
-                src="/images/address.png"
+                src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000157/address_rrjcnb.png"
                 alt="address"
                 className="w-full h-full"
               />

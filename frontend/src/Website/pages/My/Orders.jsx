@@ -41,7 +41,7 @@ export default function Orders() {
           <div className="text-center">
             <div className="w-64 h-56 mx-auto">
               <img
-                src="/images/order1.png"
+                src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1760000321/order1_sxz411.png"
                 alt="order"
                 className="w-full h-full"
               />
