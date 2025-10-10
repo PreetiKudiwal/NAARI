@@ -41,9 +41,26 @@ import About from './Website/pages/About'
 import AdminRoute from './Admin/components/AdminRoute'
 import { useDispatch } from 'react-redux'
 import { logout } from './Redux/Reducer/AdminSlice'
+import SplashScreen from './Website/components/SplashScreen'
 
 export default function App() {
 
+  const [loading, setLoading] = useState(false);
+  
+    useEffect(() => {
+      // Check if splash has been shown before
+      const hasShownSplash = localStorage.getItem("splashShown");
+  
+      if (!hasShownSplash) {
+        setLoading(true);
+        const timer = setTimeout(() => {
+          setLoading(false);
+          localStorage.setItem("splashShown", "true"); 
+        }, 6000);
+  
+        return () => clearTimeout(timer);
+      }
+    }, []);
   
 
   const routes = createBrowserRouter(
@@ -212,7 +229,9 @@ export default function App() {
     ]
   );
 
-  
+  if (loading) {
+    return <SplashScreen />;
+  }
 
   return (
     <Context>

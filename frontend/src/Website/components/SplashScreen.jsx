@@ -3,17 +3,27 @@ import React, { useEffect, useState } from 'react'
 export default function SplashScreen() {
 
     const words = ["Celebrate", "Yourself", "in", "every", "Thread"]; // words you want to show
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentWordIndex, setCurrentWordIndex] = useState(-1);
   const [showLogo, setShowLogo] = useState(false);
 
   useEffect(() => {
-    if (currentWordIndex < words.length) {
+    // Step 1: Show white screen for 1 second
+    const startTimer = setTimeout(() => {
+      setCurrentWordIndex(0);
+    }, 1000); // 1 second delay before first word
+
+    return () => clearTimeout(startTimer);
+  }, []);
+
+  useEffect(() => {
+    // Step 2: Start showing words one by one
+    if (currentWordIndex >= 0 && currentWordIndex < words.length) {
       const timer = setTimeout(() => {
         setCurrentWordIndex((prev) => prev + 1);
       }, 600);
       return () => clearTimeout(timer);
-    } else {
-      // After last word → show logo
+    } else if (currentWordIndex === words.length) {
+      // Step 3: After last word, show logo
       setShowLogo(true);
     }
   }, [currentWordIndex]);
@@ -39,7 +49,7 @@ export default function SplashScreen() {
       {/* Logo appears after words */}
       {showLogo && (
         <img
-          src="/images/logo.png"
+          src="https://res.cloudinary.com/dbglxb4z0/image/upload/v1759999596/logo_yldy7i.png"
           alt="App Logo"
           className="w-40 absolute bottom-[42%] opacity-100 transition-opacity duration-1000 animate-pulse"
         />

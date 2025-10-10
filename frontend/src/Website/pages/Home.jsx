@@ -20,22 +20,7 @@ export default function Home() {
   const [isLehengaVisible, setIsLehengaVisible] = useState(false);
   const [isSareeVisible, setIsSareeVisible] = useState(false);
   const [isSuitVisible, setIsSuitVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Check if splash has been shown before
-    const hasShownSplash = localStorage.getItem("splashShown");
-
-    if (!hasShownSplash) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-        localStorage.setItem("splashShown", "true"); 
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  
 
   
 
@@ -116,9 +101,7 @@ export default function Home() {
     },[showMobileSearchBar]
   )
 
-  if (loading) {
-    return <SplashScreen />;
-  }
+  
 
   return (
     <>
