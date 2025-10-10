@@ -33,6 +33,7 @@ export default function Cart() {
   const [showOOSNotice, setShowOOSNotice] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [isSwalOpen, setIsSwalOpen] = useState(false);
 
   const hasOOSItems =
     Array.isArray(cartData.data) &&
@@ -45,11 +46,14 @@ export default function Cart() {
     }
 
     if (cartData.totalFinelPrice > 40000) {
+      setIsSwalOpen(true);
       Swal.fire({
         icon: "warning",
         title: "Order Limit Exceeded",
         text: "Maximum order amount allowed is ₹40,000",
         confirmButtonColor: "#000",
+      }).then(() => {
+        setIsSwalOpen(false);
       });
       return;
     }
@@ -62,7 +66,7 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    if (showOOSNotice || cartData.totalFinelPrice > 40000) {
+    if (showOOSNotice || isSwalOpen) {
       const scrollBarWidth =
         window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
@@ -76,7 +80,7 @@ export default function Cart() {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0px";
     };
-  }, [showOOSNotice, cartData.totalFinelPrice]);
+  }, [showOOSNotice, isSwalOpen]);
 
 
   useEffect(() => {

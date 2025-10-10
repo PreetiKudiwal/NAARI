@@ -97,6 +97,10 @@ export default function Detail() {
     }
   };
 
+  useEffect(() => {
+    setSelectedSize(null);
+  }, [product_id]);
+
   const handleAddToWishlist = () => {
     if (!user) {
       return navigate("/wishlist");
