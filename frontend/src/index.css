@@ -37,59 +37,71 @@ body {
 }
 /* Custom styles for slick arrows */
 .slick-prev {
-    left: 10px !important;
-    z-index: 10;
-  }
-  
-  .slick-next {
-    right: 10px !important;
-    z-index: 10;
-  }
+  left: 10px !important;
+  z-index: 10;
+}
 
-  /* Admin Panel css :end */
+.slick-next {
+  right: 10px !important;
+  z-index: 10;
+}
 
-  .product-pop-up {
-    background: linear-gradient(145deg, #2e2e2e 0%, #1a1a1a 25%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
-    color: white;
-    width: 100%;
-    box-shadow: -2px -2px 5px 0px #ccc;
-  }
+/* Admin Panel css :end */
 
-  .addButton {
-    color: white;
-    transition: 0.2s;
-  }
+.product-pop-up {
+  background: linear-gradient(
+    145deg,
+    #2e2e2e 0%,
+    #1a1a1a 25%,
+    #000000 50%,
+    #1a1a1a 75%,
+    #2e2e2e 100%
+  );
+  color: white;
+  width: 100%;
+  box-shadow: -2px -2px 5px 0px #ccc;
+}
 
-  .addButton:hover {
-    box-shadow: -2px -2px 5px 0px #ccc;
-  }
+.addButton {
+  color: white;
+  transition: 0.2s;
+}
 
-  .swal2-title {
-    padding: 0 !important; /* Remove default padding */
-    font-weight: normal !important;
-  }
+.addButton:hover {
+  box-shadow: -2px -2px 5px 0px #ccc;
+}
 
-  .swal2-close {
+.swal2-title {
+  padding: 0 !important; /* Remove default padding */
+  font-weight: normal !important;
+}
+
+.swal2-close {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
   color: #7e7b7b; /* default color */
+}
 
-  }
-
-  .swal2-close:hover {
+.swal2-close:hover {
   color: rgb(54, 53, 53); /* change to your desired hover color */
 }
-  
-  .swal2-html-container {
-   padding: 5px 18px !important;
-  }
-  
-  .backgroundColor {
-    background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
-  }
-  
-  .background {
+
+.swal2-html-container {
+  padding: 5px 18px !important;
+}
+
+.backgroundColor {
+  background: linear-gradient(
+    145deg,
+    #1a1a1a 0%,
+    #000000 50%,
+    #1a1a1a 75%,
+    #2e2e2e 100%
+  );
+}
+
+.background {
   background: url("/images/background.jpg");
   background-position: center;
   background-size: cover;
@@ -101,7 +113,7 @@ body {
 }
 
 .swal-text {
- color: white;
+  color: white;
 }
 
 .custom-icon {
@@ -122,9 +134,9 @@ body {
   background-color: rgb(245, 202, 122);
 }
 
-  /* Admin Panel css :end */
+/* Admin Panel css :end */
 
-  /* Website css :start */
+/* Website css :start */
 
 .font {
   font-family: "Italianno", cursive;
@@ -140,34 +152,40 @@ body {
   font-style: normal;
   position: absolute;
 }
- 
+
 .color {
   color: #444343;
 }
-  /* Website css :start */
+/* Website css :start */
 .product-slider .slick-dots li {
-    background-color: rgba(41, 40, 40, 0.2);
-    width: 5px;
-    height: 5px;
-    border-radius: 100%;
+  background-color: rgba(41, 40, 40, 0.2);
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
 }
 
 .product-slider .slick-dots .slick-active {
-    background-color: #b45309;
+  background-color: #b45309;
 }
 .product-slider .slick-dots li button:before {
-    color: transparent;
+  color: transparent;
 }
 .product-slider .slick-dots li.slick-active button:before {
-    color: transparent;
+  color: transparent;
 }
 .product-slider .slick-dots {
-    bottom: -20px;
+  bottom: -20px;
 }
 
 .custom-button {
   @apply flex items-center justify-center gap-2 text-white w-full font-semibold border border-black py-2 rounded;
-  background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 75%, #2e2e2e 100%);
+  background: linear-gradient(
+    145deg,
+    #1a1a1a 0%,
+    #000000 50%,
+    #1a1a1a 75%,
+    #2e2e2e 100%
+  );
 }
 
 .custom-button:hover {
@@ -177,18 +195,29 @@ body {
 /* size button animation */
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-8px); }
-  80% { transform: translateX(8px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-8px);
+  }
+  80% {
+    transform: translateX(8px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .shake {
   animation: shake 0.5s;
 }
-
 
 .shimmer {
   position: relative;
@@ -270,40 +299,46 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out forwards;
 }
- 
+
 /* Bestseller tag css  */
 
 .bestseller-tag {
-position: absolute;
-top: 0;
-left: 0;
-background-color: #b45309; /* yellow-700 */
-color: white;
-overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #b45309; /* yellow-700 */
+  color: white;
+  overflow: hidden;
 }
-
 
 .bestseller-text {
-position: relative;
-z-index: 1;
+  position: relative;
+  z-index: 1;
 }
-
 
 .sparkle {
-position: absolute;
-top: 0;
-left: -100%;
-width: 90%;
-height: 100%;
-background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
-z-index: 1;
-animation: sparkle-move 2.5s linear infinite;
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 90%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 1;
+  animation: sparkle-move 2.5s linear infinite;
 }
 
-
 @keyframes sparkle-move {
-0% { left: -40%; }
-100% { left: 100%; }
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* placeholder animation */
@@ -332,24 +367,38 @@ animation: sparkle-move 2.5s linear infinite;
 }
 
 @keyframes blob {
-        0% { transform: translate(0px, 0px) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-        100% { transform: translate(0px, 0px) scale(1); }
-      }
-      .animate-blob {
-        animation: blob 8s infinite;
-      }
-      .animation-delay-2000 {
-        animation-delay: 2s;
-      }
-      .animation-delay-4000 {
-        animation-delay: 4s;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px) scale(0.95); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-      .animate-fadeIn {
-        animation: fadeIn 0.8s ease-out;
-      }
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+.animate-blob {
+  animation: blob 8s infinite;
+}
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
+}

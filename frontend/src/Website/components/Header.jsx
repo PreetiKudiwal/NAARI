@@ -171,18 +171,20 @@ export default function Header() {
 
         {/* Icons: Wishlist, Cart, Login */}
         <div className="flex items-center space-x-4">
+          <div>
           {location.pathname !== "/" && (
             <div onClick={() => setShowMobileSearchBar(!showMobileSearchBar)}>
               <IoSearch className="text-xl md:text-3xl lg:hidden" />
             </div>
           )}
+          </div>
 
           <div
             className="relative group cursor-pointer transition py-3 hidden lg:block"
             onMouseEnter={() => setShowUserPopup(true)}
             onMouseLeave={() => setShowUserPopup(false)}
           >
-            <FaRegUser className="text-lg ms-2 md:text-3xl lg:text-lg hover:text-red-800" />
+            <FaRegUser className="text-lg md:text-3xl lg:text-lg hover:text-red-800" />
             {showUserPopup && (
               <div
                 className="absolute -left-20 top-10 w-[200px] bg-white border shadow-2xl rounded p-4 
