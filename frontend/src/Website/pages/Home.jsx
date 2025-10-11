@@ -107,7 +107,7 @@ export default function Home() {
     <>
       <div className="pb-10 pt-5">
         {/* Banner section start */}
-        <div className="w-full mt-4 lg:mt-4 pb-10">
+        <div className="w-full mt-4 lg:mt-0 pb-10">
           <div className="container mx-auto">
             <Slider {...settings}>
               {/* Slide 1 */}
