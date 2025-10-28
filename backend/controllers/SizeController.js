@@ -73,7 +73,7 @@ class SizeController {
                     if (id) {
                         size = await SizeModel.findById(id);
                     } else {
-                        size = await SizeModel.find();
+                        size = await SizeModel.find().sort({ createdAt: 1 });
                     }
 
 

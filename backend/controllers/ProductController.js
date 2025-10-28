@@ -77,14 +77,8 @@ class ProductController {
                         product = await ProductModel.findById(id).populate(["category_id", "colors"]);
                     } else {
                         const limit = parseInt(query.limit);
-                        product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 100);
+                        product = await ProductModel.find(newQuery).populate(["category_id", "colors"]).limit(!isNaN(limit) ? limit : 100).sort({ createdAt: 1 });;
                     }
-                    // let product;
-                    // if (id) {
-                    //     product = await ProductModel.findById(id).populate(["category_id", "colors"]);
-                    // } else {
-                    //     product = await ProductModel.find().populate(["category_id", "colors"]).limit(query.limit);
-                    // }
                     resolve(
                         {
                             msg: "product found",
