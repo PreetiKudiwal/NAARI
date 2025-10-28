@@ -13,6 +13,8 @@ import { data, NavLink, useNavigate } from "react-router-dom";
 import { login, logout } from "../../Redux/Reducer/AdminSlice";
 import { MainContext } from "../../context/Context";
 import { LiaRulerCombinedSolid } from "react-icons/lia";
+import { LuBoxes } from "react-icons/lu";
+
 
 export default function AdminSidebar() {
 
@@ -50,6 +52,11 @@ export default function AdminSidebar() {
       icon: <FaUser />,
     },
     {
+      path: "/admin/order",
+      name: "Orders",
+      icon: <LuBoxes />,
+    },
+    {
       path: "/admin/setting",
       name: "Setting",
       icon: <IoSettingsSharp />,
@@ -80,8 +87,8 @@ export default function AdminSidebar() {
       background: "linear-gradient(145deg, #1a1a1a 0%, #2e2e2e 5%, #000000 100%)"
     }}>
       <h2 className="text-xl font-bold mb-6 text-center border-b-2 pb-4 border-zinc-700">Admin Panel</h2>
-      <div className="flex flex-col h-full">
-      <nav className="flex flex-col gap-4 h-[89%] border-b-2 border-zinc-700">
+      <div className="flex flex-col h-[500px]">
+      <nav className="flex flex-col gap-4 h-[89%] border-b-2 border-zinc-700 overflow-y-auto pb-4">
         {navMenu.map((navItem, navIndex) => {
           return (
             <NavLink

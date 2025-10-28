@@ -15,6 +15,7 @@ export default function Context({ children }) {
   const [allAdminUser, setAllAdminUser] = useState([]);
   const [allOrder, setAllOrder] = useState([]);
   const [allSize, setAllSize] = useState([]);
+  const [allUser, setAllUser] = useState([]);
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
     localStorage.getItem("searchTerm") || ""
@@ -202,6 +203,26 @@ export default function Context({ children }) {
 
   //fetch all size end
 
+  //fetch all user start
+
+  const fetchAllUser = (user_id = null) => {
+    let userApiUrl = API_BASE_URL + "/user";
+
+    if (user_id) {
+      userApiUrl += `/${user_id}`;
+    }
+
+    axios.get(userApiUrl)
+      .then((success) => {
+        setAllUser(success.data.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  //fetch all user end
+
   return (
     <MainContext.Provider
       value={{
@@ -213,6 +234,7 @@ export default function Context({ children }) {
         fetchAllAdminUser,
         fetchAllOrder,
         fetchAllSize,
+        fetchAllUser,
         toast,
         allCategory,
         allColor,
@@ -221,6 +243,7 @@ export default function Context({ children }) {
         allAdminUser,
         allOrder,
         allSize,
+        allUser,
         API_BASE_URL,
         CATEGORY_URL,
         COLOR_URL,

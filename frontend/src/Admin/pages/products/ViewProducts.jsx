@@ -123,13 +123,13 @@ export default function ViewProducts() {
                 >
                   <td className="py-2 px-4">{productIndex + 1}.</td>
                   <td className="py-2 px-4 w-fit">{productData.name}</td>
-                  <td className="py-2 px-4 ">
-                    <span>${productData?.finel_price?.toFixed(1)}</span>
+                  <td className="py-2 px-4 whitespace-nowrap">
+                    <span>₹{productData?.finel_price}</span>
                     <span className="line-through ms-2">
-                      ${productData.original_price}
+                      {productData.discount_percentage > 0 && `₹${productData.original_price}`}
                     </span>
                     <span className="text-green-700 ms-2">
-                      ({productData.discount_percentage}% off)
+                      {productData.discount_percentage > 0 && `(${productData.discount_percentage}% off)`}
                     </span>
                   </td>
                   <td className="py-2 px-4">
@@ -235,7 +235,7 @@ export default function ViewProducts() {
   );
 }
 
-function ProductPopUp({ productData, API_BASE_URL }) {
+function ProductPopUp({ productData }) {
   return (
     <div className="flex flex-col md:flex-row mt-1 rounded">
       {/* Left Side: Images */}
@@ -243,7 +243,7 @@ function ProductPopUp({ productData, API_BASE_URL }) {
         {/* Main Image */}
         <div>
           <img
-            src={API_BASE_URL + `/images/product/${productData.main_img}`}
+            src={productData.main_img}
             alt="Main Product"
             className="w-80 h-[360px] cover rounded mx-auto"
           />
@@ -255,7 +255,7 @@ function ProductPopUp({ productData, API_BASE_URL }) {
             return (
               <img
                 key={index}
-                src={API_BASE_URL + `/images/product/${image}`}
+                src={image}
                 alt="Other 1"
                 className="w-16 rounded"
               />
@@ -272,14 +272,14 @@ function ProductPopUp({ productData, API_BASE_URL }) {
         </div>
 
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 whitespace-nowrap">
             <label className="font-medium text-neutral-400">Name:</label>
-            <p>{productData.name}</p>
+            <p className="truncate w-64">{productData.name}</p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 whitespace-nowrap">
             <label className="font-medium text-neutral-400">Slug:</label>
-            <p>{productData.slug}</p>
+            <p  className="truncate w-64">{productData.slug}</p>
           </div>
         </div>
 
@@ -304,17 +304,17 @@ function ProductPopUp({ productData, API_BASE_URL }) {
             <label className="font-medium text-neutral-400">
               Original Price:
             </label>
-            <p>${productData.original_price}</p>
+            <p>₹{productData.original_price}</p>
           </div>
 
           <div className="flex items-center gap-2">
             <label className="font-medium text-neutral-400">Discount:</label>
-            <p>{productData.discount_percentage}%</p>
+            <p>{productData.discount_percentage > 0 ? productData.discount_percentage : 0}%</p>
           </div>
 
           <div className="flex items-center gap-2">
             <label className="font-medium text-neutral-400">Final Price:</label>
-            <p>${productData.finel_price.toFixed(1)}</p>
+            <p>₹{productData.finel_price}</p>
           </div>
         </div>
 

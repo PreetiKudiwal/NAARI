@@ -6,12 +6,13 @@ import axios from "axios";
 
 export default function ViewUser() {
   const {
-    fetchAllAdminUser,
-    allAdminUser,
+    fetchAllUser,
+    allUser,
     API_BASE_URL,
-    ADMIN_USER_URL,
     toastNotify,
   } = useContext(MainContext);
+
+  console.log(allUser);
 
   const deleteUser = (id) => {
     Swal.fire({
@@ -32,11 +33,11 @@ export default function ViewUser() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(API_BASE_URL + ADMIN_USER_URL + "/delete/" + id)
+          .delete(API_BASE_URL + "/user" + "/delete/" + id)
           .then((success) => {
             toastNotify(success.data.msg, success.data.status);
             if (success.data.status == 1) {
-              fetchAllAdminUser();
+              fetchAllUser();
             }
           })
           .catch((error) => {
@@ -47,7 +48,7 @@ export default function ViewUser() {
   };
 
   useEffect(() => {
-    fetchAllAdminUser();
+    fetchAllUser();
   }, []);
 
   return (
@@ -67,13 +68,13 @@ export default function ViewUser() {
               <th className="py-2 px-4">ID</th>
               <th className="py-2 px-4">Name</th>
               <th className="py-2 px-4">Email</th>
-              <th className="py-2 px-4">Role</th>
+              <th className="py-2 px-4">Contact</th>
               <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(allAdminUser) &&
-              allAdminUser?.map((user, index) => (
+            {Array.isArray(allUser) &&
+              allUser?.map((user, index) => (
                 <tr
                   key={user._id}
                   className="border-t text-center text-white hover:bg-zinc-800"
@@ -82,13 +83,8 @@ export default function ViewUser() {
                   <td className="py-2 px-4">{user._id}</td>
                   <td className="py-2 px-4">{user.name}</td>
                   <td className="py-2 px-4">{user.email}</td>
-                  <td className="py-2 px-4">{user.role}</td>
-                  <td className="p-2 flex gap-4 justify-center">
-                    <Link to={`/admin/user/edit/${user._id}`}>
-                      <button className="border text-white px-3 py-1 rounded-xl">
-                        Edit
-                      </button>
-                    </Link>
+                  <td className="py-2 px-4">{user.contact == null && '--not added--'}</td>
+                  <td className="p-2 flex justify-center">
                     <button
                       onClick={() => deleteUser(user._id)}
                       className="bg-red-500 text-white px-3 py-1 rounded-md"

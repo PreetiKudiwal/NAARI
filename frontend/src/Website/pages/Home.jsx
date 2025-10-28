@@ -130,7 +130,8 @@ export default function Home() {
                       </div>
                     </div>
                     <Link to={"/shop"}>
-                      <button className=" md:w-[150px] rounded-md mt-2 py-0.5 px-2 md:p-2 text-xs  md:text-sm font-normal bg-black">
+                      <button className=" md:w-[150px] rounded-md mt-2 py-0.5 px-2 md:p-2 text-xs  md:text-sm font-normal bg-black"
+                      onClick={() => setSearchTerm("bridal lehengas")}>
                         <div className="flex justify-center items-center gap-1">
                           Shop Now{" "}
                           <span className="rounded-2xl text-[6px] md:text-[10px] p-0.5 bg-white text-black border border-white">
@@ -159,7 +160,8 @@ export default function Home() {
                       <div>gaze — wear a Saree.</div>
                     </div>
                     <Link to={"/shop"}>
-                      <button className=" md:w-[150px] rounded-md mt-2 py-0.5 px-2 md:p-2 text-xs  md:text-sm font-normal bg-black">
+                      <button className=" md:w-[150px] rounded-md mt-2 py-0.5 px-2 md:p-2 text-xs  md:text-sm font-normal bg-black"
+                      onClick={() => setSearchTerm("sarees")}>
                         <div className="flex justify-center items-center gap-1">
                           Shop Now{" "}
                           <span className="rounded-2xl text-[6px] md:text-[10px] p-0.5 bg-white text-black border border-white">
@@ -182,7 +184,8 @@ export default function Home() {
                       <div>every thread.</div>
                     </div>
                     <Link to={"/shop"}>
-                      <button className=" md:w-[150px] rounded-md mt-2 px-2 py-0.5 md:p-2 text-xs md:text-sm font-normal bg-black">
+                      <button className=" md:w-[150px] rounded-md mt-2 px-2 py-0.5 md:p-2 text-xs md:text-sm font-normal bg-black"
+                      onClick={() => setSearchTerm("anarkali")}>
                         <div className="flex justify-center items-center gap-1">
                           Shop Now{" "}
                           <span className="rounded-2xl text-[6px] md:text-[10px] p-0.5 bg-white text-black border border-white">

@@ -23,6 +23,50 @@ UserRouter.post(
 
 //create user start
 
+//read user start
+
+UserRouter.get(
+    "/:id?",
+    (req, res) => {
+        const result = new UserController().read(req.params.id);
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+)
+
+//read user end
+
+//delete user start
+
+UserRouter.delete(
+    "/delete/:id",
+    (req, res) => {
+        const result = new UserController().delete(req.params.id);
+
+        result.then(
+            (success) => {
+                res.send(success);
+            }
+        ).catch(
+            (error) => {
+                console.log(error);
+                res.send(error);
+            }
+        )
+    }
+    
+)
+
+//delete user end
+
 //login user start
 
 UserRouter.post(

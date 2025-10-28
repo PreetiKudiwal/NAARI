@@ -67,6 +67,73 @@ class UserController {
         )
     }
 
+    read(id) {
+        return new Promise(
+            async (resolve, reject) => {
+                try{
+                    let user;
+                    if(id){
+                        user = await UserModel.findById(id)
+                    } else{
+                        user = await UserModel.find();
+                    }
+
+                    resolve(
+                        {
+                            msg: "user found",
+                            status: 1,
+                            user
+                        }
+                    )
+                }catch(error) {
+                    console.log(error);
+                    reject(
+                        {
+                            msg: 'Internal server error',
+                            status: 0
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    delete(id) {
+                return new Promise(
+                    (resolve, reject) => {
+                        try {
+                            UserModel.deleteOne({ _id: id }).then(
+                                (success) => {
+                                    resolve(
+                                        {
+                                            msg: 'User deleted successfully',
+                                            status: 1
+                                        }
+                                    )
+                                }
+                            ).catch(
+                                (error) => {
+                                    console.log(error);
+                                    reject(
+                                        {
+                                            msg: 'User not deleted',
+                                            status: 0
+                                        }
+                                    )
+                                }
+                            )
+                        } catch (error) {
+                            console.log(error);
+                            reject(
+                                {
+                                    msg: 'Internal server error',
+                                    status: 0
+                                }
+                            )
+                        }
+                    }
+                )
+            }
 
     login(data) {
         return new Promise(

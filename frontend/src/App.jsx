@@ -25,7 +25,6 @@ import UserRegister from './Website/pages/UserRegister'
 import Thankyou from './Website/pages/Thankyou'
 import Setting from './Admin/pages/Setting'
 import ViewUser from './Admin/pages/user/ViewUser'
-import EditUser from './Admin/pages/user/EditUser'
 import MyLayout from './Website/pages/MyLayout'
 import ViewProfile from './Website/pages/My/Profile/ViewProfile'
 import EditProfile from './Website/pages/My/Profile/EditProfile'
@@ -42,6 +41,7 @@ import AdminRoute from './Admin/components/AdminRoute'
 import { useDispatch } from 'react-redux'
 import { logout } from './Redux/Reducer/AdminSlice'
 import SplashScreen from './Website/components/SplashScreen'
+import ViewOrders from './Admin/pages/orders/ViewOrders'
 
 export default function App() {
 
@@ -203,10 +203,6 @@ export default function App() {
             element: <ViewUser />
           },
           {
-            path: "user/edit/:user_id",
-            element: <EditUser />
-          },
-          {
             path: "size",
             element: <ViewSize />
           }, 
@@ -217,6 +213,10 @@ export default function App() {
           {
             path: "size/edit/:size_id",
             element: <EditSize />
+          },
+          {
+            path: "order",
+            element: <ViewOrders />
           }
         ]
       } ]
